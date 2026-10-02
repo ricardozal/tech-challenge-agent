@@ -29,7 +29,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 
 EVAL = Path(__file__).resolve().parent
 PROYECTO = EVAL.parent
-EXCEL = PROYECTO / "modelos-ollama.xlsx"
+EXCEL = EVAL / "modelos-ollama.xlsx"
 CASOS = EVAL / "casos_eval.jsonl"
 PROMPTS = EVAL / "prompts_para_comparador.md"
 RESULTADOS = EVAL / "resultados"

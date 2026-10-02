@@ -1,0 +1,357 @@
+00:27:48 INFO    Corrida: 7 modelo(s) × 25 caso(s) → eval/resultados/2026-10-01_002748.jsonl
+00:27:48 INFO    HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+00:27:56 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:27:56 INFO    qwen3.5:9b · M01: json=Sí puntaje=2/2 lat=3.0s (pared 8.5s)
+00:27:59 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:27:59 INFO    qwen3.5:9b · M02: json=Sí puntaje=2/2 lat=3.0s (pared 3.0s)
+00:28:02 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:02 INFO    qwen3.5:9b · M03: json=Sí puntaje=2/2 lat=3.0s (pared 3.0s)
+00:28:06 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:06 INFO    qwen3.5:9b · M04: json=Sí puntaje=2/2 lat=3.1s (pared 3.1s)
+00:28:08 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:08 INFO    qwen3.5:9b · M05: json=Sí puntaje=2/2 lat=2.9s (pared 3.0s)
+00:28:11 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:11 INFO    qwen3.5:9b · M06: json=Sí puntaje=1/2 lat=2.8s (pared 2.9s)
+00:28:15 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:15 INFO    qwen3.5:9b · M07: json=Sí puntaje=4/4 lat=3.9s (pared 3.9s)
+00:28:20 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:20 INFO    qwen3.5:9b · M08: json=Sí puntaje=3/6 lat=4.9s (pared 5.0s)
+00:28:25 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:25 INFO    qwen3.5:9b · M09: json=Sí puntaje=0/4 lat=4.2s (pared 4.3s)
+00:28:29 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:29 INFO    qwen3.5:9b · M10: json=Sí puntaje=0/4 lat=4.4s (pared 4.5s)
+00:28:33 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:33 INFO    qwen3.5:9b · M11: json=Sí puntaje=4/4 lat=4.1s (pared 4.1s)
+00:28:37 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:37 INFO    qwen3.5:9b · M12: json=Sí puntaje=0/4 lat=4.3s (pared 4.3s)
+00:28:40 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:40 INFO    qwen3.5:9b · M13: json=Sí puntaje=2/2 lat=3.0s (pared 3.0s)
+00:28:44 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:44 INFO    qwen3.5:9b · M14: json=Sí puntaje=0/1 lat=3.1s (pared 3.2s)
+00:28:47 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:47 INFO    qwen3.5:9b · M15: json=Sí puntaje=2/2 lat=3.2s (pared 3.3s)
+00:28:51 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:51 INFO    qwen3.5:9b · M16: json=Sí puntaje=0/2 lat=3.9s (pared 3.9s)
+00:28:54 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:54 INFO    qwen3.5:9b · M17: json=Sí puntaje=3/3 lat=3.7s (pared 3.7s)
+00:28:57 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:28:57 INFO    qwen3.5:9b · M18: json=Sí puntaje=1/1 lat=2.7s (pared 2.8s)
+00:29:02 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:02 INFO    qwen3.5:9b · M19: json=Sí puntaje=0/3 lat=4.4s (pared 4.5s)
+00:29:04 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:04 INFO    qwen3.5:9b · M20: json=Sí puntaje=1/1 lat=2.6s (pared 2.7s)
+00:29:12 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:12 INFO    qwen3.5:9b · D01: json=Sí puntaje=4/7 lat=7.3s (pared 7.4s)
+00:29:20 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:20 INFO    qwen3.5:9b · D02: json=Sí puntaje=4/9 lat=8.1s (pared 8.2s)
+00:29:30 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:30 INFO    qwen3.5:9b · D03: json=Sí puntaje=6/8 lat=9.8s (pared 9.9s)
+00:29:36 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:36 INFO    qwen3.5:9b · D04: json=Sí puntaje=4/5 lat=5.6s (pared 5.8s)
+00:29:41 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:41 INFO    qwen3.5:9b · D05: json=Sí puntaje=4/7 lat=5.2s (pared 5.3s)
+00:29:52 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:52 INFO    gemma4:12b · M01: json=Sí puntaje=2/2 lat=4.3s (pared 10.7s)
+00:29:56 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:29:56 INFO    gemma4:12b · M02: json=Sí puntaje=2/2 lat=4.3s (pared 4.4s)
+00:30:00 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:00 INFO    gemma4:12b · M03: json=Sí puntaje=2/2 lat=4.3s (pared 4.4s)
+00:30:06 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:06 INFO    gemma4:12b · M04: json=Sí puntaje=1/2 lat=5.6s (pared 5.7s)
+00:30:10 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:10 INFO    gemma4:12b · M05: json=Sí puntaje=2/2 lat=4.3s (pared 4.3s)
+00:30:15 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:15 INFO    gemma4:12b · M06: json=Sí puntaje=1/2 lat=4.4s (pared 4.4s)
+00:30:20 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:20 INFO    gemma4:12b · M07: json=Sí puntaje=4/4 lat=5.1s (pared 5.1s)
+00:30:28 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:28 INFO    gemma4:12b · M08: json=Sí puntaje=1/6 lat=8.0s (pared 8.1s)
+00:30:34 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:34 INFO    gemma4:12b · M09: json=Sí puntaje=0/4 lat=6.3s (pared 6.4s)
+00:30:41 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:41 INFO    gemma4:12b · M10: json=Sí puntaje=0/4 lat=6.0s (pared 6.1s)
+00:30:46 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:46 INFO    gemma4:12b · M11: json=Sí puntaje=4/4 lat=5.7s (pared 5.8s)
+00:30:53 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:53 INFO    gemma4:12b · M12: json=Sí puntaje=0/4 lat=6.1s (pared 6.2s)
+00:30:57 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:30:57 INFO    gemma4:12b · M13: json=Sí puntaje=2/2 lat=4.3s (pared 4.5s)
+00:31:01 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:01 INFO    gemma4:12b · M14: json=Sí puntaje=1/1 lat=3.9s (pared 4.0s)
+00:31:06 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:06 INFO    gemma4:12b · M15: json=Sí puntaje=2/2 lat=4.8s (pared 5.0s)
+00:31:12 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:12 INFO    gemma4:12b · M16: json=Sí puntaje=0/2 lat=5.4s (pared 5.6s)
+00:31:17 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:17 INFO    gemma4:12b · M17: json=Sí puntaje=3/3 lat=5.0s (pared 5.1s)
+00:31:21 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:21 INFO    gemma4:12b · M18: json=Sí puntaje=1/1 lat=4.0s (pared 4.2s)
+00:31:26 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:26 INFO    gemma4:12b · M19: json=Sí puntaje=3/3 lat=5.3s (pared 5.5s)
+00:31:31 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:31 INFO    gemma4:12b · M20: json=Sí puntaje=1/1 lat=3.8s (pared 4.4s)
+00:31:41 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:41 INFO    gemma4:12b · D01: json=Sí puntaje=1/7 lat=9.9s (pared 10.2s)
+00:31:52 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:31:52 INFO    gemma4:12b · D02: json=Sí puntaje=5/9 lat=10.5s (pared 10.7s)
+00:32:07 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:07 INFO    gemma4:12b · D03: json=Sí puntaje=6/8 lat=14.8s (pared 15.2s)
+00:32:17 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:17 INFO    gemma4:12b · D04: json=Sí puntaje=2/5 lat=9.5s (pared 10.3s)
+00:32:25 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:25 INFO    gemma4:12b · D05: json=Sí puntaje=5/7 lat=7.6s (pared 7.8s)
+00:32:37 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:37 INFO    granite4.1:8b · M01: json=Sí puntaje=0/2 lat=7.9s (pared 11.6s)
+00:32:38 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:38 INFO    granite4.1:8b · M02: json=Sí puntaje=0/2 lat=1.3s (pared 1.3s)
+00:32:44 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:44 INFO    granite4.1:8b · M03: json=Sí puntaje=0/2 lat=5.9s (pared 5.9s)
+00:32:47 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:47 INFO    granite4.1:8b · M04: json=Sí puntaje=0/2 lat=2.8s (pared 2.8s)
+00:32:48 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:48 INFO    granite4.1:8b · M05: json=Sí puntaje=2/2 lat=1.4s (pared 1.4s)
+00:32:49 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:49 INFO    granite4.1:8b · M06: json=Sí puntaje=1/2 lat=1.3s (pared 1.3s)
+00:32:54 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:54 INFO    granite4.1:8b · M07: json=Sí puntaje=1/4 lat=4.1s (pared 4.1s)
+00:32:58 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:32:58 INFO    granite4.1:8b · M08: json=Sí puntaje=1/6 lat=4.9s (pared 4.9s)
+00:33:02 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:02 INFO    granite4.1:8b · M09: json=Sí puntaje=0/4 lat=3.3s (pared 3.4s)
+00:33:04 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:04 INFO    granite4.1:8b · M10: json=Sí puntaje=0/4 lat=2.5s (pared 2.5s)
+00:33:08 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:08 INFO    granite4.1:8b · M11: json=Sí puntaje=0/4 lat=3.2s (pared 3.2s)
+00:33:11 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:11 INFO    granite4.1:8b · M12: json=Sí puntaje=0/4 lat=3.2s (pared 3.3s)
+00:33:12 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:12 INFO    granite4.1:8b · M13: json=Sí puntaje=1/2 lat=1.4s (pared 1.5s)
+00:33:14 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:14 INFO    granite4.1:8b · M14: json=Sí puntaje=0/1 lat=1.3s (pared 1.3s)
+00:33:16 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:16 INFO    granite4.1:8b · M15: json=Sí puntaje=0/2 lat=2.5s (pared 2.5s)
+00:33:18 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:18 INFO    granite4.1:8b · M16: json=Sí puntaje=0/2 lat=2.2s (pared 2.2s)
+00:33:20 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:20 INFO    granite4.1:8b · M17: json=Sí puntaje=2/3 lat=2.0s (pared 2.0s)
+00:33:22 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:22 INFO    granite4.1:8b · M18: json=Sí puntaje=1/1 lat=1.2s (pared 1.3s)
+00:33:26 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:26 INFO    granite4.1:8b · M19: json=Sí puntaje=0/3 lat=3.9s (pared 4.0s)
+00:33:27 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:27 INFO    granite4.1:8b · M20: json=Sí puntaje=1/1 lat=1.0s (pared 1.0s)
+00:33:34 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:34 INFO    granite4.1:8b · D01: json=Sí puntaje=5/7 lat=6.9s (pared 6.9s)
+00:33:39 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:39 INFO    granite4.1:8b · D02: json=Sí puntaje=0/9 lat=5.9s (pared 5.9s)
+00:33:51 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:33:51 INFO    granite4.1:8b · D03: json=Sí puntaje=0/8 lat=11.8s (pared 11.9s)
+00:34:00 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:00 INFO    granite4.1:8b · D04: json=Sí puntaje=2/5 lat=8.3s (pared 8.4s)
+00:34:06 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:06 INFO    granite4.1:8b · D05: json=Sí puntaje=0/7 lat=6.1s (pared 6.1s)
+00:34:10 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:10 INFO    phi3:mini · M01: json=Sí puntaje=0/2 lat=2.8s (pared 4.6s)
+00:34:14 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:14 INFO    phi3:mini · M02: json=Sí puntaje=0/2 lat=3.3s (pared 3.3s)
+00:34:17 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:17 INFO    phi3:mini · M03: json=Sí puntaje=0/2 lat=2.8s (pared 2.8s)
+00:34:20 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:20 INFO    phi3:mini · M04: json=Sí puntaje=0/2 lat=3.2s (pared 3.2s)
+00:34:23 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:23 INFO    phi3:mini · M05: json=Sí puntaje=0/2 lat=3.0s (pared 3.1s)
+00:34:26 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:26 INFO    phi3:mini · M06: json=Sí puntaje=0/2 lat=3.0s (pared 3.0s)
+00:34:29 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:29 INFO    phi3:mini · M07: json=Sí puntaje=0/4 lat=2.9s (pared 2.9s)
+00:34:32 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:32 INFO    phi3:mini · M08: json=Sí puntaje=0/6 lat=2.9s (pared 2.9s)
+00:34:34 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:34 INFO    phi3:mini · M09: json=Sí puntaje=0/4 lat=2.6s (pared 2.6s)
+00:34:38 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:38 INFO    phi3:mini · M10: json=Sí puntaje=0/4 lat=3.3s (pared 3.3s)
+00:34:41 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:41 INFO    phi3:mini · M11: json=Sí puntaje=0/4 lat=3.2s (pared 3.2s)
+00:34:44 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:44 INFO    phi3:mini · M12: json=Sí puntaje=0/4 lat=3.2s (pared 3.2s)
+00:34:47 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:47 INFO    phi3:mini · M13: json=Sí puntaje=0/2 lat=3.3s (pared 3.3s)
+00:34:51 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:51 INFO    phi3:mini · M14: json=Sí puntaje=0/1 lat=3.2s (pared 3.3s)
+00:34:54 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:54 INFO    phi3:mini · M15: json=Sí puntaje=0/2 lat=3.3s (pared 3.4s)
+00:34:57 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:34:57 INFO    phi3:mini · M16: json=Sí puntaje=0/2 lat=3.4s (pared 3.4s)
+00:35:01 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:01 INFO    phi3:mini · M17: json=Sí puntaje=0/3 lat=3.4s (pared 3.4s)
+00:35:04 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:04 INFO    phi3:mini · M18: json=Sí puntaje=0/1 lat=3.1s (pared 3.1s)
+00:35:07 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:07 INFO    phi3:mini · M19: json=Sí puntaje=0/3 lat=3.5s (pared 3.5s)
+00:35:10 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:10 INFO    phi3:mini · M20: json=Sí puntaje=0/1 lat=2.7s (pared 2.8s)
+00:35:14 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:14 INFO    phi3:mini · D01: json=Sí puntaje=0/7 lat=3.6s (pared 3.7s)
+00:35:17 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:17 INFO    phi3:mini · D02: json=Sí puntaje=1/9 lat=2.8s (pared 2.9s)
+00:35:21 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:21 INFO    phi3:mini · D03: json=Sí puntaje=0/8 lat=4.3s (pared 4.4s)
+00:35:24 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:24 INFO    phi3:mini · D04: json=Sí puntaje=0/5 lat=2.3s (pared 2.8s)
+00:35:26 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:26 INFO    phi3:mini · D05: json=Sí puntaje=0/7 lat=2.4s (pared 2.4s)
+00:35:36 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:36 INFO    mistral:latest · M01: json=Sí puntaje=0/2 lat=6.4s (pared 9.3s)
+00:35:37 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:37 INFO    mistral:latest · M02: json=Sí puntaje=2/2 lat=1.4s (pared 1.4s)
+00:35:39 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:39 INFO    mistral:latest · M03: json=Sí puntaje=2/2 lat=1.5s (pared 1.5s)
+00:35:40 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:40 INFO    mistral:latest · M04: json=Sí puntaje=2/2 lat=1.3s (pared 1.4s)
+00:35:41 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:41 INFO    mistral:latest · M05: json=Sí puntaje=1/2 lat=1.4s (pared 1.4s)
+00:35:43 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:43 INFO    mistral:latest · M06: json=Sí puntaje=0/2 lat=1.1s (pared 1.2s)
+00:35:45 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:45 INFO    mistral:latest · M07: json=Sí puntaje=4/4 lat=2.4s (pared 2.4s)
+00:35:50 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:50 INFO    mistral:latest · M08: json=Sí puntaje=0/6 lat=4.6s (pared 4.7s)
+00:35:53 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:53 INFO    mistral:latest · M09: json=Sí puntaje=0/4 lat=3.4s (pared 3.4s)
+00:35:55 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:55 INFO    mistral:latest · M10: json=Sí puntaje=1/4 lat=2.0s (pared 2.1s)
+00:35:59 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:35:59 INFO    mistral:latest · M11: json=Sí puntaje=0/4 lat=3.4s (pared 3.5s)
+00:36:01 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:01 INFO    mistral:latest · M12: json=Sí puntaje=0/4 lat=2.5s (pared 2.5s)
+00:36:02 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:02 INFO    mistral:latest · M13: json=Sí puntaje=1/2 lat=1.2s (pared 1.2s)
+00:36:03 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:03 INFO    mistral:latest · M14: json=Sí puntaje=0/1 lat=1.1s (pared 1.1s)
+00:36:05 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:05 INFO    mistral:latest · M15: json=Sí puntaje=2/2 lat=1.6s (pared 1.6s)
+00:36:07 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:07 INFO    mistral:latest · M16: json=Sí puntaje=0/2 lat=2.0s (pared 2.0s)
+00:36:09 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:09 INFO    mistral:latest · M17: json=Sí puntaje=2/3 lat=1.6s (pared 1.6s)
+00:36:10 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:10 INFO    mistral:latest · M18: json=Sí puntaje=1/1 lat=1.0s (pared 1.0s)
+00:36:13 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:13 INFO    mistral:latest · M19: json=Sí puntaje=0/3 lat=3.1s (pared 3.2s)
+00:36:14 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:14 INFO    mistral:latest · M20: json=Sí puntaje=1/1 lat=1.1s (pared 1.2s)
+00:36:21 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:21 INFO    mistral:latest · D01: json=Sí puntaje=5/7 lat=7.3s (pared 7.4s)
+00:36:27 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:27 INFO    mistral:latest · D02: json=Sí puntaje=2/9 lat=5.2s (pared 5.3s)
+00:36:35 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:35 INFO    mistral:latest · D03: json=Sí puntaje=4/8 lat=8.7s (pared 8.8s)
+00:36:42 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:42 INFO    mistral:latest · D04: json=Sí puntaje=0/5 lat=6.7s (pared 7.0s)
+00:36:48 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:48 INFO    mistral:latest · D05: json=Sí puntaje=2/7 lat=5.9s (pared 5.9s)
+00:36:53 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:53 INFO    phi3:latest · M01: json=Sí puntaje=0/2 lat=2.8s (pared 4.7s)
+00:36:56 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:56 INFO    phi3:latest · M02: json=Sí puntaje=0/2 lat=3.3s (pared 3.3s)
+00:36:59 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:36:59 INFO    phi3:latest · M03: json=Sí puntaje=0/2 lat=2.8s (pared 2.9s)
+00:37:02 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:02 INFO    phi3:latest · M04: json=Sí puntaje=0/2 lat=3.2s (pared 3.3s)
+00:37:06 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:06 INFO    phi3:latest · M05: json=Sí puntaje=0/2 lat=3.1s (pared 3.1s)
+00:37:09 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:09 INFO    phi3:latest · M06: json=Sí puntaje=0/2 lat=3.0s (pared 3.0s)
+00:37:11 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:11 INFO    phi3:latest · M07: json=Sí puntaje=0/4 lat=2.9s (pared 2.9s)
+00:37:14 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:14 INFO    phi3:latest · M08: json=Sí puntaje=0/6 lat=2.9s (pared 2.9s)
+00:37:17 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:17 INFO    phi3:latest · M09: json=Sí puntaje=0/4 lat=2.6s (pared 2.6s)
+00:37:20 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:20 INFO    phi3:latest · M10: json=Sí puntaje=0/4 lat=3.3s (pared 3.3s)
+00:37:23 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:23 INFO    phi3:latest · M11: json=Sí puntaje=0/4 lat=3.2s (pared 3.2s)
+00:37:27 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:27 INFO    phi3:latest · M12: json=Sí puntaje=0/4 lat=3.2s (pared 3.2s)
+00:37:30 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:30 INFO    phi3:latest · M13: json=Sí puntaje=0/2 lat=3.3s (pared 3.4s)
+00:37:33 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:33 INFO    phi3:latest · M14: json=Sí puntaje=0/1 lat=3.2s (pared 3.3s)
+00:37:37 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:37 INFO    phi3:latest · M15: json=Sí puntaje=0/2 lat=3.4s (pared 3.4s)
+00:37:40 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:40 INFO    phi3:latest · M16: json=Sí puntaje=0/2 lat=3.4s (pared 3.4s)
+00:37:43 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:43 INFO    phi3:latest · M17: json=Sí puntaje=0/3 lat=3.4s (pared 3.4s)
+00:37:47 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:47 INFO    phi3:latest · M18: json=Sí puntaje=0/1 lat=3.3s (pared 3.3s)
+00:37:50 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:50 INFO    phi3:latest · M19: json=Sí puntaje=0/3 lat=3.6s (pared 3.6s)
+00:37:53 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:53 INFO    phi3:latest · M20: json=Sí puntaje=0/1 lat=2.8s (pared 2.8s)
+00:37:57 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:37:57 INFO    phi3:latest · D01: json=Sí puntaje=0/7 lat=3.6s (pared 3.7s)
+00:38:00 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:00 INFO    phi3:latest · D02: json=Sí puntaje=1/9 lat=2.8s (pared 2.8s)
+00:38:04 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:04 INFO    phi3:latest · D03: json=Sí puntaje=0/8 lat=4.2s (pared 4.3s)
+00:38:06 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:06 INFO    phi3:latest · D04: json=Sí puntaje=0/5 lat=2.3s (pared 2.4s)
+00:38:09 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:09 INFO    phi3:latest · D05: json=Sí puntaje=0/7 lat=2.4s (pared 2.4s)
+00:38:13 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:13 INFO    llama3.2:latest · M01: json=Sí puntaje=0/2 lat=2.0s (pared 3.8s)
+00:38:14 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:14 INFO    llama3.2:latest · M02: json=Sí puntaje=0/2 lat=1.7s (pared 1.7s)
+00:38:17 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:17 INFO    llama3.2:latest · M03: json=Sí puntaje=0/2 lat=2.5s (pared 2.5s)
+00:38:19 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:19 INFO    llama3.2:latest · M04: json=Sí puntaje=0/2 lat=2.7s (pared 2.7s)
+00:38:22 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:22 INFO    llama3.2:latest · M05: json=Sí puntaje=0/2 lat=2.7s (pared 2.7s)
+00:38:25 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:25 INFO    llama3.2:latest · M06: json=Sí puntaje=0/2 lat=2.7s (pared 2.7s)
+00:38:26 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:26 INFO    llama3.2:latest · M07: json=Sí puntaje=2/4 lat=1.0s (pared 1.1s)
+00:38:27 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:27 INFO    llama3.2:latest · M08: json=Sí puntaje=3/6 lat=1.0s (pared 1.0s)
+00:38:28 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:28 INFO    llama3.2:latest · M09: json=Sí puntaje=0/4 lat=1.3s (pared 1.4s)
+00:38:29 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:29 INFO    llama3.2:latest · M10: json=Sí puntaje=0/4 lat=1.2s (pared 1.2s)
+00:38:31 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:31 INFO    llama3.2:latest · M11: json=Sí puntaje=0/4 lat=1.3s (pared 1.3s)
+00:38:32 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:32 INFO    llama3.2:latest · M12: json=Sí puntaje=0/4 lat=1.3s (pared 1.3s)
+00:38:33 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:33 INFO    llama3.2:latest · M13: json=Sí puntaje=1/2 lat=0.6s (pared 0.6s)
+00:38:33 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:33 INFO    llama3.2:latest · M14: json=Sí puntaje=0/1 lat=0.7s (pared 0.8s)
+00:38:34 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:34 INFO    llama3.2:latest · M15: json=Sí puntaje=0/2 lat=1.0s (pared 1.0s)
+00:38:37 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:37 INFO    llama3.2:latest · M16: json=Sí puntaje=0/2 lat=2.4s (pared 2.4s)
+00:38:38 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:38 INFO    llama3.2:latest · M17: json=Sí puntaje=2/3 lat=0.8s (pared 0.8s)
+00:38:39 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:39 INFO    llama3.2:latest · M18: json=Sí puntaje=0/1 lat=0.9s (pared 1.0s)
+00:38:39 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:39 INFO    llama3.2:latest · M19: json=Sí puntaje=0/3 lat=0.9s (pared 0.9s)
+00:38:42 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:42 INFO    llama3.2:latest · M20: json=Sí puntaje=0/1 lat=2.6s (pared 2.6s)
+00:38:45 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:45 INFO    llama3.2:latest · D01: json=Sí puntaje=4/7 lat=2.7s (pared 2.7s)
+00:38:48 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:48 INFO    llama3.2:latest · D02: json=Sí puntaje=0/9 lat=3.0s (pared 3.0s)
+00:38:52 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:52 INFO    llama3.2:latest · D03: json=Sí puntaje=0/8 lat=4.1s (pared 4.1s)
+00:38:54 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:54 INFO    llama3.2:latest · D04: json=Sí puntaje=0/5 lat=2.4s (pared 2.4s)
+00:38:58 INFO    HTTP Request: POST http://localhost:8000/comparar "HTTP/1.1 200 OK"
+00:38:58 INFO    llama3.2:latest · D05: json=Sí puntaje=0/7 lat=3.3s (pared 3.3s)
+00:38:58 INFO    Respaldo: modelos-ollama.respaldo-2026-10-01_002748.xlsx
+00:38:58 WARNING openpyxl avisó que quita validaciones de datos; las repongo
+00:38:58 INFO    Repuse la validación list Modelos!$B$5:$B$10 en Configuración!B5
+00:38:58 INFO    Excel guardado: modelos-ollama.xlsx
+00:38:58 INFO    Verificación OK: fórmulas, otras pestañas y validaciones sin cambios

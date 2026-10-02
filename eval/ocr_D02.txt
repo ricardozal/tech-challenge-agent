@@ -1,0 +1,86 @@
+RECIBO DE NÓMINA
+Documento de prueba · empresa y empleado ficticios
+EMPRESA MANUFACTURAS EJEMPLO DEL BAJÍO, S.A. DE C.V.
+RFC EMPRESA MEB100101AB1
+EMPLEADO JORGE ALBERTO RAMÍREZ SOTO
+NO. EMPLEADO 00457
+PUESTO Operador de producción
+TIPO DE PAGO Quincenal
+PERIODO Del 01/09/2026 al 15/09/2026
+FECHA DE PAGO 15/09/2026
+PERCEPCIONES IMPORTE
+Sueldo 9,800.00
+Premio de asistencia 700.00
+Total percepciones 10,500.00
+DEDUCCIONES IMPORTE
+ISR 1,020.35
+Cuota IMSS 279.65
+Total deducciones 1,300.00
+NETO A PAGAR $9,200.00 MXN
+Datos ficticios generados para evaluar modelos de extracción.
+```markdown
+RECIBO DE NÓMINA
+Documento de prueba · empresa y empleado ficticios
+EMPRESA MANUFACTURAS EJEMPLO DEL BAJÍO, S.A. DE C.V.
+RFC EMPRESA MEB100101AB1
+EMPLEADO JORGE ALBERTO RAMÍREZ SOTO
+NO. EMPLEADO 00457
+PUESTO Operador de producción
+TIPO DE PAGO Quincenal
+PERIODO Del 01/09/2026 al 15/09/2026
+FECHA DE PAGO 15/09/2026
+PERCEPCIONES IMPORTE
+Sueldo 9,800.00
+Premio de asistencia 700.00
+Total percepciones 10,500.00
+DEDUCCIONES IMPORTE
+ISR 1,020.35
+Cuota IMSS 279.65
+Total deducciones 1,300.00
+NETO A PAGAR $9,200.00 MXN
+Datos ficticios generados para evaluar modelos de extracción.
+```
+```
+RECIBO DE NÓMINA
+Documento de prueba · empresa y empleado ficticios
+EMPRESA MANUFACTURAS EJEMPLO DEL BAJÍO, S.A. DE C.V.
+RFC EMPRESA MEB100101AB1
+EMPLEADO JORGE ALBERTO RAMÍREZ SOTO
+NO. EMPLEADO 00457
+PUESTO Operador de producción
+TIPO DE PAGO Quincenal
+PERIODO Del 01/09/2026 al 15/09/2026
+FECHA DE PAGO 15/09/2026
+PERCEPCIONES IMPORTE
+Sueldo 9,800.00
+Premio de asistencia 700.00
+Total percepciones 10,500.00
+DEDUCCIONES IMPORTE
+ISR 1,020.35
+Cuota IMSS 279.65
+Total deducciones 1,300.00
+NETO A PAGAR $9,200.00 MXN
+Datos ficticios generados para evaluar modelos de extracción.
+```
+RECIBO DE NÓMINA
+Documento de prueba · empresa y empleado ficticios
+EMPRESA MANUFACTURAS EJEMPLO DEL BAJÍO, S.A. DE C.V.
+RFC EMPRESA MEB100101AB1
+EMPLEADO JORGE ALBERTO RAMÍREZ SOTO
+NO. EMPLEADO 00457
+PUESTO Operador de producción
+TIPO DE PAGO Quincenal
+PERIODO Del 01/09/2026 al 15/09/2026
+FECHA DE PAGO 15/09/2026
+PERCEPCIONES IMPORTE
+Sueldo 9,800.00
+Premio de asistencia 700.00
+Total percepciones 10,500.00
+DEDUCCIONES IMPORTE
+ISR 1,020.35
+Cuota IMSS 279.65
+Total deducciones 1,300.00
+NETO A PAGAR $9,200.00 MXN
+Datos ficticios generados para evaluar modelos de extracción.
+```
+

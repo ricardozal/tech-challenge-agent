@@ -31,6 +31,25 @@ escala a un asesor humano con un ticket.
 estado final. Estados finales: `ok_para_financiera`, `rechazado`, `cancelado`. Un caso
 `escalado` queda en manos de un asesor hasta que lo resuelve.
 
+## Clarifications
+
+### Session 2026-10-03
+
+- Q: Si llegan dos mensajes del mismo caso al mismo tiempo, ¿qué pasa con el segundo? → A: Lock
+  por caso y versión esperada; el segundo espera su turno o recibe un conflicto.
+- Q: ¿Qué documentos se cruzan contra el perfil para nombre y domicilio? → A: Nombre en
+  identificación, comprobante de ingresos y factura; domicilio solo del comprobante de domicilio
+  (el de la identificación no se exige y el comprobante puede estar a nombre de otra persona).
+- Q: ¿Cómo se arman las opciones de crédito? → A: El sistema propone montos sin preguntar
+  cuánto quiere el cliente: porcentajes del monto máximo (p. ej. 100%, 75% y 50%) al plazo
+  estándar del perfil; el cliente elige una.
+- Q: ¿Cómo decide el sistema que un nombre o un domicilio coinciden? → A: Normalización
+  (mayúsculas, sin acentos, abreviaturas, espacios) más puntaje de similitud contra un umbral
+  de la política; en domicilio, código postal exacto más calle y número por similitud.
+- Q: ¿Quién dispara la evaluación del gate "OK para financiera"? → A: Automático: el sistema lo
+  evalúa cada vez que cambia una validación; además, el agente puede pedir la evaluación, y si
+  falta algo la solicitud se rechaza y queda registrada.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Elegibilidad del auto (Priority: P1)
@@ -79,16 +98,17 @@ resultante, el motivo registrado y, en (d), la cotización de llave.
 Con el auto elegible, el agente pide la situación laboral y el ingreso declarado (monto y
 periodicidad) y solicita el consentimiento para consultar Buró de Crédito. Con consentimiento, el
 sistema consulta Buró (simulado) y asigna un perfil que define monto máximo, tasa y plazos
-permitidos. El sistema genera opciones de crédito (monto, plazo, tasa, cuota) que incluyen el
-costo de la llave cuando aplica; el agente las presenta y registra la opción que elige el
-cliente.
+permitidos. Sin preguntar al cliente cuánto quiere, el sistema propone opciones de crédito
+(monto, plazo, tasa, cuota) como porcentajes del monto máximo al plazo estándar del perfil, con
+el costo de la llave incluido cuando aplica; el agente las presenta y registra la opción que
+elige el cliente.
 
 **Why this priority**: convierte un auto elegible en una oferta concreta. Junto con P1 cubre el
 demo 4 completo (la cotización de llave entra al plan).
 
 **Independent Test**: partiendo de un caso con auto elegible, ejecutar el guion de
-consentimiento + datos de ingreso + elección de opción y verificar perfil, opciones generadas
-(dentro de los límites del perfil, con y sin llave) y opción registrada.
+consentimiento + datos de ingreso + elección de opción y verificar perfil, opciones propuestas
+(porcentajes del máximo al plazo estándar, con y sin llave) y opción registrada.
 
 **Acceptance Scenarios**:
 
@@ -98,17 +118,18 @@ consentimiento + datos de ingreso + elección de opción y verificar perfil, opc
 2. **Given** consentimiento explícito, **When** se consulta Buró, **Then** el sistema asigna un
    perfil con monto máximo, tasa y plazos permitidos, y registra la consulta, el perfil y la
    versión de política.
-3. **Given** un perfil asignado, **When** el sistema simula, **Then** genera opciones cuyo monto,
-   plazo y tasa están dentro de los límites del perfil y cuya cuota la calcula el sistema, no el
-   agente.
-4. **Given** un caso con llave cotizada, **When** se generan las opciones, **Then** cada opción
-   suma el costo de la llave al monto financiado, la cuota lo incluye y el desglose muestra el
-   monto solicitado y el costo de la llave por separado.
+3. **Given** un perfil asignado, **When** el sistema simula, **Then** propone una opción por cada
+   porcentaje del monto máximo definido en la política, al plazo estándar y la tasa del perfil,
+   con la cuota calculada por el sistema, no por el agente.
+4. **Given** un caso con llave cotizada, **When** se generan las opciones, **Then** en cada
+   opción el monto financiado es el porcentaje del máximo, el monto que recibe el cliente es ese
+   monto menos el costo de la llave, la cuota incluye la llave y el desglose muestra ambos
+   conceptos por separado.
 5. **Given** opciones presentadas, **When** el cliente elige una (p. ej. "la segunda"), **Then**
    el sistema registra la opción elegida y el caso pasa a documentos.
-6. **Given** opciones presentadas, **When** el cliente pide un monto o plazo fuera del perfil,
-   **Then** el sistema no genera esa opción y el agente explica el límite y ofrece la opción
-   válida más cercana.
+6. **Given** opciones presentadas, **When** el cliente pide un monto o plazo distinto de los
+   propuestos, **Then** el sistema no genera una opción nueva y el agente explica que solo puede
+   elegir entre las opciones propuestas y por qué.
 7. **Given** un perfil sin oferta posible según la política, **When** se evalúa, **Then** el caso
    queda `rechazado` con motivo "perfil sin oferta".
 
@@ -119,8 +140,9 @@ consentimiento + datos de ingreso + elección de opción y verificar perfil, opc
 Con una opción elegida, el agente pide identificación oficial, comprobante de ingresos,
 comprobante de domicilio y factura del auto. Cada documento se lee y devuelve sus campos con una
 confianza por campo. El sistema valida: ingreso comprobado contra declarado con tolerancia
-(monto, moneda y periodo), nombre y domicilio de la identificación contra el perfil, vigencia de
-los documentos, tipo de comprobante de ingresos acorde a la situación laboral y titularidad del
+(monto, moneda y periodo), nombre del cliente en identificación, comprobante de ingresos y
+factura, domicilio del comprobante de domicilio contra el declarado, vigencia de los
+documentos, tipo de comprobante de ingresos acorde a la situación laboral y titularidad del
 vehículo en la factura. Si una confianza es baja o hay mismatch, el caso no avanza y el agente
 pide la corrección al cliente.
 
@@ -143,8 +165,11 @@ resultado de cada validación y el mensaje de corrección.
    ingreso.
 3. **Given** un comprobante de ingresos en una moneda distinta a la declarada, **When** se valida,
    **Then** se registra mismatch de ingreso (moneda).
-4. **Given** una identificación cuyo nombre o domicilio no coincide con el perfil, **When** se
-   valida, **Then** se registra mismatch de nombre o de domicilio según corresponda.
+4. **Given** una identificación, un comprobante de ingresos o una factura cuyo nombre no
+   coincide con el del cliente, o un comprobante de domicilio cuyo domicilio no coincide con el
+   declarado, **When** se valida, **Then** se registra mismatch de nombre (indicando el
+   documento) o de domicilio según corresponda. El domicilio de la identificación y el titular
+   del comprobante de domicilio no se validan.
 5. **Given** un documento vencido o fuera de la antigüedad máxima permitida, **When** se valida,
    **Then** se registra mismatch de vigencia.
 6. **Given** un cliente independiente, **When** envía un tipo de comprobante de ingresos que la
@@ -181,9 +206,10 @@ cierra.
 
 **Acceptance Scenarios**:
 
-1. **Given** un caso con todas las validaciones aprobadas, **When** se evalúa el gate, **Then**
-   el sistema marca el caso `ok_para_financiera`, registra la evaluación con la versión de
-   política y el agente lo comunica al cliente.
+1. **Given** un caso con todas las validaciones aprobadas salvo una, **When** esa última
+   validación queda aprobada, **Then** el sistema evalúa el gate automáticamente, sin que nadie
+   lo pida, marca el caso `ok_para_financiera`, registra la evaluación con la versión de
+   política, y el agente lo comunica al cliente en su siguiente respuesta.
 2. **Given** un caso con alguna validación fallida o pendiente, **When** el agente solicita
    marcar el caso OK, **Then** el sistema rechaza la solicitud, el caso no cambia de estado y el
    intento queda registrado.
@@ -255,9 +281,10 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 ### Edge Cases
 
-- **Mensajes simultáneos**: dos mensajes del mismo caso llegan a la vez; ambos se procesan sin
-  pérdida ni sobrescritura de datos y el caso queda en un estado consistente con alguno de los
-  órdenes posibles.
+- **Mensajes simultáneos**: dos mensajes del mismo caso llegan a la vez; solo uno se procesa a
+  la vez por caso. El segundo espera su turno, y si no lo obtiene dentro del tiempo de espera o
+  la versión del caso cambió, recibe un conflicto sin efectos y puede reenviarse. Nunca hay
+  pérdida ni sobrescritura de datos.
 - **Reenvío duplicado**: el mismo mensaje o documento se envía dos veces con la misma clave de
   idempotencia; se procesa una sola vez y el segundo envío devuelve el mismo resultado.
 - **Documento equivocado**: el cliente envía un documento de otro tipo del que se pidió (p. ej.
@@ -305,8 +332,11 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   actor, acción, etapa, entradas, resultado, motivo y fecha.
 - **FR-008**: El registro de acciones MUST admitir solo inserciones; los intentos de modificar o
   borrar entradas MUST rechazarse.
-- **FR-009**: Dos mensajes simultáneos del mismo caso MUST procesarse sin pérdida de datos ni
-  estados inconsistentes.
+- **FR-009**: El sistema MUST procesar un solo mensaje a la vez por caso, con un candado por caso
+  además de la versión esperada (FR-006). Un segundo mensaje simultáneo MUST esperar su turno o,
+  si no lo obtiene dentro del tiempo de espera o la versión cambió, recibir un conflicto sin
+  efectos que permite reenviarlo; en ningún caso hay pérdida de datos ni estados
+  inconsistentes.
 
 **Elegibilidad del auto (P1)**
 
@@ -336,16 +366,19 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   que define monto máximo, tasa y plazos permitidos.
 - **FR-020**: El sistema MUST rechazar el caso con motivo "perfil sin oferta" cuando la política
   no permita ninguna opción para el perfil.
-- **FR-021**: El sistema MUST generar opciones de crédito con monto, plazo, tasa y cuota, todas
-  dentro de los límites del perfil, con la cuota calculada por el sistema.
-- **FR-022**: Cuando haya llave cotizada, cada opción MUST incluir su costo en el monto financiado
-  y en la cuota, y mostrar por separado el monto solicitado y el costo de la llave.
+- **FR-021**: El sistema MUST proponer, sin pedir al cliente un monto, una opción por cada
+  porcentaje del monto máximo definido en la política, al plazo estándar y la tasa del perfil,
+  con monto, plazo, tasa y cuota calculados por el sistema.
+- **FR-022**: Cuando haya llave cotizada, en cada opción el monto financiado MUST ser el
+  porcentaje del máximo, el monto que recibe el cliente MUST ser ese monto menos el costo de la
+  llave, la cuota MUST incluir la llave y ambos conceptos MUST mostrarse por separado.
 - **FR-023**: El monto máximo financiable MUST ser el menor entre el límite del perfil y el
   porcentaje máximo del valor del auto definido en la política; el valor del auto se obtiene de
   una tabla de valores de referencia (simulada) por marca, modelo y año. El monto financiado
   total, incluida la llave, MUST NOT exceder ese máximo.
-- **FR-024**: El sistema MUST registrar la opción que elige el cliente; una solicitud fuera del
-  perfil MUST NOT generar una opción y el agente MUST explicar el límite.
+- **FR-024**: El sistema MUST registrar la opción que elige el cliente entre las propuestas; una
+  solicitud de monto o plazo distinto MUST NOT generar una opción nueva y el agente MUST explicar
+  por qué.
 
 **Datos y comprobantes (P3)**
 
@@ -355,72 +388,81 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   confianza; un documento de tipo distinto al solicitado MUST registrarse como tipo inesperado.
 - **FR-027**: El sistema MUST validar el ingreso comprobado contra el declarado, normalizando
   ambos al mismo periodo, comparando moneda y aplicando la tolerancia definida en la política.
-- **FR-028**: El sistema MUST validar que nombre y domicilio de la identificación coincidan con
-  los del perfil, con la regla de comparación definida en la política.
-- **FR-029**: El sistema MUST validar la vigencia de la identificación y la antigüedad máxima de
+- **FR-028**: El sistema MUST validar que el nombre en la identificación, el comprobante de
+  ingresos y la factura coincida con el del cliente, y que el domicilio del comprobante de
+  domicilio coincida con el declarado. El domicilio de la identificación y el titular del
+  comprobante de domicilio MUST NOT validarse.
+- **FR-029**: La comparación de nombres y domicilios MUST ser determinista: ambos textos se
+  normalizan (mayúsculas, sin acentos, abreviaturas comunes expandidas, espacios colapsados) y
+  coinciden si su puntaje de similitud alcanza el umbral de la política. En domicilio, el código
+  postal MUST coincidir exactamente y calle y número se comparan por similitud. El modelo de
+  lenguaje MUST NOT decidir la coincidencia.
+- **FR-030**: El sistema MUST validar la vigencia de la identificación y la antigüedad máxima de
   los comprobantes de ingresos y de domicilio según la política.
-- **FR-030**: El sistema MUST validar que el tipo de comprobante de ingresos sea aceptado para la
+- **FR-031**: El sistema MUST validar que el tipo de comprobante de ingresos sea aceptado para la
   situación laboral del cliente según la política.
-- **FR-031**: El sistema MUST validar que el titular de la factura sea el cliente y que marca,
+- **FR-032**: El sistema MUST validar que el titular de la factura sea el cliente y que marca,
   modelo y año coincidan con el auto declarado.
-- **FR-032**: Un campo con confianza por debajo del umbral de la política MUST NOT usarse en una
+- **FR-033**: Un campo con confianza por debajo del umbral de la política MUST NOT usarse en una
   validación; la validación queda pendiente por confianza baja.
-- **FR-033**: Ante mismatch o confianza baja, el agente MUST pedir al cliente una corrección
+- **FR-034**: Ante mismatch o confianza baja, el agente MUST pedir al cliente una corrección
   concreta (qué documento o dato y por qué) y el sistema MUST contar el intento por tipo de
   mismatch.
-- **FR-034**: El texto de documentos y mensajes MUST tratarse como dato; no puede cambiar
+- **FR-035**: El texto de documentos y mensajes MUST tratarse como dato; no puede cambiar
   validaciones, etapa, permisos ni decisiones.
 
 **Gate y escalación (P4)**
 
-- **FR-035**: El sistema MUST marcar el caso `ok_para_financiera` solo cuando todas las
-  validaciones requeridas estén aprobadas; el agente puede solicitar la evaluación pero no
-  decidir su resultado.
-- **FR-036**: Una solicitud de OK con alguna validación fallida o pendiente MUST rechazarse y
+- **FR-036**: El sistema MUST evaluar el gate automáticamente cada vez que cambia una
+  validación (incluida la verificación manual de un asesor) y MUST marcar el caso
+  `ok_para_financiera` solo cuando todas las validaciones requeridas estén aprobadas. El agente
+  MAY solicitar la evaluación con una acción, pero no decide su resultado, y MUST informar al
+  cliente el estado del caso después de cada acción.
+- **FR-037**: Una solicitud de OK con alguna validación fallida o pendiente MUST rechazarse y
   registrarse.
-- **FR-037**: El sistema MUST escalar el caso cuando un mismatch del mismo tipo persista después
+- **FR-038**: El sistema MUST escalar el caso cuando un mismatch del mismo tipo persista después
   de N intentos de corrección, con N definido en la política.
-- **FR-038**: El sistema MUST escalar el caso de inmediato cuando el cliente pida hablar con una
+- **FR-039**: El sistema MUST escalar el caso de inmediato cuando el cliente pida hablar con una
   persona.
-- **FR-039**: El sistema MUST escalar el caso cuando un mensaje se clasifique como tema sensible
+- **FR-040**: El sistema MUST escalar el caso cuando un mensaje se clasifique como tema sensible
   (ver Assumptions).
-- **FR-040**: El sistema MUST escalar el caso cuando un proveedor (Buró, registro vehicular o
+- **FR-041**: El sistema MUST escalar el caso cuando un proveedor (Buró, registro vehicular o
   lectura de documentos) falle tras los reintentos definidos en la política.
-- **FR-041**: Cada escalación MUST crear un ticket con motivo, evidencia, resumen en español y
+- **FR-042**: Cada escalación MUST crear un ticket con motivo, evidencia, resumen en español y
   acción sugerida.
-- **FR-042**: Mientras un caso esté escalado, el agente MUST NOT ejecutar acciones de negocio
+- **FR-043**: Mientras un caso esté escalado, el agente MUST NOT ejecutar acciones de negocio
   sobre él; solo puede informar al cliente que un asesor lo atenderá.
-- **FR-043**: El asesor MUST poder resolver el ticket con acciones del mismo catálogo (pedir
+- **FR-044**: El asesor MUST poder resolver el ticket con acciones del mismo catálogo (pedir
   corrección, rechazar con motivo, marcar una validación como verificada manualmente, devolver
   el caso al agente), sujetas a los mismos permisos, idempotencia y registro.
-- **FR-044**: Marcar una validación como verificada manualmente MUST requerir justificación y
+- **FR-045**: Marcar una validación como verificada manualmente MUST requerir justificación y
   evidencia, MUST quedar con origen "manual" y actor asesor, y MUST estar prohibido para el
-  agente; tras ello el sistema vuelve a evaluar el gate (FR-035).
-- **FR-045**: El cliente MUST poder cancelar el caso en cualquier etapa no final; el caso queda
+  agente; tras ello el sistema vuelve a evaluar el gate (FR-036).
+- **FR-046**: El cliente MUST poder cancelar el caso en cualquier etapa no final; el caso queda
   `cancelado`.
 
 **Política y trazabilidad**
 
-- **FR-046**: Todos los umbrales de negocio (tolerancias, umbrales de confianza, N intentos,
+- **FR-047**: Todos los umbrales de negocio (tolerancias, umbrales de confianza, N intentos,
   reintentos, límites por perfil, costos de llave, vigencias, tipos de comprobante por situación
   laboral) MUST provenir de una política versionada.
-- **FR-047**: Cada decisión (elegibilidad, perfil, opciones, validaciones, gate, escalación)
+- **FR-048**: Cada decisión (elegibilidad, perfil, opciones, validaciones, gate, escalación)
   MUST registrar la versión de política que la produjo.
 
 **Observabilidad (P5)**
 
-- **FR-048**: El sistema MUST generar un reporte con rechazos por auto agrupados por motivo,
+- **FR-049**: El sistema MUST generar un reporte con rechazos por auto agrupados por motivo,
   falsos OK, mismatches por tipo y número de casos con llave cotizada, calculado solo a partir del
   registro de acciones.
-- **FR-049**: El asesor MUST poder revocar el OK de un caso con motivo; el caso queda `escalado`
+- **FR-050**: El asesor MUST poder revocar el OK de un caso con motivo; el caso queda `escalado`
   y cuenta como falso OK en el reporte. La revocación MUST estar prohibida para el agente.
 
 **Ejecución reproducible**
 
-- **FR-050**: La solución completa, incluidos los 4 demos, MUST ejecutarse sin acelerador gráfico
+- **FR-051**: La solución completa, incluidos los 4 demos, MUST ejecutarse sin acelerador gráfico
   usando respuestas del modelo de lenguaje grabadas previamente, con resultados idénticos entre
   corridas.
-- **FR-051**: Cada uno de los 4 demos MUST existir como guion ejecutable que use solo el canal de
+- **FR-052**: Cada uno de los 4 demos MUST existir como guion ejecutable que use solo el canal de
   mensajes y documentos del caso y verifique su resultado esperado.
 
 ### Key Entities *(include if feature involves data)*
@@ -437,8 +479,8 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   plazos permitidos.
 - **Valor de referencia del auto**: valor por marca, modelo y año (simulado) y porcentaje
   máximo financiable de la política.
-- **Opción de crédito**: monto solicitado, costo de llave, monto financiado, plazo, tasa, cuota;
-  marca de opción elegida.
+- **Opción de crédito**: porcentaje del máximo, monto para el cliente, costo de llave, monto
+  financiado, plazo, tasa, cuota; marca de opción elegida.
 - **Documento**: tipo solicitado, tipo detectado, marca de documento de prueba, campos extraídos.
 - **Campo extraído**: nombre, valor, confianza.
 - **Validación**: tipo (ingreso, nombre, domicilio, vigencia, tipo de comprobante, titularidad),
@@ -465,8 +507,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   los demos y en las pruebas de reglas.
 - **SC-004**: El 100% de las decisiones registradas incluyen la versión de política, y el 100% de
   las acciones (aceptadas o rechazadas) aparecen en el registro de acciones.
-- **SC-005**: En 50 pares de mensajes simultáneos sobre el mismo caso, 0 casos terminan con datos
-  perdidos o estado inconsistente.
+- **SC-005**: En 50 pares de mensajes simultáneos sobre el mismo caso, cada mensaje termina
+  procesado en turno o con un conflicto explícito, y 0 casos terminan con datos perdidos o
+  estado inconsistente.
 - **SC-006**: La lectura de documentos acierta al menos el 85% de los campos del set de evaluación
   y el 100% de sus salidas tienen la estructura esperada.
 - **SC-007**: El 100% de los tickets de escalación contienen motivo, evidencia, resumen y acción
@@ -479,22 +522,25 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 ## Assumptions
 
 - **Proveedores simulados**: Buró de Crédito, registro vehicular (gravámenes), tabla de valores
-  de referencia del auto y cotización de llave son simulados con datos sintéticos; pueden configurarse para fallar y así ejercitar la
-  escalación por proveedor.
+  de referencia del auto y cotización de llave son simulados con datos sintéticos; pueden
+  configurarse para fallar y así ejercitar la escalación por proveedor.
 - **Origen de la verdad en elegibilidad**: en P1 se decide con lo declarado por el cliente más el
   registro vehicular simulado; la factura (P3) confirma la titularidad documentalmente.
 - **Costo de la llave**: se obtiene de una tabla de la política por marca/segmento y año; se
-  financia junto con el monto solicitado y el monto financiado total no puede exceder el monto
-  máximo del perfil.
+  financia dentro de cada opción y el monto financiado total no puede exceder el monto máximo
+  financiable (FR-023).
 - **Cálculo de cuota**: cuota fija mensual con tasa anual fija; el detalle del método y de
   impuestos sobre intereses lo fija la política.
-- **Opciones**: entre 2 y 4 opciones por simulación, según los plazos permitidos por el perfil.
+- **Opciones**: valores iniciales de la política: 3 opciones al 100%, 75% y 50% del monto
+  máximo financiable, al plazo estándar de cada perfil.
 - **Comprobantes aceptados por situación laboral** (valores iniciales de la política): empleado →
   recibo de nómina o estado de cuenta; independiente → estado de cuenta; pensionado → estado de
   cuenta; desempleado → sin comprobante aceptado, por lo que el perfil queda sin oferta.
-- **Valores iniciales de la política**: tolerancia de ingreso ±10%; N = 2 intentos de corrección
+- **Valores iniciales de la política**: umbral de similitud de nombre y domicilio 0.90;
+  tolerancia de ingreso ±10%; N = 2 intentos de corrección
   por tipo de mismatch antes de escalar; 2 reintentos por proveedor; antigüedad máxima de 3
-  meses para comprobantes de domicilio y de ingresos; moneda esperada MXN; porcentaje máximo financiable del valor del auto 50%.
+  meses para comprobantes de domicilio y de ingresos; moneda esperada MXN; porcentaje máximo
+  financiable del valor del auto 50%.
 - **Tema sensible**: incluye indicios de coerción o fraude, situaciones de vulnerabilidad
   (salud, crisis, violencia), quejas o amenazas legales y solicitudes sobre datos personales
   (acceso, rectificación, cancelación u oposición).

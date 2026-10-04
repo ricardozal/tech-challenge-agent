@@ -65,7 +65,7 @@ Columnas: actores permitidos y estado/etapa en que la tool es válida. Fuera de 
 | `select_option` | A (on_behalf_of client) | `simulation/active` | `option_id` | registra la elección; avanza a `documents` | FR-024 |
 | `submit_document` | A | `documents/active` | `requested_type`, `filename`, `content_base64` | guarda bytes, llama `doc_intel`, corre las validaciones del documento, cuenta intentos, escala al pasar N, evalúa el gate | FR-025–FR-036, FR-038 |
 | `evaluate_gate` | A, D, S en `documents/active`; D, S en `escalated` | `documents/active` o `escalated` | — | `rules.gate`: todo `passed` → `ok_for_lender`; si no → `409 gate_not_met` con `missing` | FR-036, FR-037 |
-| `escalate` | A, D | `active` | `reason` (`client_requested_human`, `sensitive_topic`), `agent_note` | crea ticket y pasa a `escalated` | FR-039, FR-040, FR-042 |
+| `escalate` | A, D, S | `active` | `reason` (A: solo `client_requested_human`, `sensitive_topic`; S: los motivos automáticos), `agent_note`, `evidence` | crea ticket y pasa a `escalated` | FR-038–FR-042 |
 | `cancel_case` | A (on_behalf_of client), D | `active`, `escalated` | `reason` | pasa a `cancelled`; si hay ticket abierto, lo resuelve con la cancelación | FR-043, FR-046 |
 | `request_correction` | D | `escalated` | `validation_key`, `message_to_client` | resuelve el ticket, regresa a `active/documents` | FR-044 |
 | `verify_validation_manually` | D | `escalated` | `validation_key`, `justification`, `evidence` | validación → `passed` con `origin = manual`; evalúa el gate | FR-044, FR-045 |
@@ -73,9 +73,9 @@ Columnas: actores permitidos y estado/etapa en que la tool es válida. Fuera de 
 | `return_to_agent` | D | `escalated` | `note` | resuelve el ticket, regresa a `active` | FR-044 |
 | `revoke_ok` | D | `ok_for_lender` | `reason` | pasa a `escalated` con ticket `ok_revoked`; evento `ok_revoked` | FR-050 |
 
-Escalaciones automáticas que hace `actions_api` dentro de otras tools (auditadas con
-`actor = system`): `mismatch_persisted`, `provider_failure`, `no_reference_value`,
-`policy_unavailable` (R-09, FR-038, FR-041).
+Escalaciones automáticas que hace `actions_api` al detectar el problema en otra tool: corren
+como una acción `escalate` aparte, auditada con `actor = system`: `mismatch_persisted`,
+`provider_failure`, `no_reference_value`, `policy_unavailable` (R-09, R-14, FR-038, FR-041).
 
 La matriz de permisos vive en `actions_api/permissions.py` como tabla estática y tiene un test
 por celda relevante (FR-004).

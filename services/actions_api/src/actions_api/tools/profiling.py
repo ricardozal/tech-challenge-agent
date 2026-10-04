@@ -2,11 +2,11 @@
 
 from decimal import Decimal
 
-from actions_api.escalation import open_escalation
+from actions_api.escalation import escalate_as_system
 from actions_api.providers.base import ProviderError, with_retries
 from actions_api.providers.bureau import BureauProvider
 from actions_api.rules.options import build_options
-from actions_api.rules.profile import assign
+from actions_api.rules.profile import assign, can_have_offer
 from actions_api.toolkit import HandlerContext, ToolRejected, tool
 from contracts.actions import SelectOptionInput
 from contracts.case import Profile
@@ -38,6 +38,11 @@ def record_bureau_consent(ctx: HandlerContext) -> None:
 @tool("run_credit_check")
 def run_credit_check(ctx: HandlerContext) -> None:
     state = ctx.state
+    employment = state.declared.employment
+    if employment is not None and not can_have_offer(employment, ctx.policy):
+        # No income proof is accepted for this situation: no offer, and no reason to query the bureau.
+        _reject_no_offer(ctx, {"employment": employment})
+        return
     if not state.declared.bureau_consent:
         raise ToolRejected("consent_required", "Falta el consentimiento explícito del cliente para consultar Buró.")
     missing = [name for name, get in REQUIRED_FOR_CHECK.items() if get(state) is None]
@@ -52,7 +57,7 @@ def run_credit_check(ctx: HandlerContext) -> None:
         score = with_retries(lambda: bureau.score(state.client.full_name), ctx.policy.escalation.provider_retries)
     except ProviderError:
         ctx.decide("profile", "escalated", "provider_failure", {"provider": "bureau"})
-        open_escalation(ctx, EscalationReason.provider_failure, evidence={"provider": "bureau", "tool": ctx.tool_name})
+        escalate_as_system(ctx, EscalationReason.provider_failure, {"provider": "bureau", "tool": ctx.tool_name})
         return
 
     decision = assign(score, state.declared.employment, reference_value, ctx.policy)

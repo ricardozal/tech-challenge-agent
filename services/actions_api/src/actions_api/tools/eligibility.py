@@ -1,6 +1,6 @@
 """evaluate_eligibility (P1, FR-011 to FR-016)."""
 
-from actions_api.escalation import open_escalation
+from actions_api.escalation import escalate_as_system
 from actions_api.providers.base import ProviderError, with_retries
 from actions_api.providers.key_quote import KeyQuoteProvider
 from actions_api.providers.vehicle_registry import VehicleRegistryProvider
@@ -42,7 +42,7 @@ def evaluate_eligibility(ctx: HandlerContext) -> None:
 
     if decision.outcome == Outcome.no_reference_value:
         ctx.decide("eligibility", "escalated", "no_reference_value")
-        open_escalation(ctx, EscalationReason.no_reference_value, evidence={"vehicle": vehicle.model_dump(mode="json")})
+        escalate_as_system(ctx, EscalationReason.no_reference_value, {"vehicle": vehicle.model_dump(mode="json")})
         return
 
     if decision.needs_key_quote:
@@ -68,4 +68,4 @@ def evaluate_eligibility(ctx: HandlerContext) -> None:
 
 def _provider_failure(ctx: HandlerContext, provider: str) -> None:
     ctx.decide("eligibility", "escalated", "provider_failure", {"provider": provider})
-    open_escalation(ctx, EscalationReason.provider_failure, evidence={"provider": provider, "tool": ctx.tool_name})
+    escalate_as_system(ctx, EscalationReason.provider_failure, {"provider": provider, "tool": ctx.tool_name})

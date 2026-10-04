@@ -200,7 +200,10 @@ def execute(
     try:
         policy = services.policies.get(case.policy_version)
     except PolicyUnavailable:
-        return _reject(conn, before, name, actor, call, now, "policy_unavailable")
+        if name == "escalate" and actor == Actor.system:
+            policy = services.policies.current()  # escalating uses no thresholds
+        else:
+            return _reject_and_escalate_policy(conn, services, before, case, name, actor, call, now)
 
     try:
         tool_input = TOOL_INPUTS[name].model_validate(call.input)
@@ -275,6 +278,32 @@ def execute(
 
 
 # --- helpers -------------------------------------------------------------------------------------
+
+
+def _reject_and_escalate_policy(
+    conn: psycopg.Connection,
+    services: Services,
+    before: CaseView,
+    case: CaseView,
+    name: str,
+    actor: Actor,
+    call: ToolCall,
+    now: datetime,
+) -> tuple[int, ToolResult]:
+    """The case's policy version is not loaded: reject the action and escalate the case (R-14)."""
+    details = {"policy_version": case.policy_version, "loaded": services.policies.versions()}
+    status, result = _reject(conn, before, name, actor, call, now, "policy_unavailable", details=details)
+    if case.status == Status.active:
+        escalate = ToolCall(
+            context=ToolContext(
+                case_id=case.id,
+                idempotency_key=f"{call.context.idempotency_key}>policy_unavailable",
+                expected_version=case.version,
+            ),
+            input={"reason": "policy_unavailable", "evidence": {**details, "tool": name}},
+        )
+        execute(conn, services, "escalate", Actor.system, escalate, now)
+    return status, result
 
 
 def _request_hash(name: str, actor: Actor, call: ToolCall) -> str:

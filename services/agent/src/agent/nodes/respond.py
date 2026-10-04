@@ -25,6 +25,10 @@ async def respond(state: TurnState, deps: Deps) -> dict[str, Any]:
     facts = dict(state.get("facts") or {})
     if state.get("kind") == "start":
         facts.setdefault("note_es", GREETING)
+    advisor_note = view.state.pending_client_note if view.status == Status.active else None
+    if advisor_note:
+        facts["note_es"] = f"Un asesor revisó tu caso y te pide lo siguiente: {advisor_note} " + facts.get("note_es", "")
+        facts["note_es"] = facts["note_es"].strip()
     full_name = view.state.client.full_name
     reply = await deps.llm.reply(
         ReplyRequest(
@@ -40,7 +44,8 @@ async def respond(state: TurnState, deps: Deps) -> dict[str, Any]:
     _, updates = await deps.call_tool(
         {**state, "case": current},
         "append_message",
-        {"message_id": f"{state['message_id']}:agent", "author": "agent", "text": reply.text},
+        {"message_id": f"{state['message_id']}:agent", "author": "agent", "text": reply.text,
+         "delivers_pending_note": bool(advisor_note)},
     )
 
     history = list(state.get("history") or [])

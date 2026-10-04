@@ -40,6 +40,7 @@ def request_correction(ctx: HandlerContext) -> None:
     data: RequestCorrectionInput = ctx.input
     _back_to_agent(ctx, {"tool": "request_correction", "validation_key": data.validation_key,
                          "message_to_client": data.message_to_client})
+    ctx.state.pending_client_note = data.message_to_client  # relayed by the agent on the next turn
     ctx.set_stage(Stage.documents)
     ctx.emit("correction_requested", validation_key=data.validation_key)
 

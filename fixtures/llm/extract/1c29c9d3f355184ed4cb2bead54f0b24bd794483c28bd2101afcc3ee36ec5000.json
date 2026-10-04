@@ -3,7 +3,7 @@
     "schema_name": "mensaje",
     "stage": "simulation",
     "agent_question": "¿Cuál opción prefieres?",
-    "text": "la primera"
+    "text": "La primera"
   },
   "response": {
     "intencion": "elegir_opcion",
@@ -11,6 +11,6 @@
       "opcion_elegida": 1
     }
   },
-  "recorded_at": "2026-10-04T17:34:37.875124+00:00",
+  "recorded_at": "2026-10-04T17:48:28.147995+00:00",
   "model": "seeded-from-scenario"
 }

@@ -62,3 +62,16 @@ def test_refused_consent_is_explained_and_asked_again(stack):
     ])
     assert "run_credit_check" not in tools(turns[-1])
     assert "es necesaria para continuar" in turns[-1]["reply"] and turns[-1]["reply"].endswith(Q_CONSENT)
+
+
+@pytest.mark.req("FR-020")
+def test_unemployed_client_gets_no_offer_without_being_asked_for_income_or_consent(stack):
+    _, turns = converse(stack, [
+        *laura(), ADDRESS,
+        say("ahorita no tengo trabajo", Q_INCOME, stage="profiling", situacion_laboral="desempleado"),
+    ])
+    last = turns[-1]
+    assert tools(last) == ["update_declared_data", "run_credit_check"]
+    assert last["case"]["status"] == "rejected"
+    assert "con tu perfil actual no tenemos una oferta disponible" in last["reply"]
+    assert not last["reply"].endswith(Q_CONSENT)

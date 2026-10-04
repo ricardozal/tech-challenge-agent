@@ -2,6 +2,7 @@
 
 import shutil
 
+import psycopg
 import pytest
 import yaml
 
@@ -45,3 +46,23 @@ def test_case_pins_the_current_policy_version_and_actions_record_it(api):
 
     assert api.case(case["id"])["policy_version"] == "2026.10-v1"
     assert {e["policy_version"] for e in api.audit(case["id"])} == {"2026.10-v1"}
+
+
+@pytest.mark.req("FR-048")
+def test_case_whose_policy_is_not_loaded_is_rejected_and_escalated(api, test_db):
+    case = api.create_case()
+    with psycopg.connect(test_db.actions_url, autocommit=True) as conn:
+        conn.execute("UPDATE cases.cases SET policy_version = '1999-v9' WHERE id = %s", (case["id"],))
+
+    resp = api.call("update_declared_data", case["id"], 1, input={"make": "Volkswagen"}, key="k-missing-policy")
+    again = api.call("update_declared_data", case["id"], 1, input={"make": "Volkswagen"}, key="k-missing-policy")
+
+    assert resp.status_code == 409 and resp.json()["rejection"]["code"] == "policy_unavailable"
+    assert again.json() == resp.json()  # a retry does not escalate twice
+    view = api.case(case["id"])
+    assert view["status"] == "escalated" and view["state"]["vehicle"]["make"] is None
+    tickets = [t for t in api.client.get("/escalations").json() if t["case_id"] == case["id"]]
+    assert [t["reason"] for t in tickets] == ["policy_unavailable"]
+    assert tickets[0]["evidence"]["policy_version"] == "1999-v9"
+    escalate = [e for e in api.audit(case["id"]) if e["tool"] == "escalate"]
+    assert [(e["actor"], e["outcome"]) for e in escalate] == [("system", "accepted")]

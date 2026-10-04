@@ -370,3 +370,14 @@ Task: "Implement pure rules income.py, matching.py, validity.py, documents.py"
 - Cada FR-001…FR-052 tiene al menos una tarea de test con su `req`; T096 lo verifica.
 - Hacer commit después de cada tarea o grupo lógico.
 - No agregar componentes fuera del plan (Principio I); cualquier excepción va a `DECISIONS.md`.
+
+---
+
+## Phase 9: Convergence
+
+- [X] T100 Let an unemployed client reach the no-offer decision: in `services/agent/src/agent/questions.py` and `services/agent/src/agent/nodes/profiling.py` stop requiring income amount and periodicity once `employment = unemployed`, and in `services/actions_api/src/actions_api/tools/profiling.py` (`REQUIRED_FOR_CHECK`) accept the credit check without income for that case so it ends `rejected` with `no_offer_for_profile`; add agent and tool tests marked `req("FR-020")` per FR-020 (partial)
+- [X] T101 Audit automatic escalations (`mismatch_persisted`, `provider_failure`, `no_reference_value`) as a separate action with `actor = system` instead of inside the triggering tool's row with the caller's actor, in `services/actions_api/src/actions_api/escalation.py` and the tools that call it; assert the actor in `test_escalation.py` per plan R-09 (contradicts)
+- [X] T102 Escalate the case with reason `policy_unavailable` when its pinned policy version is not loaded, instead of only rejecting, in `services/actions_api/src/actions_api/toolkit.py`; add a test in `services/actions_api/tests/test_policy.py` per plan R-14 (partial)
+- [X] T103 Deliver the advisor's `message_to_client` from `request_correction` to the client on the next agent turn (read it from the case and add it to the reply facts) in `services/actions_api/src/actions_api/tools/advisor.py` and `services/agent/src/agent/nodes/respond.py`; add a test marked `req("FR-044")` per US4/AC9 (partial)
+- [X] T104 Give OCR its own generation limit instead of the extraction `num_predict` 512 (or record the cap as a decision in `DECISIONS.md`) in `services/llm_gateway/src/llm_gateway/ollama_client.py` per plan R-11 (unrequested)
+- [X] T105 Add a test that a message in another language or off topic gets a Spanish reply that returns to the current stage question, in `services/agent/tests/test_router.py`, per spec Edge Cases "Mensaje en otro idioma o fuera de tema" (partial)

@@ -76,6 +76,7 @@ función de `contracts` (`contracts.llm.to_domain`) (R-01).
 | `decisions` | lista de `Decision` |
 | `messages` | lista de `MessageRef` (id, autor, texto, intención, fecha) |
 | `open_escalation_id` | UUID\|null |
+| `pending_client_note` | str\|null — mensaje del asesor (`request_correction`) que el agente entrega en el siguiente turno |
 
 ### CreditOption
 

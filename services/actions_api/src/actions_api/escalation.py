@@ -84,6 +84,12 @@ def open_escalation(
     return escalation
 
 
+def escalate_as_system(ctx: HandlerContext, reason: EscalationReason, evidence: dict[str, Any]) -> None:
+    """Automatic escalations run as a separate `escalate` action audited with actor = system (R-09)."""
+    ctx.follow_up("escalate", {"reason": reason.value, "evidence": evidence})
+    ctx.result["escalation_requested"] = reason.value
+
+
 def resolve_open_escalation(ctx: HandlerContext, resolution: dict[str, Any]) -> None:
     if ctx.state.open_escalation_id is None:
         return

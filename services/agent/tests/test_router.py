@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests.support.conversation import Q_ADDRESS, Q_INCOME, converse, eligible_steps, say, tools
+from tests.support.conversation import Q_ADDRESS, Q_INCOME, Q_NAME, converse, eligible_steps, say, tools
 
 
 def to_profiling():
@@ -54,3 +54,16 @@ def test_after_escalation_the_agent_only_records_messages(stack):
     assert tools(turns[-1]) == []
     assert turns[-1]["case"] == {**turns[-2]["case"], "version": turns[-1]["case"]["version"]}
     assert not turns[-1]["reply"].endswith(Q_INCOME)
+
+
+@pytest.mark.req("FR-001")
+def test_message_in_another_language_or_off_topic_gets_a_spanish_reply_back_to_the_stage(stack):
+    _, turns = converse(stack, [
+        say("Hi! How much money can you lend me?", Q_NAME, intent="pregunta"),
+        say("¿quién ganó el partido de ayer?", Q_NAME, intent="otro"),
+    ])
+    for turn in turns:
+        assert tools(turn) == []  # nothing is decided from an off-topic message
+        assert turn["case"] == {**turns[0]["case"], "version": turn["case"]["version"]}
+        assert turn["reply"].endswith(Q_NAME)  # back to the current stage question, in Spanish
+        assert "money" not in turn["reply"].lower()

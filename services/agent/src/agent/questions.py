@@ -7,7 +7,7 @@ questions of the evaluation set (eval/casos_eval.jsonl).
 from dataclasses import dataclass
 
 from contracts.case import CaseView
-from contracts.common import DocumentType, Stage
+from contracts.common import DocumentType, Employment, Stage
 
 
 @dataclass(frozen=True)
@@ -64,9 +64,19 @@ def _value(case: CaseView, field: str) -> object:
     return None
 
 
+# An unemployed client has no income to prove and gets no offer: income and consent are not asked (FR-020).
+NOT_NEEDED_WHEN_UNEMPLOYED = ("income_amount", "income_periodicity", "bureau_consent")
+
+
+def _pending(case: CaseView, field: str) -> bool:
+    if case.state.declared.employment == Employment.unemployed and field in NOT_NEEDED_WHEN_UNEMPLOYED:
+        return False
+    return _value(case, field) is None
+
+
 def missing_fields(case: CaseView, stage: Stage | None = None) -> list[str]:
     stage = stage or case.stage
-    return [f for q in STAGE_QUESTIONS.get(stage, ()) for f in q.fields if _value(case, f) is None]
+    return [f for q in STAGE_QUESTIONS.get(stage, ()) for f in q.fields if _pending(case, f)]
 
 
 def next_question(case: CaseView) -> Question | None:
@@ -74,7 +84,7 @@ def next_question(case: CaseView) -> Question | None:
     if case.stage == Stage.documents:
         return next_document_question(case)
     for question in STAGE_QUESTIONS.get(case.stage, ()):
-        if any(_value(case, f) is None for f in question.fields):
+        if any(_pending(case, f) for f in question.fields):
             return question
     return None
 

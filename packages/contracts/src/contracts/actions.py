@@ -59,6 +59,7 @@ class AppendMessageInput(BaseModel):
     author: Literal["client", "agent"]
     text: str
     intent: str | None = None
+    delivers_pending_note: bool = False  # the agent's reply included the advisor's pending note
 
 
 class UpdateDeclaredDataInput(BaseModel):

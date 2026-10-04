@@ -3,16 +3,14 @@
     "schema_name": "mensaje",
     "stage": "profiling",
     "agent_question": "¿Cuál es tu situación laboral y cuánto ganas?",
-    "text": "Soy empleada y gano 20 mil al mes"
+    "text": "ahorita no tengo trabajo"
   },
   "response": {
     "intencion": "proporcionar_datos",
     "campos": {
-      "situacion_laboral": "empleado",
-      "ingreso_monto": 20000,
-      "ingreso_periodicidad": "mensual"
+      "situacion_laboral": "desempleado"
     }
   },
-  "recorded_at": "2026-10-04T17:48:28.147219+00:00",
+  "recorded_at": "2026-10-04T17:47:47.770289+00:00",
   "model": "seeded-from-scenario"
 }

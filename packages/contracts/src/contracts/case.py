@@ -145,6 +145,8 @@ class CaseState(BaseModel):
     decisions: list[Decision] = []
     messages: list[MessageRef] = []
     open_escalation_id: UUID | None = None
+    # Message an advisor asked to relay (request_correction); the agent delivers it on the next turn.
+    pending_client_note: str | None = None
 
 
 class CaseView(BaseModel):

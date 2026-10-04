@@ -3,7 +3,7 @@
     "schema_name": "mensaje",
     "stage": "profiling",
     "agent_question": "¿Nos autorizas consultar tu historial en Buró de Crédito?",
-    "text": "sí, adelante"
+    "text": "Sí, adelante"
   },
   "response": {
     "intencion": "proporcionar_datos",
@@ -11,6 +11,6 @@
       "consentimiento_buro": true
     }
   },
-  "recorded_at": "2026-10-04T17:34:40.847499+00:00",
+  "recorded_at": "2026-10-04T17:48:28.147663+00:00",
   "model": "seeded-from-scenario"
 }

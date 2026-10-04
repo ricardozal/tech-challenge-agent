@@ -7,6 +7,8 @@ from ollama import Client
 
 # Same parameters as the model comparison that chose gemma4:12b (eval/).
 OPTIONS = {"temperature": 0, "seed": 42, "num_predict": 512}
+# OCR has its own budget: a long document must not be cut by the extraction limit.
+OCR_OPTIONS = {"temperature": 0, "seed": 42, "num_predict": 1024}
 KEEP_ALIVE = "30m"
 
 
@@ -37,7 +39,7 @@ class OllamaClient:
         resp = self._client.chat(
             model=self.ocr_model,
             messages=[{"role": "user", "content": "Text Recognition:", "images": [image]}],
-            options=OPTIONS,
+            options=OCR_OPTIONS,
             keep_alive=KEEP_ALIVE,
         )
         return Completion(resp.message.content or "", resp.prompt_eval_count, resp.eval_count)

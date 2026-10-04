@@ -30,6 +30,9 @@ def append_message(ctx: HandlerContext) -> None:
         MessageRef(id=data.message_id, author=data.author, text=data.text, intent=intent, at=ctx.now)
     )
     ctx.result["messages"] = len(ctx.state.messages)
+    if data.delivers_pending_note and data.author == "agent" and ctx.state.pending_client_note:
+        ctx.state.pending_client_note = None
+        ctx.emit("client_note_delivered", message_id=data.message_id)
 
 
 @tool("update_declared_data")

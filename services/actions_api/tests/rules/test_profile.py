@@ -6,7 +6,7 @@ import pytest
 
 from actions_api.config import REPO_ROOT
 from actions_api.policy import PolicyRegistry
-from actions_api.rules.profile import assign
+from actions_api.rules.profile import assign, can_have_offer
 from contracts.common import Employment
 
 POLICY = PolicyRegistry.load(REPO_ROOT / "policy").current()
@@ -55,3 +55,9 @@ def test_changing_a_threshold_in_the_policy_changes_the_result():
     decision = assign(720, Employment.employed, VALUE, stricter)
     assert decision.band.band == "B"
     assert decision.max_financeable == Decimal("54000.00")
+
+
+@pytest.mark.req("FR-020")
+def test_only_employment_situations_with_an_accepted_proof_can_have_an_offer():
+    assert can_have_offer(Employment.employed, POLICY) and can_have_offer(Employment.retired, POLICY)
+    assert not can_have_offer(Employment.unemployed, POLICY)

@@ -26,6 +26,7 @@ from contracts.llm import (
     fixture_key,
 )
 from llm_gateway import prompts
+from llm_gateway.ocr_text import first_copy
 from llm_gateway.ollama_client import Completion, OllamaClient
 from llm_gateway.redaction import get_logger, log_call, redact
 from llm_gateway.schemas import Schemas
@@ -173,7 +174,7 @@ class LlmService:
             text, hit = stored["text"], True
         else:
             completion = self.client.ocr(content)
-            text = completion.text
+            text = first_copy(completion.text)
             if self.mode == "record":
                 self._save("ocr", key, ocr_inputs(content), {"text": text}, self.ocr_model)
         self._log("ocr", started, hit, completion, "", {"chars": len(text)})

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Me compartes tu nombre completo?",
+    "text": "Hi! How much money can you lend me?"
+  },
+  "response": {
+    "intencion": "pregunta",
+    "campos": {}
+  },
+  "recorded_at": "2026-10-04T17:47:49.664757+00:00",
+  "model": "seeded-from-scenario"
+}

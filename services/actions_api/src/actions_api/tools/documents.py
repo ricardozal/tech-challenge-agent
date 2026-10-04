@@ -6,7 +6,7 @@ from datetime import date
 from uuid import uuid4
 
 from actions_api.config import Settings
-from actions_api.escalation import open_escalation
+from actions_api.escalation import escalate_as_system
 from actions_api.providers.base import ProviderError, with_retries
 from actions_api.providers.document_reader import DocumentReader
 from actions_api.rules.documents import INCOME_PROOFS, validations_for
@@ -38,15 +38,14 @@ def record_validations(ctx: HandlerContext, validations: list[Validation]) -> No
             state.attempts[v.type] = state.attempts.get(v.type, 0) + 1
         ctx.emit("validation_recorded", key=v.key, validation_type=v.type.value, result=v.result.value,
                  reason=v.detail.get("reason"))
-    escalate_if_persisting(ctx, validations)
-    if ctx.case.status != Status.escalated:
+    if not escalate_if_persisting(ctx, validations):
         auto_gate(ctx)
 
 
-def escalate_if_persisting(ctx: HandlerContext, validations: list[Validation]) -> None:
+def escalate_if_persisting(ctx: HandlerContext, validations: list[Validation]) -> bool:
     """Escalate on the failed result number N + 1 of the same validation type (FR-038)."""
     if ctx.case.status != Status.active:
-        return
+        return False
     limit = ctx.policy.escalation.max_correction_attempts
     for vtype in dict.fromkeys(v.type for v in validations if v.result != ValidationResult.passed):
         if ctx.state.attempts.get(vtype, 0) > limit:
@@ -59,8 +58,9 @@ def escalate_if_persisting(ctx: HandlerContext, validations: list[Validation]) -
                 "documents": _documents_like(ctx, failed),
                 "last_client_messages": [m.model_dump(mode="json") for m in messages],
             }
-            open_escalation(ctx, EscalationReason.mismatch_persisted, evidence=evidence)
-            return
+            escalate_as_system(ctx, EscalationReason.mismatch_persisted, evidence)
+            return True
+    return False
 
 
 def _documents_like(ctx: HandlerContext, failed: list[Validation]) -> list[str]:
@@ -89,8 +89,8 @@ def submit_document(ctx: HandlerContext) -> None:
             ctx.policy.escalation.provider_retries,
         )
     except ProviderError:
-        open_escalation(ctx, EscalationReason.provider_failure,
-                        evidence={"provider": "doc_intel", "tool": ctx.tool_name, "document_sha256": sha})
+        escalate_as_system(ctx, EscalationReason.provider_failure,
+                           {"provider": "doc_intel", "tool": ctx.tool_name, "document_sha256": sha})
         return
 
     record = DocumentRecord(

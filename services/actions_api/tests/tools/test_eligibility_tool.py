@@ -92,9 +92,13 @@ def test_registry_failure_after_retries_escalates(api):
     assert body["outcome"] == "accepted"
     assert body["case"]["status"] == "escalated"
     assert any(e["type"] == "escalated" and e["reason"] == "provider_failure" for e in body["events"])
-    escalation = api.client.get(f"/escalations/{body['result']['escalation_id']}").json()
+    escalated = next(e for e in body["events"] if e["type"] == "escalated")
+    assert escalated["by"] == "system"  # automatic escalation: its own action by the system (R-09)
+    escalation = api.client.get(f"/escalations/{escalated['escalation_id']}").json()
     assert escalation["status"] == "open" and escalation["reason"] == "provider_failure"
     assert escalation["summary"] and escalation["suggested_action"]
+    tools = [(e["tool"], e["actor"]) for e in api.audit(case_id)][-2:]
+    assert tools == [("evaluate_eligibility", "agent"), ("escalate", "system")]
 
 
 def test_missing_reference_value_escalates(api):

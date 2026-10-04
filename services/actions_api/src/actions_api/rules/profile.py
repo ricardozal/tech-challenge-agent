@@ -16,9 +16,14 @@ class ProfileDecision:
     reason: str | None = None
 
 
+def can_have_offer(employment: Employment, policy: Policy) -> bool:
+    """An employment situation without any accepted income proof (unemployed) can never have an offer."""
+    return bool(policy.income.accepted_proofs.get(employment))
+
+
 def assign(score: int, employment: Employment, reference_value: Decimal, policy: Policy) -> ProfileDecision:
     """No offer when the client cannot prove income (no accepted proof) or the score is below every band."""
-    if not policy.income.accepted_proofs.get(employment):
+    if not can_have_offer(employment, policy):
         return ProfileDecision(offer=False, reason="no_offer_for_profile")
     bands = sorted(policy.profile_bands, key=lambda b: b.min_score, reverse=True)
     band = next((b for b in bands if score >= b.min_score), None)

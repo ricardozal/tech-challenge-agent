@@ -88,3 +88,16 @@ def test_bureau_failure_escalates(api):
     body = c.call("run_credit_check").json()
     assert body["case"]["status"] == "escalated"
     assert any(e["type"] == "escalated" and e["reason"] == "provider_failure" for e in body["events"])
+
+
+@pytest.mark.req("FR-020")
+def test_unemployed_client_is_rejected_without_consent_or_bureau_query(api):
+    calls = []
+    api.client.app.state.services.extras["bureau"].score = lambda *a: calls.append(a)
+    case = profiling_case(api)
+    case.call("update_declared_data", {"employment": "unemployed"}, on_behalf_of="client")
+    body = case.call("run_credit_check").json()
+
+    assert body["case"]["status"] == "rejected"
+    assert {"type": "case_rejected", "reason": "no_offer_for_profile"} in body["events"]
+    assert calls == [] and case.view()["state"]["declared"]["bureau_consent"] is False

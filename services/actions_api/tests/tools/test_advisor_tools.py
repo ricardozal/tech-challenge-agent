@@ -104,3 +104,15 @@ def test_client_can_cancel_even_while_escalated_and_the_ticket_closes(api):
 def test_agent_cannot_request_the_gate_while_escalated(api):
     case, _ = escalated(api)
     assert case.call("evaluate_gate").status_code == 403
+
+
+@pytest.mark.req("FR-044")
+def test_correction_message_is_kept_until_the_agent_delivers_it(api):
+    case, _ = escalated(api)
+    case.call("request_correction", {"validation_key": "income", "message_to_client":
+              "Envía el recibo de la segunda quincena de septiembre."}, actor="advisor")
+    assert case.view()["state"]["pending_client_note"] == "Envía el recibo de la segunda quincena de septiembre."
+
+    case.call("append_message", {"message_id": "m-a1", "author": "agent", "text": "…",
+                                 "delivers_pending_note": True})
+    assert case.view()["state"]["pending_client_note"] is None

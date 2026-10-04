@@ -20,12 +20,15 @@ def test_third_failed_result_of_the_same_type_escalates(api):
     assert [b["case"]["status"] for b in bodies] == ["active", "active", "escalated"]
     assert any(e["type"] == "escalated" and e["reason"] == "mismatch_persisted" for e in bodies[-1]["events"])
     assert not any(e["type"] == "gate_failed" for e in bodies[-1]["events"])  # no gate once escalated
+    escalate = [e for e in api.audit(case.id) if e["tool"] == "escalate"]
+    assert [(e["actor"], e["outcome"]) for e in escalate] == [("system", "accepted")]  # R-09
 
 
 @pytest.mark.req("FR-042")
 def test_ticket_has_reason_evidence_summary_and_suggested_action(api):
     case, bodies = escalated_by_mismatch(api)
-    ticket = api.client.get(f"/escalations/{bodies[-1]['result']['escalation_id']}").json()
+    escalation_id = next(e["escalation_id"] for e in bodies[-1]["events"] if e["type"] == "escalated")
+    ticket = api.client.get(f"/escalations/{escalation_id}").json()
     assert ticket["reason"] == "mismatch_persisted" and ticket["status"] == "open"
     assert ticket["evidence"]["validation_type"] == "income"
     assert ticket["evidence"]["failed_validations"][0]["key"] == "income"

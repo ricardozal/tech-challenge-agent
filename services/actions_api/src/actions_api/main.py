@@ -9,7 +9,7 @@ from uuid import UUID
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 
-from actions_api import db
+from actions_api import db, metrics
 from actions_api.config import Settings
 from actions_api.policy import PolicyRegistry
 from actions_api.providers.bureau import BureauProvider
@@ -18,7 +18,7 @@ from actions_api.providers.key_quote import KeyQuoteProvider
 from actions_api.providers.vehicle_registry import VehicleRegistryProvider
 from actions_api.toolkit import REGISTRY, Services, execute
 from contracts.actions import ToolCall, ToolResult
-from contracts.case import AuditEntry, CaseSummary, CaseView, Escalation
+from contracts.case import AuditEntry, CaseSummary, CaseView, Escalation, MetricsReport
 from contracts.common import Actor
 
 # Tool modules register themselves with @tool on import.
@@ -99,6 +99,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if row is None:
             raise HTTPException(404, "escalation not found")
         return Escalation.model_validate(row)
+
+    @app.get("/metrics", response_model=MetricsReport)
+    def get_metrics() -> MetricsReport:
+        with database.read() as conn:
+            return metrics.report(conn)
 
     return app
 

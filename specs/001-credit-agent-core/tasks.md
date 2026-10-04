@@ -260,11 +260,11 @@ eventos de `audit.audit_log`; dos llamadas devuelven lo mismo.
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T090 [P] [US5] Tests in `services/actions_api/tests/test_metrics.py`: seeded audit rows produce vehicle rejections by reason, false OKs by revocation reason, mismatches by validation type and distinct cases with `key_quoted` (`req("FR-049")`, `req("FR-050")`); the report never reads `cases.cases`; two calls return identical results
+- [X] T090 [P] [US5] Tests in `services/actions_api/tests/test_metrics.py`: seeded audit rows produce vehicle rejections by reason, false OKs by revocation reason, mismatches by validation type and distinct cases with `key_quoted` (`req("FR-049")`, `req("FR-050")`); the report never reads `cases.cases`; two calls return identical results
 
 ### Implementation for User Story 5
 
-- [ ] T091 [US5] Implement `services/actions_api/src/actions_api/metrics.py` (deterministic, ordered SQL over `audit.audit_log.events`) and `GET /metrics` returning `MetricsReport` in `services/actions_api/src/actions_api/main.py`; wire `make metrics`
+- [X] T091 [US5] Implement `services/actions_api/src/actions_api/metrics.py` (deterministic, ordered SQL over `audit.audit_log.events`) and `GET /metrics` returning `MetricsReport` in `services/actions_api/src/actions_api/main.py`; wire `make metrics`
 
 **Checkpoint**: `make demo-all && make metrics` muestra el reporte completo.
 

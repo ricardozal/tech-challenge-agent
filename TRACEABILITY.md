@@ -2,7 +2,7 @@
 
 Generado por `scripts/traceability.py` a partir de `@pytest.mark.req`; no editar a mano.
 
-Requisitos: 52 · con test: 51 · sin test: 1
+Requisitos: 52 · con test: 52 · sin test: 0
 
 | Requisito | Tests |
 |---|---|
@@ -54,7 +54,7 @@ Requisitos: 52 · con test: 51 · sin test: 1
 | FR-046 | `services/actions_api/tests/tools/test_advisor_tools.py::test_client_can_cancel_even_while_escalated_and_the_ticket_closes`<br>`services/agent/tests/test_router.py::test_cancel_intent_cancels_the_case` |
 | FR-047 | `services/actions_api/tests/rules/test_profile.py::test_changing_a_threshold_in_the_policy_changes_the_result`<br>`services/actions_api/tests/test_policy.py::test_policy_file_holds_every_business_threshold`<br>`services/actions_api/tests/test_policy.py::test_archived_versions_are_resolvable_and_unknown_ones_fail` |
 | FR-048 | `services/actions_api/tests/test_policy.py::test_case_pins_the_current_policy_version_and_actions_record_it`<br>`services/actions_api/tests/tools/test_eligibility_tool.py::test_missing_spare_key_is_quoted_and_recorded_with_policy_version`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_credit_check_assigns_the_profile_with_policy_version`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_options_are_simulated_and_carry_the_policy_version` |
-| FR-049 | **sin test** |
-| FR-050 | `services/actions_api/tests/tools/test_advisor_tools.py::test_advisor_revokes_an_ok_and_the_agent_cannot` |
+| FR-049 | `tests/e2e/test_metrics.py::test_metrics_match_a_manual_count_of_the_audit_log`<br>`services/actions_api/tests/test_metrics.py::test_report_counts_come_from_the_action_log`<br>`services/actions_api/tests/test_metrics.py::test_metrics_endpoint_is_deterministic` |
+| FR-050 | `services/actions_api/tests/test_metrics.py::test_report_counts_come_from_the_action_log`<br>`services/actions_api/tests/tools/test_advisor_tools.py::test_advisor_revokes_an_ok_and_the_agent_cannot` |
 | FR-051 | `tests/architecture/test_compose.py::test_only_the_gateway_knows_the_llm_mode_and_ollama`<br>`services/llm_gateway/tests/test_modes.py::test_fake_mode_never_calls_ollama` |
 | FR-052 | `tests/e2e/test_demo_eligibility_rejection.py::test_demo_eligibility_rejection`<br>`tests/e2e/test_demos.py::test_demo_1_happy_path`<br>`tests/e2e/test_demos.py::test_demo_3_correction_branch`<br>`tests/e2e/test_demos.py::test_demo_3_escalation_branch_and_advisor_verification`<br>`tests/e2e/test_demos.py::test_demo_4_no_spare_key` |

@@ -52,7 +52,6 @@ función de `contracts` (`contracts.llm.to_domain`) (R-01).
 | Campo | Tipo | Notas |
 |---|---|---|
 | `id` | UUID | también `thread_id` del grafo del agente |
-| `client_id` | str | id del cliente de prueba (`fixtures/clients/`) |
 | `stage` | `Stage` | columna de consulta |
 | `status` | `Status` | columna de consulta |
 | `version` | int | empieza en 1; `+1` en cada acción aceptada (FR-006) |
@@ -64,7 +63,7 @@ función de `contracts` (`contracts.llm.to_domain`) (R-01).
 
 | Sección | Campos |
 |---|---|
-| `client` | `full_name`, `address` (`street`, `number`, `neighborhood`, `postal_code`, `city`), `curp`, `phone` — del fixture del cliente (R-16) |
+| `client` | `full_name`, `address` (texto libre), `postal_code`, cada uno con `source_message_id` — declarados en la conversación (R-16) |
 | `declared` | `employment`, `income_amount`, `income_currency` (default `MXN`), `income_periodicity`, `bureau_consent` (bool), `bureau_consent_at`, `bureau_consent_message_id` |
 | `vehicle` | `make`, `model`, `year`, `own_name` (bool\|null), `declared_debt` (bool\|null), `spare_key` (bool\|null), `registry` (`lien`, `reference_value`, `checked_at`) |
 | `key_quote` | `amount`, `provider_quote_id`, `quoted_at` — solo si no hay segunda llave |

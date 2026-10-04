@@ -57,7 +57,7 @@ throughput
 | V. Reproducible sin GPU | `LLM_MODE=fake` por defecto y solo visible en `llm_gateway`; parámetros de Ollama fijos; modo `record` (R-11) | ✅ | ✅ |
 | VI. Política versionada | `policy/policy.yaml` + `policy/archive/`, versión fijada por caso, reglas reciben la política, cada decisión y entrada de auditoría guarda `policy_version` (R-14) | ✅ | ✅ |
 | VII. Trazabilidad | `@pytest.mark.req("FR-xxx")` + `scripts/traceability.py` genera `TRACEABILITY.md` y falla si falta un FR (R-21) | ✅ | ✅ |
-| VIII. Calidad del LLM medida | `make eval` con umbral (R-13). El esquema `mensaje` cambia (`tema_sensible`, R-12): la tarea correspondiente no se cierra sin una corrida de `make eval` que cumpla el umbral | ⚠️ | ✅ con condición |
+| VIII. Calidad del LLM medida | `make eval` con umbral (R-13). El esquema `mensaje` cambia (`tema_sensible`, `nombre_completo`, `domicilio`, `codigo_postal`; R-12): la tarea correspondiente no se cierra sin casos nuevos en eval y una corrida de `make eval` que cumpla el umbral | ⚠️ | ✅ con condición |
 | IX. Tests reales y mínimos | Unitarios de reglas y tools, arquitectura y 5 guiones e2e; sin metas de cobertura; el LLM se sustituye con `LLM_MODE=fake`, no con mocks | ✅ | ✅ |
 | X. Datos sintéticos, texto como dato, idioma | Documentos de `eval/documentos` marcados "ESPÉCIMEN DE PRUEBA"; texto de usuario solo como campo delimitado (R-11, R-19); redacción de PII en logs (R-22); identificadores en inglés (R-01) con una excepción justificada abajo | ⚠️ | ✅ justificado |
 | XI. Fuera de alcance | Sin auth, colas, Redis, Kubernetes, CI/CD, LiteLLM, Langfuse, Grafana ni WhatsApp. Phoenix y web diferidos | ✅ | ✅ |
@@ -165,7 +165,6 @@ services/doc_intel/
 └── tests/
 
 fixtures/
-├── clients/                   # clientes de prueba (R-16)
 ├── providers/                 # Buró, consulta vehicular, cotizador de llave (R-15)
 ├── documents/                 # documentos sintéticos de los guiones (parten de eval/documentos)
 ├── llm/                       # respuestas grabadas: extract/, ocr/, reply/
@@ -187,8 +186,8 @@ eval/                          # existente: casos, esquemas (v3 con tema_sensibl
 **Structure Decision**: uv workspace con un paquete compartido (`packages/contracts`) y cuatro
 servicios independientes en `services/`, cada uno con su `pyproject.toml`, `Dockerfile` y tests
 unitarios. Los tests que cruzan servicios (`architecture`, `e2e`) viven en la raíz. Los fixtures
-son compartidos y se montan solo de lectura en el servicio que los usa (`providers` y `clients`
-en `actions_api`; `llm` en `llm_gateway`).
+son compartidos y se montan solo de lectura en el servicio que los usa (`providers` en
+`actions_api`; `llm` en `llm_gateway`).
 
 ### Base de datos (resumen; detalle en [data-model.md](./data-model.md))
 
@@ -217,4 +216,4 @@ en `actions_api`; `llm` en `llm_gateway`).
 ## Próximos pasos
 
 1. `/speckit-tasks` para generar `tasks.md`. Los ajustes a la spec que surgieron del diseño
-   (FR-004, FR-017, FR-040, FR-047) ya están aplicados.
+   (FR-001, FR-004, FR-010, FR-017, FR-040, FR-047) ya están aplicados.

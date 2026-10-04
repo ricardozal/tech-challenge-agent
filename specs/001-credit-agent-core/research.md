@@ -93,7 +93,7 @@ tiene id `R-xx` para citarla desde el plan, las tareas y DECISIONS.md.
 ## R-07 · Estado del caso como agregado JSONB versionado
 
 - **Decision**: `cases.cases` tiene columnas de consulta (`id`, `stage`, `status`, `version`,
-  `policy_version`, `client_id`, timestamps) y una columna `state JSONB` validada contra el
+  `policy_version`, timestamps) y una columna `state JSONB` validada contra el
   modelo `CaseState` de `packages/contracts`. Escalaciones e idempotencia van en tablas propias.
   Los bytes de los documentos van en el volumen `documents` montado solo en `actions_api`,
   nombrados por `sha256`.
@@ -167,15 +167,20 @@ tiene id `R-xx` para citarla desde el plan, las tareas y DECISIONS.md.
 - **Alternatives considered**: llave solo por texto (colisiones entre etapas); fallar ante un
   fixture faltante en `extract` (haría frágiles los guiones al cambiar una coma).
 
-## R-12 · Esquema de la etapa y el nuevo valor `tema_sensible`
+## R-12 · Esquema de mensaje versión 3: `tema_sensible` y datos personales
 
 - **Decision**: `/v1/extract` recibe `schema_name`. En esta feature todas las etapas usan el
   esquema `mensaje` evaluado (la etapa y la pregunta van como contexto) y los documentos usan
-  `documento`. Se agrega `tema_sensible` al enum `intencion` (esquemas versión 3), con casos
-  nuevos en `eval/casos_eval.jsonl` y una corrida de `make eval` antes de dar la tarea por
-  terminada (Principio VIII).
-- **Rationale**: FR-040 necesita clasificar temas sensibles. Hacerlo en la misma llamada evita
-  una segunda inferencia por mensaje. Esquemas recortados por etapa quedan para cuando el set de
+  `documento`. Esquemas versión 3:
+  - `tema_sensible` en el enum `intencion`;
+  - campos `nombre_completo`, `domicilio` y `codigo_postal` en `campos` (mismos nombres y
+    formato que en el esquema `documento`, para que la comparación de R-18 reciba textos
+    equivalentes).
+  Se agregan casos nuevos a `eval/casos_eval.jsonl` para ambos cambios y se corre `make eval`
+  antes de dar la tarea por terminada (Principio VIII).
+- **Rationale**: FR-040 necesita clasificar temas sensibles, y FR-010/FR-017 piden que el agente
+  pregunte nombre y domicilio (no hay datos pre-guardados, R-16). Hacerlo en la misma llamada
+  evita inferencias extra por mensaje. Esquemas recortados por etapa quedan para cuando el set de
   eval los cubra.
 - **Alternatives considered**: tarea separada `classify_sensitive` (doble latencia); esquemas
   por etapa sin eval (viola el Principio VIII).
@@ -211,21 +216,29 @@ tiene id `R-xx` para citarla desde el plan, las tareas y DECISIONS.md.
     IVA sobre intereses, tolerancia de ingreso, umbral de confianza, umbral de similitud,
     antigüedad de comprobantes, comprobantes por situación laboral, N intentos, reintentos por
     proveedor.
-  - **Proveedores simulados** (`providers/`, leen `fixtures/providers/`): Buró (score por
-    cliente), consulta vehicular (gravamen y **valor de referencia** del auto) y cotizador de
-    llave (precio por marca, modelo y año). Un fixture puede marcar `fail: true` para forzar la
-    escalación por proveedor.
+  - **Proveedores simulados** (`providers/`, leen `fixtures/providers/`). Como no hay clientes
+    pre-guardados (R-16), buscan por los datos declarados normalizados:
+    - Buró: por nombre completo → score;
+    - consulta vehicular: por nombre + marca + modelo + año → gravamen y **valor de referencia**;
+    - cotizador de llave: por marca + modelo + año → precio.
+    Cada proveedor tiene un registro `_default` para datos que no estén en los fixtures, y un
+    registro puede marcar `fail: true` para forzar la escalación por proveedor.
 - **Rationale**: un precio de cerrajería o un valor de mercado son datos externos, no umbrales de
   negocio. Esto ajusta dos supuestos de la spec (ver "Ajustes a la spec" al final).
 
-## R-16 · Datos del cliente de prueba y actor "cliente"
+## R-16 · Caso vacío y actor "cliente"
 
-- **Decision**: `POST /cases` recibe `test_client_id`. El fixture del cliente trae nombre,
-  domicilio, CURP, teléfono y la referencia de su vehículo; se guardan como datos declarados al
-  crear el caso (simula un lead que ya trae sus datos). El agente pregunta el resto (auto,
-  llave, situación laboral, ingreso, consentimiento). Las acciones que son decisión del cliente
-  (consentimiento, elegir opción, cancelar) las ejecuta el agente con `actor = agent` y
-  `on_behalf_of = client`, con el id del mensaje del cliente como evidencia.
+- **Decision**: `POST /cases` no recibe datos: crea un caso vacío. El agente pregunta todo en la
+  conversación:
+  - en `eligibility`: nombre completo, marca, modelo, año, titularidad, adeudos y segunda llave;
+  - en `profiling`: domicilio con código postal, situación laboral, ingreso y consentimiento.
+  El nombre se pide primero porque la consulta vehicular lo necesita. Cada dato se guarda con el
+  id del mensaje que lo aportó. CURP y teléfono no se piden: ninguna regla los usa.
+  Las acciones que son decisión del cliente (consentimiento, elegir opción, cancelar) las
+  ejecuta el agente con `actor = agent` y `on_behalf_of = client`, con el id del mensaje del
+  cliente como evidencia.
+- **Clarificación del usuario (2026-10-03)**: no hay casos ni clientes pre-guardados; la versión
+  anterior de esta decisión (cliente de prueba cargado desde fixtures) quedó descartada.
 - **Rationale**: sin autenticación (Principio XI) no hay forma de que el cliente llame a
   `actions_api` por sí mismo; el canal es el agente. El header `X-Actor` lo declara quien llama
   y no se verifica: es un supuesto explícito del demo.
@@ -246,7 +259,9 @@ tiene id `R-xx` para citarla desde el plan, las tareas y DECISIONS.md.
   expansión de abreviaturas de una tabla fija: `AV.`→`AVENIDA`, `C.`→`CALLE`, `COL.`→`COLONIA`,
   `NO.`/`#`→`NUMERO`…; espacios colapsados) y similitud `difflib.SequenceMatcher` sobre tokens
   ordenados. Nombre: coincide si la similitud ≥ `name_similarity_threshold`. Domicilio: código
-  postal idéntico y calle + número con similitud ≥ `address_similarity_threshold`.
+  postal idéntico y el resto del domicilio (sin el código postal) con similitud ≥
+  `address_similarity_threshold`. El domicilio declarado llega como texto libre extraído de la
+  conversación (R-12).
 - **Rationale**: clarificación del 2026-10-03. `difflib` está en la librería estándar: sin
   dependencias nuevas y determinista.
 - **Alternatives considered**: `rapidfuzz` (más rápido, pero una dependencia más sin necesidad
@@ -319,8 +334,9 @@ tiene id `R-xx` para citarla desde el plan, las tareas y DECISIONS.md.
 
 Aplicados a `spec.md` el 2026-10-03:
 
-1. **FR-017**: nombre y domicilio vienen del cliente de prueba al crear el caso (R-16); el agente
-   no los pregunta.
+1. **FR-001, FR-010, FR-017**: el caso nace vacío y el agente pregunta nombre, domicilio y el
+   resto de los datos (R-16; corrige un ajuste anterior que los cargaba de un cliente de
+   prueba).
 2. **FR-047 y Assumptions**: el costo de la llave y el valor de referencia del auto vienen de
    proveedores simulados, no de tablas de la política (R-15).
 3. **FR-004**: el actor "cliente" actúa a través del agente con `on_behalf_of = client` (R-16).

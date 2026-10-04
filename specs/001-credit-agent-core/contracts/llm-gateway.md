@@ -60,6 +60,8 @@ Redacta la respuesta al cliente a partir de hechos, no de texto crudo.
 }
 ```
 
+`client_first_name` es `null` hasta que el cliente da su nombre.
+
 → `200` `{"text": "…", "model": "gemma4:12b", "mode": "fake", "fixture_hit": false}`
 
 Sin fixture en `fake`: texto de plantilla por etapa que incluye `next_question`.

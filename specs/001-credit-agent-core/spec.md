@@ -49,13 +49,15 @@ estado final. Estados finales: `ok_para_financiera`, `rechazado`, `cancelado`. U
 - Q: ¿Quién dispara la evaluación del gate "OK para financiera"? → A: Automático: el sistema lo
   evalúa cada vez que cambia una validación; además, el agente puede pedir la evaluación, y si
   falta algo la solicitud se rechaza y queda registrada.
+- Q: ¿Los datos personales del cliente vienen precargados o los pregunta el agente? → A: El
+  agente pregunta todo; no hay casos ni clientes pre-guardados.
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Elegibilidad del auto (Priority: P1)
 
-El cliente inicia un caso. El agente le pregunta por el auto (marca, modelo, año), si está a su
-nombre, si tiene gravámenes o adeudos y si tiene la segunda llave. El sistema contrasta lo
+El cliente inicia un caso, que nace vacío. El agente le pregunta su nombre completo y por el auto
+(marca, modelo, año), si está a su nombre, si tiene gravámenes o adeudos y si tiene la segunda llave. El sistema contrasta lo
 declarado con el registro vehicular (simulado) y decide: si el titular no es el cliente o hay
 gravamen/adeudo, el caso se rechaza con motivo; si falta la segunda llave, el caso sigue y se
 cotiza la fabricación de la llave, cuyo costo se sumará al plan de pagos.
@@ -95,8 +97,8 @@ resultante, el motivo registrado y, en (d), la cotización de llave.
 
 ### User Story 2 - Perfilamiento y simulación (Priority: P2)
 
-Con el auto elegible, el agente pide la situación laboral y el ingreso declarado (monto y
-periodicidad) y solicita el consentimiento para consultar Buró de Crédito. Con consentimiento, el
+Con el auto elegible, el agente pide el domicilio con código postal, la situación laboral y el
+ingreso declarado (monto y periodicidad) y solicita el consentimiento para consultar Buró de Crédito. Con consentimiento, el
 sistema consulta Buró (simulado) y asigna un perfil que define monto máximo, tasa y plazos
 permitidos. Sin preguntar al cliente cuánto quiere, el sistema propone opciones de crédito
 (monto, plazo, tasa, cuota) como porcentajes del monto máximo al plazo estándar del perfil, con
@@ -291,6 +293,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   estado de cuenta cuando se pidió identificación); se registra como tipo inesperado y se pide
   el correcto.
 - **Documento ilegible o vacío**: todos sus campos con confianza baja; se pide reenviar.
+- **Nombre o domicilio mal dados**: si un mismatch de nombre o domicilio se debe a que el
+  cliente escribió mal sus datos, el cliente puede corregirlos en la conversación; las
+  validaciones afectadas se vuelven a evaluar.
 - **Corrección de datos declarados**: tras un mismatch de ingreso, el cliente corrige el ingreso
   declarado en lugar de enviar otro comprobante; el perfil y las opciones se recalculan y, si la
   opción elegida deja de ser válida, el cliente vuelve a elegir.
@@ -316,8 +321,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 **Caso, canal y acciones**
 
-- **FR-001**: El sistema MUST permitir crear un caso y, por caso, recibir mensajes de texto del
-  cliente y documentos, devolviendo la respuesta del agente en español.
+- **FR-001**: El sistema MUST permitir crear un caso sin datos previos del cliente y, por caso,
+  recibir mensajes de texto del cliente y documentos, devolviendo la respuesta del agente en
+  español.
 - **FR-002**: El sistema MUST mantener por caso su etapa, estado, datos declarados, decisiones,
   documentos, validaciones y tickets, consultables en cualquier momento.
 - **FR-003**: Toda modificación de un caso MUST hacerse mediante una acción del catálogo de
@@ -342,8 +348,8 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 **Elegibilidad del auto (P1)**
 
-- **FR-010**: El agente MUST recabar marca, modelo y año del auto, titularidad, existencia de
-  gravámenes o adeudos y existencia de segunda llave.
+- **FR-010**: El agente MUST recabar el nombre completo del cliente y marca, modelo y año del
+  auto, titularidad, existencia de gravámenes o adeudos y existencia de segunda llave.
 - **FR-011**: El sistema MUST consultar el registro vehicular (simulado) para el auto del caso y
   usar su resultado junto con lo declarado.
 - **FR-012**: El sistema MUST rechazar el caso con motivo "titular distinto al cliente" cuando el
@@ -359,10 +365,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 **Perfilamiento y simulación (P2)**
 
-- **FR-017**: El agente MUST recabar situación laboral (empleado, independiente, pensionado,
-  desempleado) e ingreso declarado con monto, moneda y periodicidad. Nombre, domicilio, CURP y
-  teléfono del cliente MUST tomarse de los datos del cliente de prueba al crear el caso; el agente
-  no los pregunta.
+- **FR-017**: El agente MUST recabar domicilio con código postal, situación laboral (empleado,
+  independiente, pensionado, desempleado) e ingreso declarado con monto, moneda y periodicidad.
+  Todos los datos del cliente se obtienen en la conversación; no hay datos pre-guardados.
 - **FR-018**: El sistema MUST NOT consultar Buró sin consentimiento explícito del cliente
   registrado en el caso.
 - **FR-019**: Con consentimiento, el sistema MUST consultar Buró (simulado) y asignar un perfil
@@ -477,9 +482,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 - **Caso**: unidad de trabajo de un cliente. Etapa, estado, versión, versión de política,
   referencias a todo lo demás.
-- **Datos del cliente**: nombre, domicilio, CURP y teléfono (del cliente de prueba al crear el
-  caso); situación laboral, ingreso (monto, moneda, periodicidad) y consentimiento a Buró con su
-  fecha (declarados en la conversación).
+- **Datos del cliente**: nombre completo, domicilio con código postal, situación laboral,
+  ingreso (monto, moneda, periodicidad) y consentimiento a Buró con su fecha; todos declarados en
+  la conversación, con el mensaje que los aportó como evidencia.
 - **Vehículo**: marca, modelo, año, titularidad declarada, gravamen/adeudo declarado y reportado,
   segunda llave.
 - **Cotización de llave**: costo de fabricación de la segunda llave para un vehículo, con versión
@@ -556,8 +561,10 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 - **Versión de política por caso**: el caso fija la versión vigente al crearse y todas sus
   decisiones usan esa versión.
 - **Identidad del cliente**: no hay autenticación; el caso se identifica por su id en el canal y
-  se crea para un cliente de prueba cuyos datos simulan un lead que ya los trae. El actor de cada
-  acción lo declara quien llama y no se verifica.
+  nace vacío. El actor de cada acción lo declara quien llama y no se verifica.
+- **Proveedores sin registro del cliente**: los proveedores simulados responden por nombre
+  declarado y datos del auto; si no tienen un registro específico, usan un registro por defecto
+  para que cualquier conversación pueda avanzar.
 - **Documentos sintéticos**: todos los documentos son sintéticos y llevan una marca visible de
   prueba; no hay datos reales de personas.
 - **Fuera de alcance**: originación, contratos, firma, dispersión, instalación de dispositivos,

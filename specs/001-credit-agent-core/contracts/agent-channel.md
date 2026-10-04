@@ -5,13 +5,11 @@ los e2e. Modelos en `contracts.channel`.
 
 ## `POST /cases`
 
-```json
-{"test_client_id": "laura-mendez"}
-```
+Sin cuerpo: no hay datos pre-guardados del cliente.
 
-→ `201` `{"case_id": "6f1c…", "reply": "Hola Laura, …", "stage": "eligibility", "status": "active"}`
+→ `201` `{"case_id": "6f1c…", "reply": "Hola, soy tu asesor virtual. ¿Me compartes tu nombre completo?", "stage": "eligibility", "status": "active"}`
 
-Crea el caso con la tool `create_case` y devuelve el saludo con la primera pregunta.
+Crea un caso vacío con la tool `create_case` y devuelve el saludo con la primera pregunta.
 
 ## `POST /cases/{case_id}/messages`
 

@@ -55,9 +55,9 @@ Columnas: actores permitidos y estado/etapa en que la tool es válida. Fuera de 
 
 | Tool | Actores | Válida en | Entrada | Efecto | FR |
 |---|---|---|---|---|---|
-| `create_case` | A | — | `test_client_id` | crea el caso en `eligibility/active`, fija `policy_version`, copia los datos del cliente de prueba | FR-001, FR-002 |
+| `create_case` | A | — | — | crea un caso vacío en `eligibility/active` y fija `policy_version` | FR-001, FR-002 |
 | `append_message` | A | cualquiera | `message_id`, `author`, `text`, `intent` | guarda el mensaje como evidencia | FR-002 |
-| `update_declared_data` | A (on_behalf_of client) | `active`, cualquier etapa no final | campos del vehículo, `employment`, `income_*` (solo valores confirmados; `null` = sin cambio) | actualiza `vehicle`/`declared`; un ingreso corregido en `documents` regresa a `profiling` | FR-010, FR-015, FR-017 |
+| `update_declared_data` | A (on_behalf_of client) | `active`, cualquier etapa no final | `full_name`, `address`, `postal_code`, campos del vehículo, `employment`, `income_*` (solo valores confirmados; `null` = sin cambio) | actualiza `client`/`vehicle`/`declared`; un ingreso corregido en `documents` regresa a `profiling`; un nombre o domicilio corregido vuelve a evaluar las validaciones afectadas | FR-010, FR-015, FR-017 |
 | `evaluate_eligibility` | A | `eligibility/active` | — | consulta vehicular (reintentos) + `rules.eligibility`; rechaza (`owner_mismatch`, `lien_or_debt`), o cotiza llave y avanza a `profiling`; sin valor de referencia o falla de proveedor → escala | FR-011–FR-014 |
 | `record_bureau_consent` | A (on_behalf_of client) | `profiling/active` | `consent: true`, `evidence_message_id` obligatorio | registra consentimiento con fecha y mensaje | FR-018 |
 | `run_credit_check` | A | `profiling/active` | — | exige consentimiento; Buró (reintentos) + `rules.profile`; calcula `max_financeable`; sin oferta → rechaza; avanza a `simulation` | FR-018–FR-020, FR-023 |

@@ -1,0 +1,108 @@
+# Feature 001: 5 of the 7 reference containers (web: feature 002, phoenix: feature 003).
+# Ollama runs on the host; only llm_gateway knows LLM_MODE and OLLAMA_URL (Principle V).
+
+x-healthcheck: &http-health
+  interval: 5s
+  timeout: 3s
+  retries: 20
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin_pw}
+      POSTGRES_DB: app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_admin -d app"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  actions_api:
+    build:
+      context: .
+      dockerfile: services/actions_api/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://actions_rw:actions_pw@postgres:5432/app
+      POLICY_DIR: /app/policy
+      PROVIDERS_DIR: /app/fixtures/providers
+      DOCUMENTS_DIR: /data/documents
+      DOC_INTEL_URL: http://doc_intel:8003
+    volumes:
+      - documents:/data/documents
+      - ./policy:/app/policy:ro
+      - ./fixtures/providers:/app/fixtures/providers:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+
+  agent:
+    build:
+      context: .
+      dockerfile: services/agent/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://agent_rw:agent_pw@postgres:5432/app?options=-csearch_path%3Dagent
+      ACTIONS_URL: http://actions_api:8000
+      LLM_URL: http://llm_gateway:8002
+      CASE_LOCK_TIMEOUT_S: "10"
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      actions_api:
+        condition: service_healthy
+      llm_gateway:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+
+  llm_gateway:
+    build:
+      context: .
+      dockerfile: services/llm_gateway/Dockerfile
+    environment:
+      LLM_MODE: ${LLM_MODE:-fake}
+      OLLAMA_URL: http://host.docker.internal:11434
+      FIXTURES_DIR: /app/fixtures/llm
+      ESQUEMAS_PATH: /app/eval/esquemas.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./fixtures/llm:/app/fixtures/llm
+    ports:
+      - "8002:8002"
+    healthcheck:
+      <<: *http-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+
+  doc_intel:
+    build:
+      context: .
+      dockerfile: services/doc_intel/Dockerfile
+    environment:
+      LLM_URL: http://llm_gateway:8002
+    ports:
+      - "8003:8003"
+    depends_on:
+      llm_gateway:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+
+volumes:
+  pgdata:
+  documents:

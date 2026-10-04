@@ -1,0 +1,97 @@
+"""Fixed Spanish questions per missing field (R-19).
+
+The texts are deterministic on purpose: they are part of the LLM fixture key (R-11) and match the
+questions of the evaluation set (eval/casos_eval.jsonl).
+"""
+
+from dataclasses import dataclass
+
+from contracts.case import CaseView
+from contracts.common import DocumentType, Stage
+
+
+@dataclass(frozen=True)
+class Question:
+    id: str
+    fields: tuple[str, ...]  # case fields this question fills
+    text: str
+
+
+Q_NAME = Question("full_name", ("full_name",), "¿Me compartes tu nombre completo?")
+Q_VEHICLE = Question("vehicle", ("make", "model", "year"), "¿Qué auto es? Dime marca, modelo y año.")
+Q_OWN_NAME = Question("own_name", ("own_name",), "¿El auto está a tu nombre?")
+Q_DEBT = Question("declared_debt", ("declared_debt",), "¿El auto tiene algún adeudo, crédito o gravamen?")
+Q_SPARE_KEY = Question("spare_key", ("spare_key",), "¿Tienes la segunda llave del auto?")
+Q_ADDRESS = Question("address", ("address", "postal_code"), "¿Cuál es tu domicilio, con código postal?")
+Q_INCOME = Question(
+    "income", ("employment", "income_amount", "income_periodicity"), "¿Cuál es tu situación laboral y cuánto ganas?"
+)
+Q_CONSENT = Question("bureau_consent", ("bureau_consent",), "¿Nos autorizas consultar tu historial en Buró de Crédito?")
+Q_OPTION = Question("option", ("selected_option_id",), "¿Cuál opción prefieres?")
+
+DOCUMENT_QUESTIONS = {
+    DocumentType.identification: Question(
+        "doc_identification", (), "Envíame una foto de tu identificación oficial (INE o pasaporte)."
+    ),
+    "income_proof": Question(
+        "doc_income_proof", (), "Envíame tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta)."
+    ),
+    DocumentType.proof_of_address: Question(
+        "doc_proof_of_address", (), "¿Me envías tu comprobante de domicilio?"
+    ),
+    DocumentType.vehicle_invoice: Question("doc_vehicle_invoice", (), "Envíame la factura del auto."),
+}
+
+STAGE_QUESTIONS: dict[Stage, tuple[Question, ...]] = {
+    Stage.eligibility: (Q_NAME, Q_VEHICLE, Q_OWN_NAME, Q_DEBT, Q_SPARE_KEY),
+    Stage.profiling: (Q_ADDRESS, Q_INCOME, Q_CONSENT),
+    Stage.simulation: (Q_OPTION,),
+}
+
+INCOME_PROOF_TYPES = (DocumentType.payslip, DocumentType.bank_statement)
+
+
+def _value(case: CaseView, field: str) -> object:
+    state = case.state
+    for section in (state.client, state.vehicle, state.declared):
+        if field in type(section).model_fields:
+            value = getattr(section, field)
+            if field == "bureau_consent":
+                return value or None
+            return value
+    if field == "selected_option_id":
+        return state.selected_option_id
+    return None
+
+
+def missing_fields(case: CaseView, stage: Stage | None = None) -> list[str]:
+    stage = stage or case.stage
+    return [f for q in STAGE_QUESTIONS.get(stage, ()) for f in q.fields if _value(case, f) is None]
+
+
+def next_question(case: CaseView) -> Question | None:
+    """First question of the current stage whose fields are not all filled yet."""
+    if case.stage == Stage.documents:
+        return next_document_question(case)
+    for question in STAGE_QUESTIONS.get(case.stage, ()):
+        if any(_value(case, f) is None for f in question.fields):
+            return question
+    return None
+
+
+def missing_documents(case: CaseView) -> list[str]:
+    received = {doc.requested_type for doc in case.state.documents}
+    needed: list[str] = []
+    if DocumentType.identification not in received:
+        needed.append(DocumentType.identification)
+    if not received.intersection(INCOME_PROOF_TYPES):
+        needed.append("income_proof")
+    for doc_type in (DocumentType.proof_of_address, DocumentType.vehicle_invoice):
+        if doc_type not in received:
+            needed.append(doc_type)
+    return needed
+
+
+def next_document_question(case: CaseView) -> Question | None:
+    needed = missing_documents(case)
+    return DOCUMENT_QUESTIONS[needed[0]] if needed else None

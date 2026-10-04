@@ -26,3 +26,6 @@ dist/
 
 # Material privado del reto
 *.pdf
+
+# Datos locales de los servicios
+.data/

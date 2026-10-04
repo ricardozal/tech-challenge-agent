@@ -1,0 +1,63 @@
+[importlinter]
+root_packages =
+    contracts
+    actions_api
+    agent
+    llm_gateway
+    doc_intel
+include_external_packages = True
+
+[importlinter:contract:independent-services]
+name = Services are independent; they only share contracts
+type = independence
+modules =
+    actions_api
+    agent
+    llm_gateway
+    doc_intel
+
+[importlinter:contract:contracts-is-a-leaf]
+name = contracts does not import any service
+type = forbidden
+source_modules = contracts
+forbidden_modules =
+    actions_api
+    agent
+    llm_gateway
+    doc_intel
+
+[importlinter:contract:ollama-only-in-gateway]
+name = Only llm_gateway talks to Ollama
+type = forbidden
+source_modules =
+    contracts
+    actions_api
+    agent
+    doc_intel
+forbidden_modules = ollama
+
+[importlinter:contract:stateless-services-without-db]
+name = doc_intel and llm_gateway have no database
+type = forbidden
+source_modules =
+    doc_intel
+    llm_gateway
+forbidden_modules =
+    psycopg
+    psycopg_pool
+    langgraph
+
+[importlinter:contract:pure-rules]
+name = Business rules are pure (no I/O)
+type = forbidden
+source_modules = actions_api.rules
+forbidden_modules =
+    httpx
+    psycopg
+    psycopg_pool
+    ollama
+    os
+    pathlib
+    actions_api.db
+    actions_api.providers
+    actions_api.toolkit

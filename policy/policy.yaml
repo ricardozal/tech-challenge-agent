@@ -1,0 +1,39 @@
+# Business thresholds (Principle VI). Changing a value means a new policy_version;
+# copy the previous file to policy/archive/<policy_version>.yaml first.
+policy_version: "2026.10-v1"
+
+profile_bands:            # by credit bureau score, highest first
+  - {band: A, min_score: 700, max_amount: "150000", annual_rate: "0.24", standard_term_months: 24}
+  - {band: B, min_score: 620, max_amount: "100000", annual_rate: "0.32", standard_term_months: 24}
+  - {band: C, min_score: 550, max_amount: "60000",  annual_rate: "0.42", standard_term_months: 18}
+
+vehicle:
+  max_financeable_pct_of_value: "0.50"
+
+options:
+  pcts_of_max: ["1.00", "0.75", "0.50"]
+
+pricing:
+  apply_vat_on_interest: true
+  vat_rate: "0.16"
+
+income:
+  tolerance_pct: "0.10"
+  expected_currency: MXN
+  accepted_proofs:
+    employed: [payslip, bank_statement]
+    self_employed: [bank_statement]
+    retired: [bank_statement]
+    unemployed: []
+
+documents:
+  min_field_confidence: "0.80"
+  max_age_months: {payslip: 3, bank_statement: 3, proof_of_address: 3}
+
+matching:
+  name_similarity_threshold: "0.90"
+  address_similarity_threshold: "0.90"
+
+escalation:
+  max_correction_attempts: 2       # escalates on failed result number N + 1
+  provider_retries: 2

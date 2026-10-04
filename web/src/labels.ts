@@ -91,6 +91,9 @@ const LABELS = {
     case_busy: 'Hay otro mensaje de este caso en proceso',
     upstream_failure: 'Un servicio no respondió',
     network_error: 'No hubo respuesta del servidor',
+    not_found: 'No se encontró el caso o el recurso pedido',
+    server_error: 'El servicio no respondió correctamente',
+    request_failed: 'La solicitud no se pudo completar',
   },
   field: {
     full_name: 'Nombre completo',
@@ -126,8 +129,4 @@ export function label(kind: LabelKind, code: string | null | undefined): string 
 
 export function formatDate(iso: string): string {
   return new Date(iso).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'medium' })
-}
-
-export function formatMoney(amount: string | number): string {
-  return Number(amount).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
 }

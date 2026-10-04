@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-04
 
-**Status**: Draft
+**Status**: Implemented (2026-10-04)
 
 **Input**: User description: "Feature 002 · Web de demo. Una web sencilla con dos vistas para mostrar el agente funcionando. P1 · Chat del cliente (/chat). Una conversación tipo mensajería con el agente sobre un caso. Al iniciar se elige un escenario (happy path, rechazo por auto, documento fallido, sin segunda llave), que crea el caso con los datos de ese cliente de prueba. El usuario escribe libremente o toca sugerencias con los mensajes del guion, y puede enviar el documento de ejemplo que corresponde al paso. Siempre se ve la etapa actual del caso y, al terminar, el resultado: OK para financiera, rechazo con motivo o escalación. P2 · Consola del asesor (/adviser). Bandeja de escalaciones con motivo, resumen, evidencia (documentos y campos extraídos con su confianza) y acción sugerida; timeline del registro de acciones del caso; el asesor resuelve con las mismas acciones del agente y su acción queda registrada con actor asesor. Un panel muestra el reporte de métricas. Fuera de alcance: login, roles, diseño responsivo fino e internacionalización."
 

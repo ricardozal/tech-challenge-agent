@@ -170,6 +170,17 @@ test(
   },
 )
 
+test('chat · recarga con caso inexistente', { tag: ['@FR-064'] }, async ({ page }) => {
+  await page.goto('/chat?scenario=happy_path&case=00000000-0000-0000-0000-000000000000')
+  await idle(page)
+  const error = page.getByTestId('chat-error')
+  await expect(error).toContainText('No se encontró el caso')
+  await expect(error).not.toContainText('not found')
+  await page.getByTestId('restart').click()
+  await expect(page.getByTestId('scenario-happy_path')).toBeVisible()
+  expect(new URL(page.url()).searchParams.get('case')).toBeNull()
+})
+
 test('chat · reintento sin duplicar', { tag: ['@FR-063'] }, async ({ page }) => {
   await page.goto('/chat')
   await page.getByTestId('scenario-happy_path').click()
@@ -249,6 +260,7 @@ test(
     await expect(advisor.getByTestId('ticket-suggested-action')).not.toBeEmpty()
     await expect(advisor.getByTestId('evidence').getByTestId('document-record')).toHaveCount(6)
     await expect(advisor.getByTestId('field-payslip-net_income').first()).toContainText('%')
+    await expect(advisor.getByTestId('empty-fields-identification')).toContainText('Banco')
     const before = await timelineTools(advisor)
     expect(before.length).toBeGreaterThanOrEqual(10)
     expect(before).toContainEqual({ tool: 'escalate', actor: 'system', outcome: 'accepted' })
@@ -307,19 +319,29 @@ test('asesor · revocar OK y acción rechazada', { tag: ['@FR-070', '@FR-072'] }
   await tabA.goto('/asesor')
   await expect(tabA.getByTestId(`inbox-item-${played.caseId}`)).toContainText('OK revocado')
 
-  // Two tabs on the same case: the stale one gets a version conflict, shown in Spanish.
+  // The client writes while the advisor has the case open: the version changes, the status does not.
   await tabA.goto(`/asesor?case=${played.caseId}`)
   await expect(tabA.getByTestId('case-status')).toHaveText('Escalado a asesor')
-  const tabB = await context.newPage()
-  await tabB.goto(`/asesor?case=${played.caseId}`)
-  await tabB.getByTestId('action-return_to_agent').click()
-  await tabB.getByTestId('action-submit').click()
-  await expect(tabB.getByTestId('case-status')).toHaveText('En curso')
+  await page.reload() // the chat only polls while escalated; an OK case is closed for it
+  await idle(page)
+  await expect(page.getByTestId('result')).toHaveText('Escalado a asesor')
+  const replies = await page.getByTestId('bubble-agent').count()
+  await page.getByTestId('message-input').fill('¿Ya revisaron mi caso?')
+  await page.getByTestId('send').click()
+  await expect(page.getByTestId('bubble-agent')).toHaveCount(replies + 1)
 
+  // The stale tab gets a version conflict in Spanish, sees the attempt in the timeline and the case
+  // re-read (FR-070)...
   await tabA.getByTestId('action-reject_case').click()
   await tabA.getByTestId('action-text').fill('Documentación alterada.')
   await tabA.getByTestId('action-submit').click()
   await expect(tabA.getByTestId('action-error')).toContainText('El caso cambió')
-  await expect(tabA.getByTestId('case-status')).toHaveText('En curso')
+  await expect(tabA.getByTestId('case-status')).toHaveText('Escalado a asesor')
   expect(await timelineTools(tabA)).toContainEqual({ tool: 'reject_case', actor: 'advisor', outcome: 'rejected' })
+
+  // ...and retrying the same form is a new attempt on the current version: accepted.
+  await tabA.getByTestId('action-submit').click()
+  await expect(tabA.getByTestId('case-status')).toHaveText('Rechazado')
+  const rejects = (await timelineTools(tabA)).filter((e) => e.tool === 'reject_case')
+  expect(rejects.map((e) => e.outcome)).toEqual(['rejected', 'accepted'])
 })

@@ -69,7 +69,7 @@ Requisitos: 75 · con test: 75 · sin test: 0
 | FR-061 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
 | FR-062 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
 | FR-063 | `web/e2e/demo.spec.ts::chat · ${scenario.id}`<br>`web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio`<br>`web/e2e/demo.spec.ts::chat · reintento sin duplicar` |
-| FR-064 | `web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio` |
+| FR-064 | `web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio`<br>`web/e2e/demo.spec.ts::chat · recarga con caso inexistente` |
 | FR-065 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
 | FR-066 | `services/actions_api/tests/test_policies_endpoint.py::test_returns_the_policy_of_that_version`<br>`web/e2e/demo.spec.ts::asesor · resolver escalación` |
 | FR-067 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |

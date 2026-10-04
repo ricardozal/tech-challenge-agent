@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getCase, getEscalation } from '../api/actions'
 import { createCase, getConversation, sendDocument, sendMessage } from '../api/agent'
-import { ApiError } from '../api/errors'
+import { errorText } from '../api/errors'
 import { loadScenarios } from '../api/scenarios'
-import type { CaseView, Escalation, SampleDocument, Scenario } from '../api/types'
+import { FINAL_STATUSES, type CaseView, type Escalation, type SampleDocument, type Scenario } from '../api/types'
 import { label } from '../labels'
 import CaseStatusBar from './CaseStatusBar'
 import Composer from './Composer'
@@ -21,11 +21,6 @@ type Pending =
 
 const POLL_MS = 5000
 const DOCUMENT_TAG = /^\[documento: (\w+)\]$/
-
-function errorText(error: unknown): string {
-  if (error instanceof ApiError) return `${label('rejection_code', error.code)}. ${error.message}`
-  return 'Ocurrió un error inesperado.'
-}
 
 function readUrl(): { scenarioId: string | null; caseId: string | null } {
   const params = new URLSearchParams(location.search)
@@ -208,7 +203,7 @@ export default function ChatPage() {
   }
 
   const active = caseView?.status === 'active'
-  const closed = caseView !== null && ['ok_for_lender', 'rejected', 'cancelled'].includes(caseView.status)
+  const closed = caseView !== null && FINAL_STATUSES.includes(caseView.status)
   const suggestion = active && caseView ? suggestMessage(scenario, caseView.stage, lastQuestion) : null
   const slot = active ? requestedSlot(scenario, lastQuestion) : null
   const showTray = active && caseView?.stage === 'documents' && scenario.documents.length > 0
@@ -216,8 +211,18 @@ export default function ChatPage() {
 
   return (
     <main data-testid="chat" data-busy={busy ? 'true' : 'false'} className="mx-auto flex h-[calc(100vh-49px)] max-w-4xl flex-col bg-slate-50">
-      {caseView && (
+      {caseView ? (
         <CaseStatusBar stage={caseView.stage} status={caseView.status} reason={resultReason(caseView, escalation)} onRestart={restart} />
+      ) : (
+        !busy && (
+          // The session in the URL could not be restored (unknown case or API down).
+          <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 text-sm">
+            <span className="text-slate-600">No se pudo recuperar el caso de esta dirección.</span>
+            <button type="button" data-testid="restart" onClick={restart} className="rounded-md border border-slate-300 px-3 py-1 hover:bg-slate-50">
+              Empezar de nuevo
+            </button>
+          </div>
+        )
       )}
       <div className="px-4 pt-2 text-xs text-slate-500">
         {scenario.title} · Cliente de prueba: {scenario.client_name} · Caso {caseId.slice(0, 8)}

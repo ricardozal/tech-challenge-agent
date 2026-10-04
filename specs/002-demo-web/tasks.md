@@ -262,3 +262,13 @@ Task: "Create web/src/advisor/CaseDetail.tsx"
 - No se agregan tools, permisos ni tablas; si una tarea parece requerirlo, detenerse y registrar
   la decisión en `DECISIONS.md` antes (Principio I).
 - Commit por tarea o grupo lógico, solo cuando se pida (memoria del proyecto).
+
+---
+
+## Phase 6: Convergence
+
+- [X] T054 CRITICAL: Show only Spanish text for API errors in `web/src/api/errors.ts` (and its callers `web/src/chat/ChatPage.tsx`, `web/src/advisor/ActionPanel.tsx`): map `http_404` → "No se encontró el caso o el recurso pedido", `http_5xx` → "El servicio no respondió correctamente", other `http_*` → "La solicitud no se pudo completar"; never show the actions_api `detail` or the HTTP `statusText` (English) to the user; keep the agent's Spanish `error.message` and the Spanish `rejection.message`; add the labels to `rejection_code` in `web/src/labels.ts` and extend `tests/architecture/test_web_boundaries.py` to fail if `errors.ts` uses `statusText` or `detail` as user text per Constitution X (contradicts)
+- [X] T055 Renew the idempotency key in `web/src/advisor/ActionPanel.tsx` after a `rejected` outcome (the case is reloaded, so the next submit is a new attempt on another version; keep reusing it only for a resend of the same attempt after a network error), and extend `asesor · revocar OK y acción rechazada` in `web/e2e/demo.spec.ts` so that, after the `version_conflict`, submitting `reject_case` again from the same tab is accepted and the case shows "Rechazado" per FR-070, US2/AC8 (partial)
+- [X] T056 In `web/src/advisor/CaseDetail.tsx`, list by name (with `label('field', …)`) the fields of each document that came back empty or with confidence below `policy.documents.min_field_confidence`, marked "Confianza baja", below the table of extracted fields, instead of only counting them; keep `data-testid="field-{requested_type}-{name}"` on the extracted rows per FR-066, US2/AC2 (partial)
+- [X] T057 In `web/src/chat/ChatPage.tsx`, when restoring a `?case=` session fails (unknown case or API down), show the Spanish error together with an "Empezar de nuevo" button (`data-testid="restart"`) that clears the URL and returns to the scenario picker, and add a Playwright test `chat · recarga con caso inexistente` tagged `@FR-064` in `web/e2e/demo.spec.ts` per Edge case "Recargar la página" (partial)
+- [X] T058 Remove the unused exports `formatMoney` from `web/src/labels.ts` and `FINAL_STATUSES` from `web/src/api/types.ts`, or use `FINAL_STATUSES` in `web/src/chat/ChatPage.tsx` instead of its inline list of final statuses per plan: estructura de `web/src` (unrequested)

@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-03
 
-**Status**: Draft
+**Status**: Implemented (2026-10-04)
 
 **Input**: User description: "Feature 001 · Núcleo del agente de crédito con garantía vehicular. Agente que opera de punta a punta el tramo previo a originación de un crédito personal con el auto como garantía, en el que el cliente sigue usando su auto. Hoy lo hace un asesor en un backoffice; el agente ejecuta las mismas acciones con tools, estado, validaciones y trazabilidad. Historias P1 elegibilidad del auto, P2 perfilamiento y simulación, P3 datos y comprobantes, P4 gate y escalación, P5 observabilidad mínima. Canal: API de mensajes y documentos por caso; los 4 demos corren como guiones que la llaman. Fuera de alcance: originación, contratos, firma, dispersión, instalación de dispositivos, cobranza e interfaz web."
 

@@ -58,3 +58,11 @@ def test_no_raw_html_rendering():
     for path, text in SOURCES.items():
         assert "dangerouslySetInnerHTML" not in text, path
         assert "innerHTML" not in text, path
+
+
+def test_api_errors_never_show_english_text_to_the_user():
+    """Constitution X: actions_api `detail` and the HTTP status text are English; never user text."""
+    for path, text in SOURCES.items():
+        assert "statusText" not in text, path
+        if path.startswith("web/src/api/"):
+            assert not re.search(r"\.detail\b", text), path

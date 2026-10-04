@@ -2,7 +2,7 @@
 // decided by actions_api; this panel only hides what makes no sense for the case status.
 import { useRef, useState, type FormEvent } from 'react'
 import { callTool } from '../api/actions'
-import { ApiError } from '../api/errors'
+import { errorText } from '../api/errors'
 import type { CaseView, Status, Validation } from '../api/types'
 import { label } from '../labels'
 
@@ -64,7 +64,9 @@ export default function ActionPanel({ caseView, onChanged }: Props) {
   const tools = BY_STATUS[caseView.status]
   const pending = Object.values(caseView.state.validations).filter((v) => v.result !== 'passed')
 
-  // One idempotency key per attempt: new when the form opens or changes, reused on a resend.
+  // One idempotency key per attempt: new when the form opens or changes, and after a rejection (the
+  // case is re-read, so the next submit is another attempt on another version). A resend after a
+  // network error reuses it, so the action runs at most once (FR-069).
   function open(next: Tool) {
     setTool(next)
     setValidationKey(pending[0]?.key ?? '')
@@ -95,13 +97,14 @@ export default function ActionPanel({ caseView, onChanged }: Props) {
       if (result.outcome === 'rejected') {
         const code = result.rejection?.code
         setError(`${label('rejection_code', code)}. ${result.rejection?.message ?? ''}`)
+        setKey(crypto.randomUUID())
       } else {
         setDone(`${label('tool', tool)}: acción registrada.`)
         setTool(null)
       }
       await onChanged()
     } catch (e) {
-      setError(e instanceof ApiError ? `${label('rejection_code', e.code)}. ${e.message}` : 'Ocurrió un error inesperado.')
+      setError(errorText(e))
     } finally {
       inFlight.current = false
       setSending(false)
@@ -126,7 +129,7 @@ export default function ActionPanel({ caseView, onChanged }: Props) {
         ))}
       </div>
 
-      {tool && (
+      {tool && tools.includes(tool) && (
         <form onSubmit={submit} className="mt-3 flex flex-col gap-2 text-sm">
           {FORM[tool].validation && (
             <label className="flex flex-col gap-1">

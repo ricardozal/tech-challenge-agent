@@ -86,6 +86,9 @@ desincronizan. Los contratos de `packages/contracts` de 001 no cambian.
 | 2026-10-04 | El chat expone `data-busy` (envío, lectura del caso o restauración desde la URL) y Playwright espera a que sea `false` | Sin esa señal, un test veía la página "lista" a mitad de la restauración y fallaba de forma intermitente |
 | 2026-10-04 | El test del asesor genera la escalación enviando los documentos en el orden del guion del demo 3B (identificación, domicilio, factura y tres veces el recibo que no cuadra) | Siguiendo el orden en que pide el agente, el caso se escala sin domicilio ni factura y la verificación manual no puede llevarlo a OK |
 | 2026-10-04 | Además de los 4 escenarios, Playwright cubre reintento sin duplicar (misma `Idempotency-Key`) y mide el p95 de respuesta por escenario (SC-012) | Hallazgos G1 y G3 de `/speckit-analyze` |
+| 2026-10-04 | Los errores de API que ve el usuario se arman siempre en español (`web/src/api/errors.ts`): el mensaje del agente o un texto por código HTTP; nunca el `detail` de `actions_api` ni el texto de estado HTTP | Convergencia T054 (Principio X): un caso inexistente mostraba "case not found" |
+| 2026-10-04 | La consola renueva la llave de idempotencia después de un rechazo; solo un reenvío tras error de red la reutiliza | Convergencia T055: `actions_api` guarda también los rechazos por llave, y reenviar tras un `version_conflict` daba `idempotency_mismatch` |
+| 2026-10-04 | El test de conflicto de versión provoca el cambio con un mensaje del cliente mientras el caso está escalado (cambia la versión, no el estado), y verifica que reintentar el mismo formulario se acepta | Si otra pestaña devolvía el caso al agente, rechazar ya no estaba permitido y el reintento no se podía probar |
 
 ## Calidad del LLM (`make eval`, Principio VIII)
 

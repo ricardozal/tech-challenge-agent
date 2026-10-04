@@ -1,7 +1,7 @@
 // Case Actions API (specs/001-credit-agent-core/contracts/actions-api.md). The console writes only
 // through callTool, as `advisor` (Principle IV); everything else is a read.
 import { ACTIONS_URL } from '../config'
-import { ApiError, request, toApiError } from './errors'
+import { errorForStatus, request, toApiError } from './errors'
 import type {
   AuditEntry,
   CaseSummary,
@@ -44,6 +44,6 @@ export async function callTool(
   })
   const body = await resp.json().catch(() => null)
   if (body && typeof body === 'object' && 'outcome' in body) return body as ToolResult
-  throw new ApiError(resp.status, `http_${resp.status}`, resp.statusText)
+  throw errorForStatus(resp.status)
 }
 

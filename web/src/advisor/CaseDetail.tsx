@@ -57,7 +57,7 @@ export default function CaseDetail({ caseView, escalation, policy }: Props) {
           {state.documents.map((doc) => {
             // Fields of the schema the reader did not find come back as null: listed apart, not as rows.
             const found = Object.entries(doc.fields).filter(([, f]) => f.value !== null && f.value !== '')
-            const empty = Object.keys(doc.fields).length - found.length
+            const empty = Object.keys(doc.fields).filter((name) => !found.some(([n]) => n === name))
             return (
             <div key={doc.id} data-testid="document-record" className="rounded-md border border-slate-200 p-3 text-sm">
               <p className="font-medium">
@@ -86,7 +86,11 @@ export default function CaseDetail({ caseView, escalation, policy }: Props) {
                   })}
                 </tbody>
               </table>
-              {empty > 0 && <p className="mt-1 text-xs text-slate-500">{empty} campos del esquema sin valor en este documento.</p>}
+              {empty.length > 0 && (
+                <p data-testid={`empty-fields-${doc.requested_type}`} className="mt-1 text-xs text-slate-500">
+                  Sin valor (confianza 0%, por debajo del umbral): {empty.map((name) => label('field', name)).join(', ')}
+                </p>
+              )}
             </div>
             )
           })}

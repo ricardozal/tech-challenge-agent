@@ -44,7 +44,7 @@ INTENT_NODES: dict[str, Node] = {}
 DOCUMENT_NODE: dict[str, Node] = {}
 
 # Node modules register themselves on import; later phases add theirs here.
-NODE_MODULES: list[str] = ["agent.nodes.eligibility"]
+NODE_MODULES: list[str] = ["agent.nodes.eligibility", "agent.nodes.profiling", "agent.nodes.simulation"]
 
 
 def stage_node(stage: str) -> Callable[[Node], Node]:

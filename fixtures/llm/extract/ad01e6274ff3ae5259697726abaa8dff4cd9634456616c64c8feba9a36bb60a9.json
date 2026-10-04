@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "simulation",
+    "agent_question": "¿Cuál opción prefieres?",
+    "text": "quiero 300 mil"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "monto_solicitado": 300000
+    }
+  },
+  "recorded_at": "2026-10-04T15:34:27.893278+00:00",
+  "model": "seeded-from-scenario"
+}

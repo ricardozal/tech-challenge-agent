@@ -1,0 +1,18 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "profiling",
+    "agent_question": "¿Cuál es tu situación laboral y cuánto ganas?",
+    "text": "soy empleada y gano 20 mil al mes"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "situacion_laboral": "empleado",
+      "ingreso_monto": 20000,
+      "ingreso_periodicidad": "mensual"
+    }
+  },
+  "recorded_at": "2026-10-04T15:34:28.912663+00:00",
+  "model": "seeded-from-scenario"
+}

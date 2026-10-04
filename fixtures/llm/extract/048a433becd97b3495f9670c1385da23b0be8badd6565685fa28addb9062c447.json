@@ -3,7 +3,7 @@
     "schema_name": "mensaje",
     "stage": "eligibility",
     "agent_question": "¿Qué auto es? Dime marca, modelo y año.",
-    "text": "tengo un Jetta 2019 de Volkswagen"
+    "text": "un Volkswagen Jetta 2019"
   },
   "response": {
     "intencion": "proporcionar_datos",
@@ -13,6 +13,6 @@
       "auto_anio": 2019
     }
   },
-  "recorded_at": "2026-10-04T15:34:27.172920+00:00",
+  "recorded_at": "2026-10-04T15:34:28.911144+00:00",
   "model": "seeded-from-scenario"
 }

@@ -29,3 +29,21 @@ def merge(state: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]:
 def rejection_facts(result: ToolResult) -> dict[str, Any]:
     reason = result.result.get("reason")
     return {"reason_es": REJECTION_ES.get(reason, reason)} if reason else {}
+
+
+def pesos(value: str | float) -> str:
+    return f"${float(value):,.2f}"
+
+
+def present_options(options: list[dict[str, Any]]) -> str:
+    """Spanish list of options; amounts come from the system, never computed here."""
+    lines = []
+    for n, opt in enumerate(options, start=1):
+        line = f"{n}) Recibes {pesos(opt['client_amount'])}"
+        if float(opt["key_cost"]) > 0:
+            line += (f" (financiamos {pesos(opt['financed_amount'])}, que incluye "
+                     f"{pesos(opt['key_cost'])} de la segunda llave)")
+        rate = float(opt["annual_rate"]) * 100
+        line += f" y pagas {pesos(opt['monthly_payment'])} al mes durante {opt['term_months']} meses, tasa anual {rate:g}%"
+        lines.append(line + ".")
+    return "Estas son tus opciones: " + " ".join(lines)

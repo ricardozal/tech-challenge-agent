@@ -1,0 +1,8 @@
+# Simulated credit bureau (R-15): score by declared full name. Synthetic data only.
+records:
+  - {name: Laura Méndez Rojas, score: 720}
+  - {name: Jorge Ramírez Luna, score: 640}
+  - {name: María Fernanda López García, score: 680}
+  - {name: Prueba Sin Oferta, score: 500}
+  - {name: Prueba Falla Buro, fail: true}
+default: {score: 650}

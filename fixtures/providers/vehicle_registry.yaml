@@ -7,5 +7,6 @@ records:
   - {name: Sofía Castillo Pérez, make: Mazda, model: "3", year: 2020, lien: true, reference_value: "230000"}
   - {name: Prueba Sin Valor, make: Chevrolet, model: Aveo, year: 2010, lien: false, reference_value: null}
   - {name: Prueba Falla Proveedor, make: Volkswagen, model: Jetta, year: 2019, fail: true}
+  # Prueba Sin Oferta and Prueba Falla Buro use the default record.
 # Any vehicle not listed above.
 default: {lien: false, reference_value: "150000"}

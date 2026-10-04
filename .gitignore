@@ -29,3 +29,9 @@ dist/
 
 # Datos locales de los servicios
 .data/
+
+# Web (feature 002)
+web/public/documents/
+web/test-results/
+web/playwright-report/
+web/tsconfig.tsbuildinfo

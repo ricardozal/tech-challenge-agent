@@ -1,6 +1,6 @@
-"""Generate TRACEABILITY.md from @pytest.mark.req("FR-xxx") markers (R-21, Principle VII).
+"""Generate TRACEABILITY.md from @pytest.mark.req("FR-xxx") markers and Playwright @FR-xxx tags (R-21, W-13).
 
-Exits with code 1 and lists the FRs of the spec that have no test.
+Exits with code 1 and lists the FRs of the specs that have no test.
 """
 
 import ast
@@ -10,9 +10,13 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SPEC = ROOT / "specs" / "001-credit-agent-core" / "spec.md"
+SPECS = [ROOT / "specs" / "001-credit-agent-core" / "spec.md", ROOT / "specs" / "002-demo-web" / "spec.md"]
 TEST_DIRS = [ROOT / "tests", *sorted((ROOT / "services").glob("*/tests"))]
+PLAYWRIGHT_DIR = ROOT / "web" / "e2e"
 FR_ID = re.compile(r"\*\*(FR-\d{3})\*\*")
+# test('title' | "title" | `title`, { tag: [...] }, ...)
+PW_TEST = re.compile(r"\btest\(\s*(['\"`])(?P<title>.+?)\1\s*,\s*\{\s*tag:\s*\[(?P<tags>[^\]]*)\]", re.S)
+PW_TAG = re.compile(r"@(FR-\d{3})")
 
 
 def _req_ids(decorators: list[ast.expr]) -> list[str]:
@@ -46,17 +50,23 @@ def collect() -> dict[str, list[str]]:
                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
                     for fr in [*module_ids, *_req_ids(node.decorator_list)]:
                         found[fr].append(f"{rel}::{node.name}")
+    for path in sorted(PLAYWRIGHT_DIR.glob("*.spec.ts")):
+        rel = path.relative_to(ROOT)
+        for match in PW_TEST.finditer(path.read_text(encoding="utf-8")):
+            for fr in PW_TAG.findall(match["tags"]):
+                found[fr].append(f"{rel}::{match['title']}")
     return found
 
 
 def main() -> int:
-    spec_ids = sorted(set(FR_ID.findall(SPEC.read_text(encoding="utf-8"))))
+    spec_ids = sorted({fr for spec in SPECS for fr in FR_ID.findall(spec.read_text(encoding="utf-8"))})
     found = collect()
     missing = [fr for fr in spec_ids if not found.get(fr)]
     lines = [
         "# Traceability",
         "",
-        "Generado por `scripts/traceability.py` a partir de `@pytest.mark.req`; no editar a mano.",
+        "Generado por `scripts/traceability.py` a partir de `@pytest.mark.req` y de los tags `@FR-xxx` de "
+        "Playwright (`web/e2e/`); no editar a mano.",
         "",
         f"Requisitos: {len(spec_ids)} · con test: {len(spec_ids) - len(missing)} · sin test: {len(missing)}",
         "",

@@ -1,0 +1,376 @@
+{
+  "generated_from": [
+    "fixtures/scenarios/happy_path.yaml",
+    "fixtures/scenarios/eligibility_rejection.yaml",
+    "fixtures/scenarios/document_correction.yaml",
+    "fixtures/scenarios/document_escalation.yaml",
+    "fixtures/scenarios/no_spare_key.yaml"
+  ],
+  "scenarios": [
+    {
+      "id": "happy_path",
+      "title": "Happy path",
+      "description": "Auto elegible con segunda llave y documentos en orden: termina en OK para financiera.",
+      "client_name": "Laura Méndez Rojas",
+      "expected_results": [
+        "ok_for_lender"
+      ],
+      "source_scripts": [
+        "happy_path"
+      ],
+      "messages": [
+        {
+          "stage": "eligibility",
+          "question": "¿Me compartes tu nombre completo?",
+          "text": "Hola, soy Laura Méndez Rojas"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Qué auto es? Dime marca, modelo y año.",
+          "text": "Tengo un Volkswagen Jetta 2019"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto está a tu nombre?",
+          "text": "Sí, está a mi nombre"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto tiene algún adeudo, crédito o gravamen?",
+          "text": "No, ya lo terminé de pagar"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Tienes la segunda llave del auto?",
+          "text": "Sí, tengo las dos llaves"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Cuál es tu domicilio, con código postal?",
+          "text": "Av. Morelos 245, Col. Centro, Toluca, CP 50000"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Cuál es tu situación laboral y cuánto ganas?",
+          "text": "Soy empleada y gano 20 mil al mes"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Nos autorizas consultar tu historial en Buró de Crédito?",
+          "text": "Sí, adelante"
+        },
+        {
+          "stage": "simulation",
+          "question": "¿Cuál opción prefieres?",
+          "text": "La primera"
+        }
+      ],
+      "documents": [
+        {
+          "slot": "identification",
+          "question": "Envíame una foto de tu identificación oficial (INE o pasaporte).",
+          "options": [
+            {
+              "file": "documents/laura_identification.png",
+              "requested_type": "identification",
+              "label": "Identificación oficial",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "income_proof",
+          "question": "Envíame tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta).",
+          "options": [
+            {
+              "file": "documents/laura_payslip.png",
+              "requested_type": "payslip",
+              "label": "Recibo de nómina",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "proof_of_address",
+          "question": "¿Me envías tu comprobante de domicilio?",
+          "options": [
+            {
+              "file": "documents/laura_proof_of_address.png",
+              "requested_type": "proof_of_address",
+              "label": "Comprobante de domicilio",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "vehicle_invoice",
+          "question": "Envíame la factura del auto.",
+          "options": [
+            {
+              "file": "documents/laura_invoice.png",
+              "requested_type": "vehicle_invoice",
+              "label": "Factura del auto",
+              "variant": "ok"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eligibility_rejection",
+      "title": "Rechazo por auto",
+      "description": "El auto está a nombre de otra persona: el sistema rechaza sin consultar Buró.",
+      "client_name": "Jorge Ramírez Luna",
+      "expected_results": [
+        "rejected"
+      ],
+      "source_scripts": [
+        "eligibility_rejection"
+      ],
+      "messages": [
+        {
+          "stage": "eligibility",
+          "question": "¿Me compartes tu nombre completo?",
+          "text": "Hola, soy Jorge Ramírez Luna"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Qué auto es? Dime marca, modelo y año.",
+          "text": "Es un Nissan Versa 2018"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto está a tu nombre?",
+          "text": "está a nombre de mi esposa pero yo lo manejo diario"
+        }
+      ],
+      "documents": []
+    },
+    {
+      "id": "document_failed",
+      "title": "Documento fallido",
+      "description": "El recibo de nómina no cuadra con el ingreso declarado. Envía el correcto para llegar a OK, o reenvía el que no cuadra hasta que el caso se escale a un asesor.",
+      "client_name": "Laura Méndez Rojas",
+      "expected_results": [
+        "ok_for_lender",
+        "escalated"
+      ],
+      "source_scripts": [
+        "document_correction",
+        "document_escalation"
+      ],
+      "messages": [
+        {
+          "stage": "eligibility",
+          "question": "¿Me compartes tu nombre completo?",
+          "text": "Hola, soy Laura Méndez Rojas"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Qué auto es? Dime marca, modelo y año.",
+          "text": "Tengo un Volkswagen Jetta 2019"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto está a tu nombre?",
+          "text": "Sí, está a mi nombre"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto tiene algún adeudo, crédito o gravamen?",
+          "text": "No, ya lo terminé de pagar"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Tienes la segunda llave del auto?",
+          "text": "Sí, tengo las dos llaves"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Cuál es tu domicilio, con código postal?",
+          "text": "Av. Morelos 245, Col. Centro, Toluca, CP 50000"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Cuál es tu situación laboral y cuánto ganas?",
+          "text": "Soy empleada y gano 20 mil al mes"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Nos autorizas consultar tu historial en Buró de Crédito?",
+          "text": "Sí, adelante"
+        },
+        {
+          "stage": "simulation",
+          "question": "¿Cuál opción prefieres?",
+          "text": "La primera"
+        }
+      ],
+      "documents": [
+        {
+          "slot": "identification",
+          "question": "Envíame una foto de tu identificación oficial (INE o pasaporte).",
+          "options": [
+            {
+              "file": "documents/laura_identification.png",
+              "requested_type": "identification",
+              "label": "Identificación oficial",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "income_proof",
+          "question": "Envíame tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta).",
+          "options": [
+            {
+              "file": "documents/laura_payslip_low.png",
+              "requested_type": "payslip",
+              "label": "Recibo de nómina — no cuadra",
+              "variant": "mismatch"
+            },
+            {
+              "file": "documents/laura_payslip.png",
+              "requested_type": "payslip",
+              "label": "Recibo de nómina",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "proof_of_address",
+          "question": "¿Me envías tu comprobante de domicilio?",
+          "options": [
+            {
+              "file": "documents/laura_proof_of_address.png",
+              "requested_type": "proof_of_address",
+              "label": "Comprobante de domicilio",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "vehicle_invoice",
+          "question": "Envíame la factura del auto.",
+          "options": [
+            {
+              "file": "documents/laura_invoice.png",
+              "requested_type": "vehicle_invoice",
+              "label": "Factura del auto",
+              "variant": "ok"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "no_spare_key",
+      "title": "Sin segunda llave",
+      "description": "Auto sin segunda llave: se cotiza su fabricación, entra al plan de pagos y el caso llega a OK.",
+      "client_name": "María Fernanda López García",
+      "expected_results": [
+        "ok_for_lender"
+      ],
+      "source_scripts": [
+        "no_spare_key"
+      ],
+      "messages": [
+        {
+          "stage": "eligibility",
+          "question": "¿Me compartes tu nombre completo?",
+          "text": "Buenas tardes, me llamo María Fernanda López García"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Qué auto es? Dime marca, modelo y año.",
+          "text": "Es un Kia Rio 2021"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto está a tu nombre?",
+          "text": "Sí, es mío"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿El auto tiene algún adeudo, crédito o gravamen?",
+          "text": "No tiene ningún adeudo"
+        },
+        {
+          "stage": "eligibility",
+          "question": "¿Tienes la segunda llave del auto?",
+          "text": "No, solo tengo una llave"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Cuál es tu domicilio, con código postal?",
+          "text": "Calle Roble 18, Col. Jardines, Querétaro, CP 76020"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Cuál es tu situación laboral y cuánto ganas?",
+          "text": "Trabajo por mi cuenta y me depositan unos 24 mil al mes"
+        },
+        {
+          "stage": "profiling",
+          "question": "¿Nos autorizas consultar tu historial en Buró de Crédito?",
+          "text": "Sí, los autorizo"
+        },
+        {
+          "stage": "simulation",
+          "question": "¿Cuál opción prefieres?",
+          "text": "Me quedo con la opción 1"
+        }
+      ],
+      "documents": [
+        {
+          "slot": "identification",
+          "question": "Envíame una foto de tu identificación oficial (INE o pasaporte).",
+          "options": [
+            {
+              "file": "documents/maria_identification.png",
+              "requested_type": "identification",
+              "label": "Identificación oficial",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "income_proof",
+          "question": "Envíame tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta).",
+          "options": [
+            {
+              "file": "documents/maria_bank_statement.png",
+              "requested_type": "bank_statement",
+              "label": "Estado de cuenta",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "proof_of_address",
+          "question": "¿Me envías tu comprobante de domicilio?",
+          "options": [
+            {
+              "file": "documents/maria_proof_of_address.png",
+              "requested_type": "proof_of_address",
+              "label": "Comprobante de domicilio",
+              "variant": "ok"
+            }
+          ]
+        },
+        {
+          "slot": "vehicle_invoice",
+          "question": "Envíame la factura del auto.",
+          "options": [
+            {
+              "file": "documents/maria_invoice.png",
+              "requested_type": "vehicle_invoice",
+              "label": "Factura del auto",
+              "variant": "ok"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

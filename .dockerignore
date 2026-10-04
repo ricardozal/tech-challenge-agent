@@ -14,3 +14,11 @@ fixtures/
 tests/
 .specify/
 .claude/
+# web (feature 002): sample documents are copied into the web image
+!fixtures/documents/*.png
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+web/public/documents/
+web/*.tsbuildinfo

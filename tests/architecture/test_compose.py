@@ -17,8 +17,21 @@ def volumes(service: str) -> list[str]:
     return SERVICES[service].get("volumes", [])
 
 
-def test_topology_is_the_feature_001_subset():
-    assert set(SERVICES) == {"postgres", "actions_api", "agent", "llm_gateway", "doc_intel"}
+def test_topology_is_the_feature_002_subset():
+    assert set(SERVICES) == {"postgres", "actions_api", "agent", "llm_gateway", "doc_intel", "web"}
+
+
+@pytest.mark.req("FR-054")
+def test_web_has_no_database_llm_or_volumes():
+    assert not any("DATABASE" in key for key in env("web"))
+    assert not {"LLM_MODE", "OLLAMA_URL"} & set(env("web"))
+    assert volumes("web") == []
+    assert set(SERVICES["web"]["depends_on"]) == {"agent", "actions_api"}
+
+
+def test_web_origins_on_agent_and_actions_api():
+    for service in ("agent", "actions_api"):
+        assert env(service)["WEB_ORIGINS"] == "${WEB_ORIGINS:-http://localhost:8080}", service
 
 
 @pytest.mark.req("FR-051")

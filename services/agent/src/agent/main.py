@@ -8,6 +8,7 @@ from typing import Annotated, Any
 from uuid import UUID, uuid4
 
 from fastapi import FastAPI, File, Form, Header, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 
@@ -56,6 +57,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         await store.close()
 
     app = FastAPI(title="Agent channel", lifespan=lifespan)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=list(settings.web_origins),
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "Idempotency-Key"],
+        allow_credentials=False,
+    )
 
     async def run_turn(case_id: UUID, kind: str, message_id: str, **inputs: Any) -> TurnResponse:
         view = await app.state.actions.get_case(case_id)

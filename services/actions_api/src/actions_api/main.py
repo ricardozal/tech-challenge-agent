@@ -7,11 +7,12 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import FastAPI, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from actions_api import db, metrics
 from actions_api.config import Settings
-from actions_api.policy import PolicyRegistry
+from actions_api.policy import Policy, PolicyRegistry, PolicyUnavailable
 from actions_api.providers.bureau import BureauProvider
 from actions_api.providers.document_reader import DocumentReader
 from actions_api.providers.key_quote import KeyQuoteProvider
@@ -56,6 +57,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         database.close()
 
     app = FastAPI(title="Case Actions API", lifespan=lifespan)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=list(settings.web_origins),
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "X-Actor"],
+        allow_credentials=False,
+    )
     app.state.database = database
     app.state.services = services
 
@@ -99,6 +107,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if row is None:
             raise HTTPException(404, "escalation not found")
         return Escalation.model_validate(row)
+
+    @app.get("/policies/{policy_version}", response_model=Policy)
+    def get_policy(policy_version: str) -> Policy:
+        """Read-only policy for the advisor console (confidence threshold, W-11); not an action."""
+        try:
+            return services.policies.get(policy_version)
+        except PolicyUnavailable:
+            raise HTTPException(404, "policy not found") from None
 
     @app.get("/metrics", response_model=MetricsReport)
     def get_metrics() -> MetricsReport:

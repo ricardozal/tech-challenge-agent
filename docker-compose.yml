@@ -1,4 +1,4 @@
-# Feature 001: 5 of the 7 reference containers (web: feature 002, phoenix: feature 003).
+# Feature 002: 6 of the 7 reference containers (phoenix: feature 003).
 # Ollama runs on the host; only llm_gateway knows LLM_MODE and OLLAMA_URL (Principle V).
 
 x-healthcheck: &http-health
@@ -35,6 +35,7 @@ services:
       DOCUMENTS_DIR: /data/documents
       DOC_INTEL_URL: http://doc_intel:8003
       AS_OF_DATE: ${AS_OF_DATE:-2026-10-04}  # pins "today" for document validity (reproducible demos)
+      WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:8080}  # CORS for the web container
     volumes:
       - documents:/data/documents
       - ./policy:/app/policy:ro
@@ -57,6 +58,7 @@ services:
       ACTIONS_URL: http://actions_api:8000
       LLM_URL: http://llm_gateway:8002
       CASE_LOCK_TIMEOUT_S: "10"
+      WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:8080}  # CORS for the web container
     ports:
       - "8001:8001"
     depends_on:
@@ -103,6 +105,25 @@ services:
     healthcheck:
       <<: *http-health
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+
+  # Static build served by nginx; the browser calls agent and actions_api directly (no DB, no LLM).
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        VITE_AGENT_URL: ${VITE_AGENT_URL:-http://localhost:8001}
+        VITE_ACTIONS_URL: ${VITE_ACTIONS_URL:-http://localhost:8000}
+    ports:
+      - "8080:8080"
+    depends_on:
+      agent:
+        condition: service_healthy
+      actions_api:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
 
 volumes:
   pgdata:

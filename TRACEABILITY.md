@@ -1,8 +1,8 @@
 # Traceability
 
-Generado por `scripts/traceability.py` a partir de `@pytest.mark.req`; no editar a mano.
+Generado por `scripts/traceability.py` a partir de `@pytest.mark.req` y de los tags `@FR-xxx` de Playwright (`web/e2e/`); no editar a mano.
 
-Requisitos: 52 · con test: 52 · sin test: 0
+Requisitos: 75 · con test: 75 · sin test: 0
 
 | Requisito | Tests |
 |---|---|
@@ -58,3 +58,26 @@ Requisitos: 52 · con test: 52 · sin test: 0
 | FR-050 | `services/actions_api/tests/test_metrics.py::test_report_counts_come_from_the_action_log`<br>`services/actions_api/tests/tools/test_advisor_tools.py::test_advisor_revokes_an_ok_and_the_agent_cannot` |
 | FR-051 | `tests/architecture/test_compose.py::test_only_the_gateway_knows_the_llm_mode_and_ollama`<br>`tests/e2e/test_reproducibility.py::test_scenario_is_reproducible_and_fast`<br>`services/llm_gateway/tests/test_modes.py::test_fake_mode_never_calls_ollama` |
 | FR-052 | `tests/e2e/test_demo_eligibility_rejection.py::test_demo_eligibility_rejection`<br>`tests/e2e/test_demos.py::test_demo_1_happy_path`<br>`tests/e2e/test_demos.py::test_demo_3_correction_branch`<br>`tests/e2e/test_demos.py::test_demo_3_escalation_branch_and_advisor_verification`<br>`tests/e2e/test_demos.py::test_demo_4_no_spare_key` |
+| FR-053 | `web/e2e/demo.spec.ts::chat · ${scenario.id}`<br>`web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-054 | `tests/architecture/test_compose.py::test_web_has_no_database_llm_or_volumes`<br>`tests/architecture/test_web_boundaries.py::test_only_config_reads_the_environment_and_only_the_two_api_urls`<br>`tests/architecture/test_web_boundaries.py::test_no_other_service_is_reachable`<br>`tests/architecture/test_web_boundaries.py::test_requests_live_only_in_the_api_clients`<br>`tests/architecture/test_web_boundaries.py::test_console_writes_only_tools_as_advisor`<br>`web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-055 | `tests/architecture/test_web_boundaries.py::test_no_raw_html_rendering`<br>`web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio` |
+| FR-056 | `tests/web/test_scenarios_export.py::test_committed_file_is_up_to_date`<br>`tests/web/test_scenarios_export.py::test_the_four_scenarios_of_the_web`<br>`web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-057 | `tests/web/test_scenarios_export.py::test_committed_file_is_up_to_date`<br>`tests/web/test_scenarios_export.py::test_messages_come_from_the_scripts_with_their_question`<br>`web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-058 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-059 | `web/e2e/demo.spec.ts::chat · ${scenario.id}`<br>`web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio` |
+| FR-060 | `tests/web/test_scenarios_export.py::test_only_document_failed_offers_two_income_proofs`<br>`web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-061 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-062 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-063 | `web/e2e/demo.spec.ts::chat · ${scenario.id}`<br>`web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio`<br>`web/e2e/demo.spec.ts::chat · reintento sin duplicar` |
+| FR-064 | `web/e2e/demo.spec.ts::chat · happy_path · texto libre, recarga y reinicio` |
+| FR-065 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-066 | `services/actions_api/tests/test_policies_endpoint.py::test_returns_the_policy_of_that_version`<br>`web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-067 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-068 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-069 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-070 | `web/e2e/demo.spec.ts::asesor · resolver escalación`<br>`web/e2e/demo.spec.ts::asesor · revocar OK y acción rechazada` |
+| FR-071 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-072 | `web/e2e/demo.spec.ts::asesor · revocar OK y acción rechazada` |
+| FR-073 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
+| FR-074 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-075 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |

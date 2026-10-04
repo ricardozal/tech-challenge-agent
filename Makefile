@@ -5,10 +5,10 @@ REPEAT  ?= 1
 SCENARIOS := happy_path eligibility_rejection document_correction document_escalation no_spare_key
 
 .PHONY: up up-db down ps logs test test-arch test-e2e traceability metrics eval seed-fixtures \
-        demo-all advisor-open-escalations advisor-verify \
+        demo-all advisor-open-escalations advisor-verify web-scenarios web-dev test-web \
         demo-happy-path demo-eligibility-rejection demo-document-correction demo-document-escalation demo-no-spare-key
 
-up:            ## Build and start the 5 services
+up:            ## Build and start the 6 services (web on http://localhost:8080)
 	$(COMPOSE) up -d --build --wait
 
 up-db:         ## Start only Postgres (unit tests of actions_api and agent)
@@ -43,6 +43,16 @@ eval:          ## LLM quality gate (needs Ollama and LLM_MODE=ollama)
 
 seed-fixtures: ## Write fixtures/llm from the scenario scripts
 	$(PY) scripts/seed_fixtures.py
+
+web-scenarios: ## Regenerate web/public/scenarios.json from the scenario scripts
+	$(PY) scripts/export_web_scenarios.py
+
+web-dev:       ## Vite dev server on :5173 (start the stack with WEB_ORIGINS=http://localhost:8080,http://localhost:5173)
+	mkdir -p web/public/documents && cp fixtures/documents/*.png web/public/documents/
+	cd web && npm run dev
+
+test-web:      ## Playwright against the running compose (LLM_MODE=fake)
+	cd web && npx playwright test
 
 demo-happy-path:
 	$(PY) scripts/run_demo.py fixtures/scenarios/happy_path.yaml

@@ -322,8 +322,10 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   documentos, validaciones y tickets, consultables en cualquier momento.
 - **FR-003**: Toda modificación de un caso MUST hacerse mediante una acción del catálogo de
   acciones; agente y asesor usan el mismo catálogo.
-- **FR-004**: Cada acción MUST validarse contra los permisos por actor (cliente, agente, asesor,
-  sistema) × etapa × acción; una acción no permitida se rechaza sin modificar el caso.
+- **FR-004**: Cada acción MUST validarse contra los permisos por actor (agente, asesor, sistema)
+  × etapa × acción; una acción no permitida se rechaza sin modificar el caso. Las decisiones del
+  cliente (consentimiento a Buró, elección de opción, cancelación) MUST ejecutarse por el agente
+  en nombre del cliente y registrarse como tales, con el mensaje del cliente como evidencia.
 - **FR-005**: Cada acción MUST llevar una clave de idempotencia; repetir una acción con la misma
   clave MUST devolver el resultado original sin volver a ejecutarla.
 - **FR-006**: Cada acción MUST indicar la versión del caso sobre la que se tomó; si el caso cambió
@@ -358,8 +360,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 **Perfilamiento y simulación (P2)**
 
 - **FR-017**: El agente MUST recabar situación laboral (empleado, independiente, pensionado,
-  desempleado), ingreso declarado con monto, moneda y periodicidad, y nombre y domicilio del
-  cliente.
+  desempleado) e ingreso declarado con monto, moneda y periodicidad. Nombre, domicilio, CURP y
+  teléfono del cliente MUST tomarse de los datos del cliente de prueba al crear el caso; el agente
+  no los pregunta.
 - **FR-018**: El sistema MUST NOT consultar Buró sin consentimiento explícito del cliente
   registrado en el caso.
 - **FR-019**: Con consentimiento, el sistema MUST consultar Buró (simulado) y asignar un perfil
@@ -373,9 +376,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   porcentaje del máximo, el monto que recibe el cliente MUST ser ese monto menos el costo de la
   llave, la cuota MUST incluir la llave y ambos conceptos MUST mostrarse por separado.
 - **FR-023**: El monto máximo financiable MUST ser el menor entre el límite del perfil y el
-  porcentaje máximo del valor del auto definido en la política; el valor del auto se obtiene de
-  una tabla de valores de referencia (simulada) por marca, modelo y año. El monto financiado
-  total, incluida la llave, MUST NOT exceder ese máximo.
+  porcentaje máximo del valor del auto definido en la política; el valor de referencia del auto
+  lo devuelve la consulta vehicular (simulada). El monto financiado total, incluida la llave,
+  MUST NOT exceder ese máximo.
 - **FR-024**: El sistema MUST registrar la opción que elige el cliente entre las propuestas; una
   solicitud de monto o plazo distinto MUST NOT generar una opción nueva y el agente MUST explicar
   por qué.
@@ -425,7 +428,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 - **FR-039**: El sistema MUST escalar el caso de inmediato cuando el cliente pida hablar con una
   persona.
 - **FR-040**: El sistema MUST escalar el caso cuando un mensaje se clasifique como tema sensible
-  (ver Assumptions).
+  (ver Assumptions). La clasificación MUST hacerse en la misma interpretación del mensaje, como
+  una intención más, y su calidad MUST medirse en el set de evaluación junto con el resto de la
+  extracción.
 - **FR-041**: El sistema MUST escalar el caso cuando un proveedor (Buró, registro vehicular o
   lectura de documentos) falle tras los reintentos definidos en la política.
 - **FR-042**: Cada escalación MUST crear un ticket con motivo, evidencia, resumen en español y
@@ -443,9 +448,12 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 **Política y trazabilidad**
 
-- **FR-047**: Todos los umbrales de negocio (tolerancias, umbrales de confianza, N intentos,
-  reintentos, límites por perfil, costos de llave, vigencias, tipos de comprobante por situación
-  laboral) MUST provenir de una política versionada.
+- **FR-047**: Todos los umbrales de negocio (tolerancias, umbrales de confianza y de similitud,
+  N intentos, reintentos, bandas y límites por perfil, porcentajes de las opciones, porcentaje
+  financiable del valor del auto, vigencias, tipos de comprobante por situación laboral) MUST
+  provenir de una política versionada. El costo de la llave y el valor de referencia del auto son
+  datos de proveedores (simulados), no de la política, y se registran con la decisión que los
+  usa.
 - **FR-048**: Cada decisión (elegibilidad, perfil, opciones, validaciones, gate, escalación)
   MUST registrar la versión de política que la produjo.
 
@@ -469,16 +477,17 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 - **Caso**: unidad de trabajo de un cliente. Etapa, estado, versión, versión de política,
   referencias a todo lo demás.
-- **Datos declarados del cliente**: nombre, domicilio, situación laboral, ingreso (monto, moneda,
-  periodicidad), consentimiento a Buró con su fecha.
+- **Datos del cliente**: nombre, domicilio, CURP y teléfono (del cliente de prueba al crear el
+  caso); situación laboral, ingreso (monto, moneda, periodicidad) y consentimiento a Buró con su
+  fecha (declarados en la conversación).
 - **Vehículo**: marca, modelo, año, titularidad declarada, gravamen/adeudo declarado y reportado,
   segunda llave.
 - **Cotización de llave**: costo de fabricación de la segunda llave para un vehículo, con versión
   de política.
 - **Perfil crediticio**: resultado de Buró (simulado) y perfil asignado: monto máximo, tasa,
   plazos permitidos.
-- **Valor de referencia del auto**: valor por marca, modelo y año (simulado) y porcentaje
-  máximo financiable de la política.
+- **Valor de referencia del auto**: valor que devuelve la consulta vehicular (simulada) para el
+  auto del caso; se combina con el porcentaje máximo financiable de la política.
 - **Opción de crédito**: porcentaje del máximo, monto para el cliente, costo de llave, monto
   financiado, plazo, tasa, cuota; marca de opción elegida.
 - **Documento**: tipo solicitado, tipo detectado, marca de documento de prueba, campos extraídos.
@@ -521,12 +530,12 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 ## Assumptions
 
-- **Proveedores simulados**: Buró de Crédito, registro vehicular (gravámenes), tabla de valores
-  de referencia del auto y cotización de llave son simulados con datos sintéticos; pueden
+- **Proveedores simulados**: Buró de Crédito, consulta vehicular (gravámenes y valor de
+  referencia del auto) y cotizador de llave son simulados con datos sintéticos; pueden
   configurarse para fallar y así ejercitar la escalación por proveedor.
 - **Origen de la verdad en elegibilidad**: en P1 se decide con lo declarado por el cliente más el
   registro vehicular simulado; la factura (P3) confirma la titularidad documentalmente.
-- **Costo de la llave**: se obtiene de una tabla de la política por marca/segmento y año; se
+- **Costo de la llave**: lo devuelve el cotizador de llave (simulado) por marca, modelo y año; se
   financia dentro de cada opción y el monto financiado total no puede exceder el monto máximo
   financiable (FR-023).
 - **Cálculo de cuota**: cuota fija mensual con tasa anual fija; el detalle del método y de
@@ -546,7 +555,9 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   (acceso, rectificación, cancelación u oposición).
 - **Versión de política por caso**: el caso fija la versión vigente al crearse y todas sus
   decisiones usan esa versión.
-- **Identidad del cliente**: no hay autenticación; el caso se identifica por su id en el canal.
+- **Identidad del cliente**: no hay autenticación; el caso se identifica por su id en el canal y
+  se crea para un cliente de prueba cuyos datos simulan un lead que ya los trae. El actor de cada
+  acción lo declara quien llama y no se verifica.
 - **Documentos sintéticos**: todos los documentos son sintéticos y llevan una marca visible de
   prueba; no hay datos reales de personas.
 - **Fuera de alcance**: originación, contratos, firma, dispersión, instalación de dispositivos,

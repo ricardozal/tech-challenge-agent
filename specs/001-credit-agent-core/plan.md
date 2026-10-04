@@ -21,7 +21,8 @@ diseño están en [research.md](./research.md) (R-01…R-23).
 **Language/Version**: Python 3.12
 
 **Primary Dependencies**: FastAPI, Pydantic v2, LangGraph + `langgraph-checkpoint-postgres`
-(PostgresSaver), `psycopg` 3, `httpx`, `ollama` (solo en `llm_gateway`), PyYAML
+(PostgresSaver), `psycopg` 3, `httpx`, `python-multipart` (subida de documentos en `agent`),
+`ollama` (solo en `llm_gateway`), PyYAML; Pillow solo en dev para generar documentos sintéticos
 
 **Storage**: PostgreSQL 16 (schemas `cases`, `audit`, `agent`; R-02, R-03); volumen Docker
 `documents` para los bytes de documentos, montado solo en `actions_api`

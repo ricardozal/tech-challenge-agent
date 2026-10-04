@@ -58,7 +58,7 @@ estado final. Estados finales: `ok_para_financiera`, `rechazado`, `cancelado`. U
 
 El cliente inicia un caso, que nace vacío. El agente le pregunta su nombre completo y por el auto
 (marca, modelo, año), si está a su nombre, si tiene gravámenes o adeudos y si tiene la segunda llave. El sistema contrasta lo
-declarado con el registro vehicular (simulado) y decide: si el titular no es el cliente o hay
+declarado con la consulta vehicular (simulada) y decide: si el titular no es el cliente o hay
 gravamen/adeudo, el caso se rechaza con motivo; si falta la segunda llave, el caso sigue y se
 cotiza la fabricación de la llave, cuyo costo se sumará al plan de pagos.
 
@@ -73,7 +73,7 @@ resultante, el motivo registrado y, en (d), la cotización de llave.
 **Acceptance Scenarios**:
 
 1. **Given** un caso nuevo, **When** el cliente confirma que el auto está a su nombre, que no
-   tiene adeudos ni gravámenes y que tiene segunda llave, y el registro vehicular no reporta
+   tiene adeudos ni gravámenes y que tiene segunda llave, y la consulta vehicular no reporta
    gravamen, **Then** el sistema marca el auto como elegible, registra la versión de política
    usada y el caso pasa a perfilamiento.
 2. **Given** un caso en elegibilidad, **When** el cliente indica que el auto está a nombre de otra
@@ -81,7 +81,7 @@ resultante, el motivo registrado y, en (d), la cotización de llave.
    `rechazado` con motivo "titular distinto al cliente", el agente lo comunica en español con
    ese motivo y no se consulta Buró.
 3. **Given** un caso en elegibilidad, **When** el cliente declara un adeudo (p. ej. "todavía le
-   debo 8 meses a la agencia") o el registro vehicular reporta gravamen, **Then** el caso queda
+   debo 8 meses a la agencia") o la consulta vehicular reporta gravamen, **Then** el caso queda
    `rechazado` con motivo "gravamen o adeudo" y el origen del dato (declarado o registro).
 4. **Given** un caso en elegibilidad, **When** el cliente indica que no tiene la segunda llave,
    **Then** el caso no se rechaza: el sistema cotiza la fabricación de la llave para ese auto,
@@ -90,7 +90,7 @@ resultante, el motivo registrado y, en (d), la cotización de llave.
 5. **Given** una respuesta ambigua o no confirmada sobre titularidad, adeudos o llave, **When** el
    agente la interpreta, **Then** no se toma ninguna decisión con ese dato y el agente vuelve a
    preguntar.
-6. **Given** un caso en elegibilidad, **When** el registro vehicular no responde tras los
+6. **Given** un caso en elegibilidad, **When** la consulta vehicular no responde tras los
    reintentos permitidos, **Then** el caso se escala con motivo "falla de proveedor".
 
 ---
@@ -222,7 +222,7 @@ cierra.
    escala de inmediato con motivo "cliente pide humano".
 5. **Given** cualquier etapa, **When** el mensaje del cliente se clasifica como tema sensible,
    **Then** el caso se escala con motivo "tema sensible" y el agente no intenta resolverlo.
-6. **Given** un proveedor (Buró, registro vehicular o lectura de documentos) que falla tras los
+6. **Given** un proveedor (Buró, consulta vehicular o lectura de documentos) que falla tras los
    reintentos permitidos, **When** se agota el último intento, **Then** el caso se escala con
    motivo "falla de proveedor".
 7. **Given** un caso escalado, **When** se consulta el ticket, **Then** contiene motivo,
@@ -350,12 +350,12 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 
 - **FR-010**: El agente MUST recabar el nombre completo del cliente y marca, modelo y año del
   auto, titularidad, existencia de gravámenes o adeudos y existencia de segunda llave.
-- **FR-011**: El sistema MUST consultar el registro vehicular (simulado) para el auto del caso y
+- **FR-011**: El sistema MUST hacer la consulta vehicular (simulada) del auto del caso y
   usar su resultado junto con lo declarado.
 - **FR-012**: El sistema MUST rechazar el caso con motivo "titular distinto al cliente" cuando el
   cliente declare que el auto no está a su nombre.
 - **FR-013**: El sistema MUST rechazar el caso con motivo "gravamen o adeudo" cuando el cliente lo
-  declare o el registro vehicular lo reporte, indicando el origen del dato.
+  declare o la consulta vehicular lo reporte, indicando el origen del dato.
 - **FR-014**: La falta de segunda llave MUST NOT ser motivo de rechazo; el sistema MUST cotizar
   la fabricación de la llave para el auto del caso y registrar el costo.
 - **FR-015**: El sistema MUST NOT tomar una decisión de elegibilidad con un dato no confirmado por
@@ -373,7 +373,8 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 - **FR-019**: Con consentimiento, el sistema MUST consultar Buró (simulado) y asignar un perfil
   que define monto máximo, tasa y plazos permitidos.
 - **FR-020**: El sistema MUST rechazar el caso con motivo "perfil sin oferta" cuando la política
-  no permita ninguna opción para el perfil.
+  no permita ninguna opción para el perfil o cuando, descontado el costo de la llave, ninguna
+  opción deje un monto positivo para el cliente.
 - **FR-021**: El sistema MUST proponer, sin pedir al cliente un monto, una opción por cada
   porcentaje del monto máximo definido en la política, al plazo estándar y la tasa del perfil,
   con monto, plazo, tasa y cuota calculados por el sistema.
@@ -396,14 +397,14 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   confianza; un documento de tipo distinto al solicitado MUST registrarse como tipo inesperado.
 - **FR-027**: El sistema MUST validar el ingreso comprobado contra el declarado, normalizando
   ambos al mismo periodo, comparando moneda y aplicando la tolerancia definida en la política.
-- **FR-028**: El sistema MUST validar que el nombre en la identificación, el comprobante de
-  ingresos y la factura coincida con el del cliente, y que el domicilio del comprobante de
+- **FR-028**: El sistema MUST validar que el nombre en la identificación y el comprobante de
+  ingresos coincida con el del cliente (el titular de la factura se valida en FR-032), y que el domicilio del comprobante de
   domicilio coincida con el declarado. El domicilio de la identificación y el titular del
   comprobante de domicilio MUST NOT validarse.
 - **FR-029**: La comparación de nombres y domicilios MUST ser determinista: ambos textos se
   normalizan (mayúsculas, sin acentos, abreviaturas comunes expandidas, espacios colapsados) y
   coinciden si su puntaje de similitud alcanza el umbral de la política. En domicilio, el código
-  postal MUST coincidir exactamente y calle y número se comparan por similitud. El modelo de
+  postal MUST coincidir exactamente y el resto del domicilio se compara por similitud. El modelo de
   lenguaje MUST NOT decidir la coincidencia.
 - **FR-030**: El sistema MUST validar la vigencia de la identificación y la antigüedad máxima de
   los comprobantes de ingresos y de domicilio según la política.
@@ -436,20 +437,22 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
   (ver Assumptions). La clasificación MUST hacerse en la misma interpretación del mensaje, como
   una intención más, y su calidad MUST medirse en el set de evaluación junto con el resto de la
   extracción.
-- **FR-041**: El sistema MUST escalar el caso cuando un proveedor (Buró, registro vehicular o
+- **FR-041**: El sistema MUST escalar el caso cuando un proveedor (Buró, consulta vehicular o
   lectura de documentos) falle tras los reintentos definidos en la política.
 - **FR-042**: Cada escalación MUST crear un ticket con motivo, evidencia, resumen en español y
   acción sugerida.
 - **FR-043**: Mientras un caso esté escalado, el agente MUST NOT ejecutar acciones de negocio
-  sobre él; solo puede informar al cliente que un asesor lo atenderá.
+  sobre él; solo puede registrar mensajes, informar al cliente que un asesor lo atenderá y
+  ejecutar la cancelación que pida el cliente (FR-046).
 - **FR-044**: El asesor MUST poder resolver el ticket con acciones del mismo catálogo (pedir
   corrección, rechazar con motivo, marcar una validación como verificada manualmente, devolver
   el caso al agente), sujetas a los mismos permisos, idempotencia y registro.
 - **FR-045**: Marcar una validación como verificada manualmente MUST requerir justificación y
   evidencia, MUST quedar con origen "manual" y actor asesor, y MUST estar prohibido para el
   agente; tras ello el sistema vuelve a evaluar el gate (FR-036).
-- **FR-046**: El cliente MUST poder cancelar el caso en cualquier etapa no final; el caso queda
-  `cancelado`.
+- **FR-046**: El cliente MUST poder cancelar el caso en cualquier etapa no final, incluso
+  escalado; el caso queda `cancelado` y, si había un ticket abierto, se cierra con la
+  cancelación como resolución.
 
 **Política y trazabilidad**
 
@@ -538,8 +541,8 @@ interfaz web. Cada uno debe poder ejecutarse de forma independiente y reproducib
 - **Proveedores simulados**: Buró de Crédito, consulta vehicular (gravámenes y valor de
   referencia del auto) y cotizador de llave son simulados con datos sintéticos; pueden
   configurarse para fallar y así ejercitar la escalación por proveedor.
-- **Origen de la verdad en elegibilidad**: en P1 se decide con lo declarado por el cliente más el
-  registro vehicular simulado; la factura (P3) confirma la titularidad documentalmente.
+- **Origen de la verdad en elegibilidad**: en P1 se decide con lo declarado por el cliente más
+  la consulta vehicular simulada; la factura (P3) confirma la titularidad documentalmente.
 - **Costo de la llave**: lo devuelve el cotizador de llave (simulado) por marca, modelo y año; se
   financia dentro de cada opción y el monto financiado total no puede exceder el monto máximo
   financiable (FR-023).

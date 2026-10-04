@@ -32,10 +32,10 @@
 ## Notes
 
 - Clarifications resolved on 2026-10-03: the advisor may mark a failed validation as manually
-  verified with justification and the system then re-runs the gate (FR-043, FR-044); a "falso
-  OK" is an OK revoked by an advisor (FR-049); the max amount is the lower of the profile limit
+  verified with justification and the system then re-runs the gate (FR-044, FR-045); a "falso
+  OK" is an OK revoked by an advisor (FR-050); the max amount is the lower of the profile limit
   and a policy percentage of the car's reference value (FR-023).
-- FR ids renumbered sequentially (FR-001…FR-051) after the clarifications; no tests cite them yet.
+- FR ids are sequential FR-001…FR-052; tests cite them with `@pytest.mark.req`.
 - Idempotency key, case version and action log appear as business-level guarantees required by
   the constitution (Principle IV), not as implementation choices.
 - Items marked incomplete require spec updates before `/speckit-clarify` or `/speckit-plan`

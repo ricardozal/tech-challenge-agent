@@ -64,9 +64,9 @@ Columnas: actores permitidos y estado/etapa en que la tool es válida. Fuera de 
 | `simulate_options` | A | `simulation/active` | — | `rules.options` → opciones con cuota (y llave) | FR-021–FR-023 |
 | `select_option` | A (on_behalf_of client) | `simulation/active` | `option_id` | registra la elección; avanza a `documents` | FR-024 |
 | `submit_document` | A | `documents/active` | `requested_type`, `filename`, `content_base64` | guarda bytes, llama `doc_intel`, corre las validaciones del documento, cuenta intentos, escala al pasar N, evalúa el gate | FR-025–FR-036, FR-038 |
-| `evaluate_gate` | A, D, S | `documents/active` o `escalated` | — | `rules.gate`: todo `passed` → `ok_for_lender`; si no → `409 gate_not_met` con `missing` | FR-036, FR-037 |
+| `evaluate_gate` | A, D, S en `documents/active`; D, S en `escalated` | `documents/active` o `escalated` | — | `rules.gate`: todo `passed` → `ok_for_lender`; si no → `409 gate_not_met` con `missing` | FR-036, FR-037 |
 | `escalate` | A, D | `active` | `reason` (`client_requested_human`, `sensitive_topic`), `agent_note` | crea ticket y pasa a `escalated` | FR-039, FR-040, FR-042 |
-| `cancel_case` | A (on_behalf_of client), D | `active`, `escalated` | `reason` | pasa a `cancelled` | FR-046 |
+| `cancel_case` | A (on_behalf_of client), D | `active`, `escalated` | `reason` | pasa a `cancelled`; si hay ticket abierto, lo resuelve con la cancelación | FR-043, FR-046 |
 | `request_correction` | D | `escalated` | `validation_key`, `message_to_client` | resuelve el ticket, regresa a `active/documents` | FR-044 |
 | `verify_validation_manually` | D | `escalated` | `validation_key`, `justification`, `evidence` | validación → `passed` con `origin = manual`; evalúa el gate | FR-044, FR-045 |
 | `reject_case` | D | `escalated` | `reason` | pasa a `rejected` (`advisor_rejected`) | FR-044 |

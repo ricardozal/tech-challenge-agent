@@ -85,7 +85,7 @@ función de `contracts` (`contracts.llm.to_domain`) (R-01).
 | `pct_of_max` | Decimal | de `policy.options.pcts_of_max` |
 | `financed_amount` | Decimal | `pct × profile.max_financeable` |
 | `key_cost` | Decimal | `key_quote.amount` o 0 |
-| `client_amount` | Decimal | `financed_amount − key_cost`; si ≤ 0 la opción no se genera |
+| `client_amount` | Decimal | `financed_amount − key_cost`; si ≤ 0 la opción no se genera; si no queda ninguna, `no_offer_for_profile` (FR-020) |
 | `term_months` | int | `profile.standard_term_months` |
 | `annual_rate` | Decimal | `profile.annual_rate` |
 | `monthly_payment` | Decimal | amortización francesa (R-17) |
@@ -203,20 +203,22 @@ regresa a `profiling` (edge case "corrección de datos declarados").
 
 ```text
 active ──evaluate_eligibility: owner/lien──▶ rejected
-active ──run_credit_check: sin oferta──▶ rejected
+active ──run_credit_check o simulate_options: sin oferta──▶ rejected
 active ──evaluate_gate: todo passed──▶ ok_for_lender
 active ──escalate | auto (N intentos, proveedor, sin valor)──▶ escalated
 active ──cancel_case──▶ cancelled
 escalated ──return_to_agent──▶ active
 escalated ──verify_validation_manually → evaluate_gate: todo passed──▶ ok_for_lender
 escalated ──reject_case──▶ rejected
+escalated ──cancel_case (agente en nombre del cliente o asesor)──▶ cancelled
 escalated ──request_correction──▶ active (stage = documents)
 ok_for_lender ──revoke_ok──▶ escalated
 ```
 
 `rejected` y `cancelled` son finales: toda tool de negocio responde `case_closed` (FR-016,
 FR-046). Con `status = escalated`, las tools de negocio con `actor = agent` responden
-`forbidden` (FR-043); el agente solo puede `append_message`.
+`forbidden` (FR-043); el agente solo puede `append_message` y `cancel_case` en nombre del
+cliente, que además resuelve el ticket abierto.
 
 ## Política (`policy/policy.yaml`)
 

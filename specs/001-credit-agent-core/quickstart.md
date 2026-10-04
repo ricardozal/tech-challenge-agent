@@ -50,9 +50,9 @@ queda `ok_for_lender`. La entrada de auditoría tiene `actor = advisor` (FR-044,
 ## 4. Tests
 
 ```bash
-make test               # unitarios de reglas, tools, gateway, doc_intel y agente (sin compose)
-make test-arch          # import-linter + permisos de BD + compose (R-20)
-make test-e2e           # los 5 guiones contra el compose en LLM_MODE=fake
+make test               # reglas, tools, gateway, doc_intel y agente (Postgres y, para el agente, el compose)
+make test-arch          # import-linter + permisos de BD + registro inmutable + compose (R-20)
+make test-e2e           # los 5 guiones, concurrencia, reproducibilidad y métricas contra el compose (LLM_MODE=fake)
 make traceability       # regenera TRACEABILITY.md; falla si un FR no tiene test
 ```
 
@@ -63,8 +63,9 @@ Verificaciones puntuales que cubren los tests:
 - **Concurrencia (SC-005)**: `tests/e2e/test_concurrency.py` envía 50 pares de mensajes
   simultáneos; cada uno termina procesado o con `409 case_busy`, sin pérdida de datos.
 - **Registro inmutable (SC-009)**: un `UPDATE` o `DELETE` sobre `audit.audit_log` falla.
-- **Reproducibilidad (SC-001)**: `make demo-all REPEAT=10` produce el mismo estado final y la
-  misma secuencia de tools en las 10 corridas.
+- **Reproducibilidad (SC-001, SC-002)**: `tests/e2e/test_reproducibility.py` corre cada guion 10 veces
+  y exige el mismo estado final y la misma secuencia de acciones, cada corrida en menos de 2 minutos.
+  `make demo-all REPEAT=10` hace lo mismo desde la terminal.
 
 ## 5. Reporte de observabilidad
 

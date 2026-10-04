@@ -5,7 +5,9 @@ from typing import Any
 
 from ollama import Client
 
-OPTIONS = {"temperature": 0, "seed": 42}
+# Same parameters as the model comparison that chose gemma4:12b (eval/).
+OPTIONS = {"temperature": 0, "seed": 42, "num_predict": 512}
+KEEP_ALIVE = "30m"
 
 
 @dataclass
@@ -22,11 +24,13 @@ class OllamaClient:
         self._client = Client(host=url, timeout=timeout_s)
 
     def chat_json(self, messages: list[dict[str, Any]], schema: dict[str, Any]) -> Completion:
-        resp = self._client.chat(model=self.model, messages=messages, format=schema, options=OPTIONS, think=False)
+        resp = self._client.chat(
+            model=self.model, messages=messages, format=schema, options=OPTIONS, think=False, keep_alive=KEEP_ALIVE
+        )
         return Completion(resp.message.content or "", resp.prompt_eval_count, resp.eval_count)
 
     def chat_text(self, messages: list[dict[str, Any]]) -> Completion:
-        resp = self._client.chat(model=self.model, messages=messages, options=OPTIONS, think=False)
+        resp = self._client.chat(model=self.model, messages=messages, options=OPTIONS, think=False, keep_alive=KEEP_ALIVE)
         return Completion(resp.message.content or "", resp.prompt_eval_count, resp.eval_count)
 
     def ocr(self, image: bytes) -> Completion:
@@ -34,5 +38,6 @@ class OllamaClient:
             model=self.ocr_model,
             messages=[{"role": "user", "content": "Text Recognition:", "images": [image]}],
             options=OPTIONS,
+            keep_alive=KEEP_ALIVE,
         )
         return Completion(resp.message.content or "", resp.prompt_eval_count, resp.eval_count)

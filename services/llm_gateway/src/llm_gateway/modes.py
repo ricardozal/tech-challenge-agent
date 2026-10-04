@@ -142,7 +142,8 @@ class LlmService:
 
     def _extract_with_model(self, req: ExtractRequest) -> tuple[dict[str, Any], Completion]:
         messages = prompts.extract_messages(
-            req.schema_name, self.schemas.rules(req.schema_name), req.stage, req.agent_question, req.text
+            req.schema_name, self.schemas.schema(req.schema_name), self.schemas.rules(req.schema_name),
+            req.agent_question, req.text,
         )
         last_error = ""
         for _ in range(2):  # one retry on invalid output

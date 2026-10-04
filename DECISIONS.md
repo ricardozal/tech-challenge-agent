@@ -40,3 +40,11 @@ Detalle en [specs/001-credit-agent-core/research.md](specs/001-credit-agent-core
 | 2026-10-04 | `cases.idempotency_keys` usa `scope` (`case_id` o `global`) en lugar de `case_id` en la llave primaria | `create_case` no tiene `case_id` y también es idempotente |
 | 2026-10-04 | `actions_api` acepta `AS_OF_DATE` como "hoy" para la vigencia de documentos; el compose lo fija en `2026-10-04` | Los documentos sintéticos tienen fechas fijas; sin fecha fija los demos dejarían de pasar con el tiempo (SC-001) |
 | 2026-10-04 | Domicilio: además de la similitud por tokens ordenados (R-18), se acepta la contención de tokens, ignorando palabras de relleno (`COLONIA`, `MÉX.`) | `AV. MORELOS 245, COL. CENTRO` contra `AV MORELOS 245, CENTRO` quedaba debajo de 0.90 sin ser otro domicilio |
+| 2026-10-04 | Los prompts de extracción del gateway siguen el formato medido en la comparación de modelos (`eval/prompts_para_comparador.md`): rol, formato, lista de campos con tipos en el orden del esquema, reglas numeradas, pregunta y respuesta entre comillas; `num_predict` 512. `eval_gate.py` califica con la misma regla que esa comparación | El primer prompt del gateway (sin lista de campos) dio 68.4% en `make eval`; con el formato medido, 89.5% |
+| 2026-10-04 | T097: los fixtures del LLM se quedan sembrados desde los guiones (`make seed-fixtures`); no se regraban con el modelo real | Con `LLM_MODE=ollama` en una Mac de 16 GB, el demo 2 pasó, pero el demo 1 excedió el límite de 330 s del guion en el tercer documento (Docker, `gemma4:12b` y `glm-ocr` cargados a la vez fuerzan swap; Ollama se trabó >300 s en una extracción y el reintento sí pasó). Regrabar en esta máquina daría fixtures incompletos, y los errores conocidos del modelo (p. ej. M16) romperían los guiones. La calidad del modelo la mide `make eval`; los demos y e2e prueban el flujo con respuestas fijas |
+
+## Calidad del LLM (`make eval`, Principio VIII)
+
+| Fecha | Modelo | Esquema | Casos | Campos correctos | JSON válido | Resultado |
+|---|---|---|---|---|---|---|
+| 2026-10-04 | `gemma4:12b` (temperature 0, seed 42, think false) | v3 | 37 (25 originales + 12 nuevos de v3) | 102/114 = **89.5%** (originales 88.2%, nuevos 95.2%) | 100% | Pasa (mínimo 85% y 100%) · `eval/resultados/gate-2026-10-04_104313.json` |

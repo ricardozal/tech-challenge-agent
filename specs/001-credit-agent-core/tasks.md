@@ -272,14 +272,14 @@ eventos de `audit.audit_log`; dos llamadas devuelven lo mismo.
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T092 [P] Implement `scripts/eval_gate.py` (R-13): runs `eval/casos_eval.jsonl` against `llm_gateway` `/v1/extract` (documents use `eval/ocr_D0x.txt`), scores with the `puntaje` rule of `eval/esquemas.json`, prints per-case results and exits non-zero below 85% correct fields or with any invalid JSON; wire `make eval`
-- [ ] T093 Run `LLM_MODE=ollama make up && make eval` and record the result (percentage, date, model) in `DECISIONS.md`; adjust prompts in `services/llm_gateway/src/llm_gateway/prompts.py` until the threshold passes (Principle VIII; closes the schema v3 change of T026–T027)
-- [ ] T094 [P] E2E concurrency in `tests/e2e/test_concurrency.py`: 50 pairs of simultaneous messages on the same case; each ends processed or with `409 case_busy`; no lost declared data and `version` equals the number of accepted actions (`req("FR-009")`, SC-005)
-- [ ] T095 [P] Reproducibility check in `tests/e2e/test_reproducibility.py`: `demo-all` run 10 times yields the same final states and tool sequences, each demo under 2 minutes (`req("FR-051")`, SC-001, SC-002)
-- [ ] T096 Run `make traceability`, add the missing `req` markers until every FR-001…FR-052 has at least one test, and commit the generated `TRACEABILITY.md`
-- [ ] T097 [P] Optionally re-record LLM fixtures with `LLM_MODE=record make up && make demo-all`, then confirm `LLM_MODE=fake make test-e2e` stays green
-- [ ] T098 [P] Update `README.md` with the project summary, architecture (link to `docs/diagrams/`), commands from quickstart.md and the 4 demos
-- [ ] T099 Run every step of `specs/001-credit-agent-core/quickstart.md` on a clean checkout and fix any drift
+- [X] T092 [P] Implement `scripts/eval_gate.py` (R-13): runs `eval/casos_eval.jsonl` against `llm_gateway` `/v1/extract` (documents use `eval/ocr_D0x.txt`), scores with the `puntaje` rule of `eval/esquemas.json`, prints per-case results and exits non-zero below 85% correct fields or with any invalid JSON; wire `make eval`
+- [X] T093 Run `LLM_MODE=ollama make up && make eval` and record the result (percentage, date, model) in `DECISIONS.md`; adjust prompts in `services/llm_gateway/src/llm_gateway/prompts.py` until the threshold passes (Principle VIII; closes the schema v3 change of T026–T027)
+- [X] T094 [P] E2E concurrency in `tests/e2e/test_concurrency.py`: 50 pairs of simultaneous messages on the same case; each ends processed or with `409 case_busy`; no lost declared data and `version` equals the number of accepted actions (`req("FR-009")`, SC-005)
+- [X] T095 [P] Reproducibility check in `tests/e2e/test_reproducibility.py`: `demo-all` run 10 times yields the same final states and tool sequences, each demo under 2 minutes (`req("FR-051")`, SC-001, SC-002)
+- [X] T096 Run `make traceability`, add the missing `req` markers until every FR-001…FR-052 has at least one test, and commit the generated `TRACEABILITY.md`
+- [X] T097 [P] Optionally re-record LLM fixtures with `LLM_MODE=record make up && make demo-all`, then confirm `LLM_MODE=fake make test-e2e` stays green — resolved 2026-10-04: demos run against `gemma4:12b`, fixtures kept seeded (see DECISIONS.md)
+- [X] T098 [P] Update `README.md` with the project summary, architecture (link to `docs/diagrams/`), commands from quickstart.md and the 4 demos
+- [X] T099 Run every step of `specs/001-credit-agent-core/quickstart.md` on a clean checkout and fix any drift
 
 ---
 

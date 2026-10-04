@@ -3,7 +3,7 @@
     "schema_name": "mensaje",
     "stage": "eligibility",
     "agent_question": "¿El auto está a tu nombre?",
-    "text": "Sí, es mío"
+    "text": "sí, es mío"
   },
   "response": {
     "intencion": "proporcionar_datos",
@@ -11,6 +11,6 @@
       "auto_a_nombre_propio": true
     }
   },
-  "recorded_at": "2026-10-04T16:01:14.365594+00:00",
+  "recorded_at": "2026-10-04T17:34:39.266567+00:00",
   "model": "seeded-from-scenario"
 }

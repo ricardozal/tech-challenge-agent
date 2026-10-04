@@ -13,6 +13,7 @@ from actions_api import db
 from actions_api.config import Settings
 from actions_api.policy import PolicyRegistry
 from actions_api.providers.bureau import BureauProvider
+from actions_api.providers.document_reader import DocumentReader
 from actions_api.providers.key_quote import KeyQuoteProvider
 from actions_api.providers.vehicle_registry import VehicleRegistryProvider
 from actions_api.toolkit import REGISTRY, Services, execute
@@ -21,7 +22,12 @@ from contracts.case import AuditEntry, CaseSummary, CaseView, Escalation
 from contracts.common import Actor
 
 # Tool modules register themselves with @tool on import.
-TOOL_MODULES = ["actions_api.tools.case", "actions_api.tools.eligibility", "actions_api.tools.profiling"]
+TOOL_MODULES = [
+    "actions_api.tools.case",
+    "actions_api.tools.eligibility",
+    "actions_api.tools.profiling",
+    "actions_api.tools.documents",
+]
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -37,6 +43,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "vehicle_registry": VehicleRegistryProvider(settings.providers_dir / "vehicle_registry.yaml"),
             "key_quote": KeyQuoteProvider(settings.providers_dir / "key_quotes.yaml"),
             "bureau": BureauProvider(settings.providers_dir / "bureau.yaml"),
+            "document_reader": DocumentReader(settings.doc_intel_url),
         },
     )
 

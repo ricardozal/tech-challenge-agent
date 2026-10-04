@@ -2,6 +2,7 @@
 
 import os
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -14,6 +15,8 @@ class Settings:
     providers_dir: Path
     documents_dir: Path
     doc_intel_url: str
+    # Pins "today" for document validity so demos are reproducible (SC-001); None = real date.
+    as_of_date: date | None = None
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -25,4 +28,5 @@ class Settings:
             providers_dir=Path(os.environ.get("PROVIDERS_DIR", REPO_ROOT / "fixtures" / "providers")),
             documents_dir=Path(os.environ.get("DOCUMENTS_DIR", REPO_ROOT / ".data" / "documents")),
             doc_intel_url=os.environ.get("DOC_INTEL_URL", "http://localhost:8003"),
+            as_of_date=date.fromisoformat(os.environ["AS_OF_DATE"]) if os.environ.get("AS_OF_DATE") else None,
         )

@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 
 from actions_api.escalation import resolve_open_escalation
 from actions_api.toolkit import HandlerContext, ToolRejected, tool
+from actions_api.tools.documents import revalidate_identity
 from contracts.actions import AppendMessageInput, CancelCaseInput, UpdateDeclaredDataInput
 from contracts.case import MessageRef
 from contracts.common import Intent, Stage, Status
@@ -71,17 +72,12 @@ def update_declared_data(ctx: HandlerContext) -> None:
         ctx.decide("data_correction", "profile_invalidated", reason="income_corrected", inputs={"fields": changed})
         ctx.emit("declared_data_corrected", fields=changed, back_to=Stage.profiling.value)
 
-    # A corrected name or address makes the dependent validations pending again (re-evaluated by
-    # the documents tools with the stored documents).
+    # A corrected name or address re-runs the dependent validations with the stored documents (T071).
     identity = [name for name in changed if name in CLIENT_FIELDS]
-    if identity:
-        prefixes = ("name@",) if identity == ["full_name"] else ("name@", "address@")
-        stale = [key for key in state.validations if key.startswith(prefixes)]
-        for key in stale:
-            del state.validations[key]
-        if stale:
-            ctx.emit("revalidation_required", keys=sorted(stale))
-            ctx.result["revalidation_required"] = sorted(stale)
+    if identity and state.documents:
+        revalidated = revalidate_identity(ctx, identity)
+        if revalidated:
+            ctx.result["revalidated"] = sorted(revalidated)
 
 
 @tool("cancel_case")

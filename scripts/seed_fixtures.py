@@ -9,8 +9,7 @@ Scenario step formats (fixtures/scenarios/*.yaml):
 
     - upload: fixtures/documents/laura_identification.png
       requested_type: identification
-      ocr_text: "IDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA ..."
-      extract: {tipo_documento: identificacion, campos: {...}}
+      # ocr_text and extract default to fixtures/documents/specs.yaml (same file name)
 
 The fixture key is contracts.llm.fixture_key, the same function the gateway uses.
 """
@@ -26,8 +25,17 @@ import yaml
 
 from contracts.llm import fixture_key
 
+try:  # imported as scripts.seed_fixtures (tests) or run as a script (make seed-fixtures)
+    from scripts.make_documents import load_specs, ocr_text
+except ModuleNotFoundError:
+    from make_documents import load_specs, ocr_text
+
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = ROOT / "fixtures" / "llm"
+
+
+def specs() -> dict:
+    return load_specs()
 
 
 def write(task: str, key: str, request: dict, response: dict) -> Path:
@@ -57,6 +65,8 @@ def seed_steps(steps: list[dict]) -> int:
             write("extract", fixture_key("extract", "mensaje", inputs), {"schema_name": "mensaje", **inputs}, step["extract"])
             count += 1
         if "upload" in step:
+            spec = specs().get(Path(step["upload"]).stem, {})
+            step = {"ocr_text": ocr_text(spec) if spec else None, "extract": spec.get("extract"), **step}
             content = (ROOT / step["upload"]).read_bytes()
             ocr_inputs = {"sha256": hashlib.sha256(content).hexdigest()}
             write("ocr", fixture_key("ocr", None, ocr_inputs), ocr_inputs, {"text": step["ocr_text"]})

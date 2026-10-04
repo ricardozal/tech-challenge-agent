@@ -1,4 +1,5 @@
 import uuid
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,7 @@ def make_settings(test_db, tmp_path: Path, **overrides: Any) -> Settings:
         providers_dir=REPO_ROOT / "fixtures" / "providers",
         documents_dir=tmp_path / "documents",
         doc_intel_url="http://127.0.0.1:9",
+        as_of_date=date(2026, 10, 4),
     )
     values.update(overrides)
     return Settings(**values)

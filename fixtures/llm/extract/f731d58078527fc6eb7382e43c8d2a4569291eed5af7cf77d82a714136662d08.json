@@ -1,0 +1,21 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026"
+  },
+  "response": {
+    "tipo_documento": "comprobante_domicilio",
+    "campos": {
+      "nombre_completo": "LAURA MÉNDEZ ROJAS",
+      "domicilio": "AV MORELOS 245, CENTRO, TOLUCA, MÉX.",
+      "codigo_postal": "50000",
+      "periodo_inicio": "2026-07-01",
+      "periodo_fin": "2026-08-31",
+      "fecha_emision": "2026-09-05"
+    }
+  },
+  "recorded_at": "2026-10-04T15:46:34.308142+00:00",
+  "model": "seeded-from-scenario"
+}

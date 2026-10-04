@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "simulation",
+    "agent_question": "¿Cuál opción prefieres?",
+    "text": "la primera"
+  },
+  "response": {
+    "intencion": "elegir_opcion",
+    "campos": {
+      "opcion_elegida": 1
+    }
+  },
+  "recorded_at": "2026-10-04T15:46:36.888959+00:00",
+  "model": "seeded-from-scenario"
+}

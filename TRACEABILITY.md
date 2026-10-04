@@ -2,7 +2,7 @@
 
 Generado por `scripts/traceability.py` a partir de `@pytest.mark.req`; no editar a mano.
 
-Requisitos: 52 · con test: 31 · sin test: 21
+Requisitos: 52 · con test: 41 · sin test: 11
 
 | Requisito | Tests |
 |---|---|
@@ -22,7 +22,7 @@ Requisitos: 52 · con test: 31 · sin test: 21
 | FR-014 | `services/actions_api/tests/rules/test_eligibility.py::test_missing_spare_key_is_not_a_rejection_but_needs_a_quote`<br>`services/actions_api/tests/tools/test_eligibility_tool.py::test_missing_spare_key_is_quoted_and_recorded_with_policy_version` |
 | FR-015 | `services/actions_api/tests/rules/test_eligibility.py::test_unconfirmed_answer_means_no_decision`<br>`services/actions_api/tests/tools/test_eligibility_tool.py::test_incomplete_declaration_is_not_decided`<br>`services/agent/tests/test_eligibility_node.py::test_ambiguous_answer_is_asked_again_without_deciding` |
 | FR-016 | `services/actions_api/tests/tools/test_eligibility_tool.py::test_rejected_case_accepts_no_more_business_actions`<br>`services/agent/tests/test_eligibility_node.py::test_rejection_reply_states_the_reason_in_spanish` |
-| FR-017 | `services/agent/tests/test_profiling_nodes.py::test_asks_address_income_and_consent_then_proposes_options` |
+| FR-017 | `services/actions_api/tests/tools/test_declared_corrections.py::test_corrected_income_returns_to_profiling_and_the_option_must_be_chosen_again`<br>`services/agent/tests/test_profiling_nodes.py::test_asks_address_income_and_consent_then_proposes_options` |
 | FR-018 | `services/actions_api/tests/tools/test_profiling_tools.py::test_credit_check_without_consent_is_rejected_and_the_bureau_is_not_called`<br>`services/agent/tests/test_profiling_nodes.py::test_refused_consent_is_explained_and_asked_again` |
 | FR-019 | `services/actions_api/tests/rules/test_profile.py::test_score_maps_to_the_policy_band`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_credit_check_assigns_the_profile_with_policy_version` |
 | FR-020 | `services/actions_api/tests/rules/test_options.py::test_no_option_left_means_no_offer`<br>`services/actions_api/tests/rules/test_profile.py::test_score_below_the_lowest_band_has_no_offer`<br>`services/actions_api/tests/rules/test_profile.py::test_unemployed_has_no_offer`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_low_score_is_rejected_without_offer` |
@@ -30,23 +30,23 @@ Requisitos: 52 · con test: 31 · sin test: 21
 | FR-022 | `services/actions_api/tests/rules/test_options.py::test_key_cost_is_financed_inside_each_option`<br>`services/actions_api/tests/rules/test_options.py::test_option_is_skipped_when_the_key_eats_the_whole_amount`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_options_include_the_quoted_key`<br>`services/agent/tests/test_profiling_nodes.py::test_options_show_the_key_cost_when_there_is_no_spare_key` |
 | FR-023 | `services/actions_api/tests/rules/test_options.py::test_financed_total_never_exceeds_the_max`<br>`services/actions_api/tests/rules/test_profile.py::test_max_financeable_is_the_lower_of_band_limit_and_vehicle_share` |
 | FR-024 | `services/actions_api/tests/tools/test_profiling_tools.py::test_selecting_a_proposed_option_moves_to_documents_and_others_are_rejected`<br>`services/agent/tests/test_profiling_nodes.py::test_other_amount_is_not_offered_and_a_proposed_option_is_selected` |
-| FR-025 | **sin test** |
-| FR-026 | **sin test** |
-| FR-027 | **sin test** |
-| FR-028 | **sin test** |
-| FR-029 | **sin test** |
-| FR-030 | **sin test** |
-| FR-031 | **sin test** |
-| FR-032 | **sin test** |
-| FR-033 | **sin test** |
-| FR-034 | **sin test** |
-| FR-035 | `services/llm_gateway/tests/test_modes.py::test_user_text_only_appears_inside_the_delimited_data_block` |
+| FR-025 | `services/agent/tests/test_documents_node.py::test_asks_for_the_four_documents_one_by_one` |
+| FR-026 | `services/actions_api/tests/tools/test_submit_document.py::test_document_is_stored_by_hash_and_read_with_confidence`<br>`services/actions_api/tests/tools/test_submit_document.py::test_unexpected_document_type_is_recorded_without_validations`<br>`services/doc_intel/tests/test_extract.py::test_returns_type_and_each_field_with_confidence`<br>`services/doc_intel/tests/test_extract.py::test_document_of_another_type_is_flagged` |
+| FR-027 | `services/actions_api/tests/rules/test_income.py::test_biweekly_proof_is_normalized_before_comparing`<br>`services/actions_api/tests/rules/test_income.py::test_out_of_tolerance_is_a_mismatch`<br>`services/actions_api/tests/rules/test_income.py::test_declared_weekly_and_proof_biweekly_are_compared_on_the_same_period`<br>`services/actions_api/tests/rules/test_income.py::test_different_currency_is_a_mismatch` |
+| FR-028 | `services/actions_api/tests/rules/test_matching.py::test_name_is_checked_on_identification_and_income_proof`<br>`services/actions_api/tests/rules/test_matching.py::test_proof_of_address_holder_is_never_checked`<br>`services/actions_api/tests/tools/test_declared_corrections.py::test_corrected_address_is_revalidated_with_the_stored_document` |
+| FR-029 | `services/actions_api/tests/rules/test_matching.py::test_names_match_despite_accents_case_spaces_and_order`<br>`services/actions_api/tests/rules/test_matching.py::test_different_names_do_not_match`<br>`services/actions_api/tests/rules/test_matching.py::test_address_matches_with_abbreviations`<br>`services/actions_api/tests/rules/test_matching.py::test_address_requires_the_same_postal_code` |
+| FR-030 | `services/actions_api/tests/rules/test_documents.py::test_identification_validity_year`<br>`services/actions_api/tests/rules/test_documents.py::test_proofs_older_than_three_months_are_rejected` |
+| FR-031 | `services/actions_api/tests/rules/test_documents.py::test_self_employed_cannot_prove_income_with_a_payslip` |
+| FR-032 | `services/actions_api/tests/rules/test_documents.py::test_invoice_holder_and_vehicle_must_match`<br>`services/agent/tests/test_documents_node.py::test_invoice_of_another_holder_is_explained` |
+| FR-033 | `services/actions_api/tests/rules/test_documents.py::test_low_confidence_field_is_not_used`<br>`services/actions_api/tests/rules/test_income.py::test_low_confidence_amount_is_not_used`<br>`services/actions_api/tests/tools/test_submit_document.py::test_low_confidence_fields_leave_validations_pending` |
+| FR-034 | `services/actions_api/tests/tools/test_submit_document.py::test_each_non_passed_result_counts_an_attempt_by_type`<br>`services/agent/tests/test_documents_node.py::test_income_mismatch_names_the_document_the_field_and_asks_again`<br>`services/agent/tests/test_documents_node.py::test_illegible_document_asks_for_a_better_photo` |
+| FR-035 | `services/actions_api/tests/tools/test_submit_document.py::test_instructions_inside_a_document_do_not_change_anything`<br>`services/llm_gateway/tests/test_modes.py::test_user_text_only_appears_inside_the_delimited_data_block` |
 | FR-036 | **sin test** |
 | FR-037 | **sin test** |
 | FR-038 | **sin test** |
 | FR-039 | **sin test** |
 | FR-040 | **sin test** |
-| FR-041 | `services/actions_api/tests/tools/test_eligibility_tool.py::test_registry_failure_after_retries_escalates`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_bureau_failure_escalates` |
+| FR-041 | `services/actions_api/tests/tools/test_eligibility_tool.py::test_registry_failure_after_retries_escalates`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_bureau_failure_escalates`<br>`services/actions_api/tests/tools/test_submit_document.py::test_document_reader_failure_after_retries_escalates` |
 | FR-042 | **sin test** |
 | FR-043 | `services/actions_api/tests/test_permissions.py::test_escalated_case_allows_the_agent_only_messages_and_cancellation` |
 | FR-044 | **sin test** |

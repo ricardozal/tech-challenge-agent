@@ -2,40 +2,7 @@
 
 import pytest
 
-ELIGIBLE = {"full_name": "Laura Méndez Rojas", "make": "Volkswagen", "model": "Jetta", "year": 2019,
-            "own_name": True, "declared_debt": False}
-PROFILE = {"address": "Av. Morelos 245, Col. Centro, Toluca", "postal_code": "50000", "employment": "employed",
-           "income_amount": "20000", "income_periodicity": "monthly"}
-
-
-class Case:
-    def __init__(self, api, case_id, version):
-        self.api, self.id, self.version = api, case_id, version
-
-    def call(self, tool, input=None, **context):
-        resp = self.api.call(tool, self.id, self.version, input=input, **context)
-        if resp.json().get("case"):
-            self.version = resp.json()["case"]["version"]
-        return resp
-
-    def view(self):
-        return self.api.case(self.id)
-
-
-def profiling_case(api, spare_key=True, **declared) -> Case:
-    case = api.create_case()
-    c = Case(api, case["id"], case["version"])
-    c.call("update_declared_data", {**ELIGIBLE, "spare_key": spare_key, **declared})
-    assert c.call("evaluate_eligibility").json()["case"]["stage"] == "profiling"
-    c.call("update_declared_data", PROFILE)
-    return c
-
-
-def consented(api, **kwargs) -> Case:
-    c = profiling_case(api, **kwargs)
-    assert c.call("record_bureau_consent", {"consent": True}, on_behalf_of="client",
-                  evidence_message_id="m-consent").status_code == 200
-    return c
+from tests.support.cases import consented, profiling_case
 
 
 @pytest.mark.req("FR-018")

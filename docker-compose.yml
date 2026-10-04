@@ -34,6 +34,7 @@ services:
       PROVIDERS_DIR: /app/fixtures/providers
       DOCUMENTS_DIR: /data/documents
       DOC_INTEL_URL: http://doc_intel:8003
+      AS_OF_DATE: ${AS_OF_DATE:-2026-10-04}  # pins "today" for document validity (reproducible demos)
     volumes:
       - documents:/data/documents
       - ./policy:/app/policy:ro

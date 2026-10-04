@@ -79,17 +79,30 @@ def next_question(case: CaseView) -> Question | None:
     return None
 
 
+# Validation keys each document family must pass (mirrors the gate's required keys).
+FAMILY_KEYS: dict[str, tuple[str, ...]] = {
+    DocumentType.identification: ("name@identification", "validity@identification"),
+    "income_proof": ("income", "income_proof_type", "name@income_proof", "validity@income_proof"),
+    DocumentType.proof_of_address: ("address@proof_of_address", "validity@proof_of_address"),
+    DocumentType.vehicle_invoice: ("vehicle_ownership",),
+}
+
+
+def family(doc_type: str) -> str:
+    return "income_proof" if doc_type in INCOME_PROOF_TYPES else doc_type
+
+
 def missing_documents(case: CaseView) -> list[str]:
-    received = {doc.requested_type for doc in case.state.documents}
-    needed: list[str] = []
-    if DocumentType.identification not in received:
-        needed.append(DocumentType.identification)
-    if not received.intersection(INCOME_PROOF_TYPES):
-        needed.append("income_proof")
-    for doc_type in (DocumentType.proof_of_address, DocumentType.vehicle_invoice):
-        if doc_type not in received:
-            needed.append(doc_type)
-    return needed
+    """Families whose validations are not all passed yet, in the order the agent asks for them."""
+    validations = case.state.validations
+    return [
+        fam for fam, keys in FAMILY_KEYS.items()
+        if not all(k in validations and validations[k].result == "passed" for k in keys)
+    ]
+
+
+def document_question(doc_type: str) -> Question:
+    return DOCUMENT_QUESTIONS[family(doc_type)]
 
 
 def next_document_question(case: CaseView) -> Question | None:

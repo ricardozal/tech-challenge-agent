@@ -38,3 +38,5 @@ Detalle en [specs/001-credit-agent-core/research.md](specs/001-credit-agent-core
 | Fecha | Decisión | Motivo |
 |---|---|---|
 | 2026-10-04 | `cases.idempotency_keys` usa `scope` (`case_id` o `global`) en lugar de `case_id` en la llave primaria | `create_case` no tiene `case_id` y también es idempotente |
+| 2026-10-04 | `actions_api` acepta `AS_OF_DATE` como "hoy" para la vigencia de documentos; el compose lo fija en `2026-10-04` | Los documentos sintéticos tienen fechas fijas; sin fecha fija los demos dejarían de pasar con el tiempo (SC-001) |
+| 2026-10-04 | Domicilio: además de la similitud por tokens ordenados (R-18), se acepta la contención de tokens, ignorando palabras de relleno (`COLONIA`, `MÉX.`) | `AV. MORELOS 245, COL. CENTRO` contra `AV MORELOS 245, CENTRO` quedaba debajo de 0.90 sin ser otro domicilio |

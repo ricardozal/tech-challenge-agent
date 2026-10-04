@@ -1,0 +1,173 @@
+# Synthetic documents for the demos (Principle X: test specimens, fictitious data).
+# `lines` is what is drawn on the PNG and, verbatim, the OCR text recorded for LLM_MODE=fake.
+# `extract` is the expected `documento` extraction (eval/esquemas.json) seeded as fixture.
+# Regenerate PNGs with: uv run python scripts/make_documents.py && make seed-fixtures
+documents:
+  laura_identification:
+    lines:
+      - "IDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA"
+      - "Formato genérico de prueba. No es un documento oficial."
+      - "NOMBRE LAURA MÉNDEZ ROJAS"
+      - "DOMICILIO AV. MORELOS No. 245, COL. CENTRO, TOLUCA, MÉX. C.P. 50000"
+      - "CURP MERL880412MMCNJR09"
+      - "FECHA DE NACIMIENTO 12/04/1988"
+      - "EMISIÓN 2021   VIGENCIA 2031"
+    extract:
+      tipo_documento: identificacion
+      campos: {nombre_completo: "LAURA MÉNDEZ ROJAS", curp: MERL880412MMCNJR09,
+               domicilio: "AV. MORELOS No. 245, COL. CENTRO, TOLUCA, MÉX.", codigo_postal: "50000",
+               fecha_nacimiento: "1988-04-12", vigencia: 2031, fecha_emision: "2021"}
+
+  laura_payslip:
+    lines:
+      - "RECIBO DE NÓMINA — ESPÉCIMEN DE PRUEBA"
+      - "EMPRESA SERVICIOS EJEMPLO DEL CENTRO, S.A. DE C.V."
+      - "EMPLEADO LAURA MÉNDEZ ROJAS"
+      - "TIPO DE PAGO Quincenal"
+      - "PERIODO Del 16/09/2026 al 30/09/2026"
+      - "FECHA DE PAGO 30/09/2026"
+      - "TOTAL PERCEPCIONES 11,400.00"
+      - "NETO A PAGAR $10,000.00 MXN"
+    extract:
+      tipo_documento: recibo_nomina
+      campos: {nombre_completo: "LAURA MÉNDEZ ROJAS", empleador: "SERVICIOS EJEMPLO DEL CENTRO, S.A. DE C.V.",
+               periodicidad: quincenal, periodo_inicio: "2026-09-16", periodo_fin: "2026-09-30",
+               fecha_emision: "2026-09-30", ingreso_bruto: 11400.0, ingreso_neto: 10000.0, moneda: MXN}
+
+  laura_payslip_low:
+    lines:
+      - "RECIBO DE NÓMINA — ESPÉCIMEN DE PRUEBA"
+      - "EMPRESA SERVICIOS EJEMPLO DEL CENTRO, S.A. DE C.V."
+      - "EMPLEADO LAURA MÉNDEZ ROJAS"
+      - "TIPO DE PAGO Quincenal"
+      - "PERIODO Del 01/09/2026 al 15/09/2026"
+      - "FECHA DE PAGO 15/09/2026"
+      - "TOTAL PERCEPCIONES 7,900.00"
+      - "NETO A PAGAR $7,000.00 MXN"
+    extract:
+      tipo_documento: recibo_nomina
+      campos: {nombre_completo: "LAURA MÉNDEZ ROJAS", empleador: "SERVICIOS EJEMPLO DEL CENTRO, S.A. DE C.V.",
+               periodicidad: quincenal, periodo_inicio: "2026-09-01", periodo_fin: "2026-09-15",
+               fecha_emision: "2026-09-15", ingreso_bruto: 7900.0, ingreso_neto: 7000.0, moneda: MXN}
+
+  laura_proof_of_address:
+    lines:
+      - "COMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA"
+      - "SUMINISTRADORA EJEMPLO DE ENERGÍA"
+      - "TITULAR LAURA MÉNDEZ ROJAS"
+      - "DOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX."
+      - "C.P. 50000"
+      - "PERIODO 01/07/2026 al 31/08/2026"
+      - "FECHA DE EMISIÓN 05/09/2026"
+    extract:
+      tipo_documento: comprobante_domicilio
+      campos: {nombre_completo: "LAURA MÉNDEZ ROJAS", domicilio: "AV MORELOS 245, CENTRO, TOLUCA, MÉX.",
+               codigo_postal: "50000", periodo_inicio: "2026-07-01", periodo_fin: "2026-08-31",
+               fecha_emision: "2026-09-05"}
+
+  laura_proof_of_address_old:
+    lines:
+      - "COMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA"
+      - "SUMINISTRADORA EJEMPLO DE ENERGÍA"
+      - "TITULAR LAURA MÉNDEZ ROJAS"
+      - "DOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX."
+      - "C.P. 50000"
+      - "PERIODO 01/03/2026 al 30/04/2026"
+      - "FECHA DE EMISIÓN 03/05/2026"
+    extract:
+      tipo_documento: comprobante_domicilio
+      campos: {nombre_completo: "LAURA MÉNDEZ ROJAS", domicilio: "AV MORELOS 245, CENTRO, TOLUCA, MÉX.",
+               codigo_postal: "50000", periodo_inicio: "2026-03-01", periodo_fin: "2026-04-30",
+               fecha_emision: "2026-05-03"}
+
+  laura_invoice:
+    lines:
+      - "FACTURA DE VEHÍCULO — ESPÉCIMEN DE PRUEBA"
+      - "EMISOR AUTOS EJEMPLO DE TOLUCA, S.A. DE C.V."
+      - "RECEPTOR LAURA MÉNDEZ ROJAS"
+      - "VEHÍCULO VOLKSWAGEN JETTA MODELO 2019"
+      - "NIV 3VWEJ1BU0KM123456"
+      - "FECHA DE EMISIÓN 22/03/2019"
+    extract:
+      tipo_documento: factura_vehiculo
+      campos: {nombre_completo: "LAURA MÉNDEZ ROJAS", marca: VOLKSWAGEN, modelo: JETTA, anio: 2019,
+               niv: 3VWEJ1BU0KM123456, fecha_emision: "2019-03-22"}
+
+  laura_invoice_other_holder:
+    lines:
+      - "FACTURA DE VEHÍCULO — ESPÉCIMEN DE PRUEBA"
+      - "EMISOR AUTOS EJEMPLO DE TOLUCA, S.A. DE C.V."
+      - "RECEPTOR JORGE RAMÍREZ LUNA"
+      - "VEHÍCULO VOLKSWAGEN JETTA MODELO 2019"
+      - "NIV 3VWEJ1BU0KM654321"
+      - "FECHA DE EMISIÓN 22/03/2019"
+    extract:
+      tipo_documento: factura_vehiculo
+      campos: {nombre_completo: "JORGE RAMÍREZ LUNA", marca: VOLKSWAGEN, modelo: JETTA, anio: 2019,
+               niv: 3VWEJ1BU0KM654321, fecha_emision: "2019-03-22"}
+
+  illegible_identification:
+    blur: true
+    lines:
+      - "IDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA"
+      - "N0MBR3 L...A M..D.Z"
+      - "CURP M#RL8#0#1#"
+      - "V1G#NC1A 20#1"
+    extract:
+      tipo_documento: identificacion
+      campos: {}
+
+  maria_identification:
+    lines:
+      - "IDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA"
+      - "Formato genérico de prueba. No es un documento oficial."
+      - "NOMBRE MARÍA FERNANDA LÓPEZ GARCÍA"
+      - "DOMICILIO CALLE ROBLE 18, COL. JARDINES, QUERÉTARO, QRO. C.P. 76020"
+      - "CURP LOGM900315MQTPRR04"
+      - "FECHA DE NACIMIENTO 15/03/1990"
+      - "EMISIÓN 2022   VIGENCIA 2032"
+    extract:
+      tipo_documento: identificacion
+      campos: {nombre_completo: "MARÍA FERNANDA LÓPEZ GARCÍA", curp: LOGM900315MQTPRR04,
+               domicilio: "CALLE ROBLE 18, COL. JARDINES, QUERÉTARO, QRO.", codigo_postal: "76020",
+               fecha_nacimiento: "1990-03-15", vigencia: 2032, fecha_emision: "2022"}
+
+  maria_bank_statement:
+    lines:
+      - "ESTADO DE CUENTA — ESPÉCIMEN DE PRUEBA"
+      - "BANCO EJEMPLO, S.A."
+      - "CLIENTE MARÍA FERNANDA LÓPEZ GARCÍA"
+      - "PERIODO Del 01/09/2026 al 30/09/2026"
+      - "TOTAL DE DEPÓSITOS $24,100.00 MXN"
+      - "SALDO FINAL $6,980.40"
+    extract:
+      tipo_documento: estado_cuenta
+      campos: {nombre_completo: "MARÍA FERNANDA LÓPEZ GARCÍA", banco: "BANCO EJEMPLO, S.A.",
+               periodo_inicio: "2026-09-01", periodo_fin: "2026-09-30", total_depositos: 24100.0,
+               saldo_final: 6980.4, moneda: MXN}
+
+  maria_proof_of_address:
+    lines:
+      - "COMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA"
+      - "AGUA EJEMPLO DE QUERÉTARO"
+      - "TITULAR JOSÉ LÓPEZ RUIZ"
+      - "DOMICILIO CALLE ROBLE 18, JARDINES, QUERÉTARO, QRO."
+      - "C.P. 76020"
+      - "FECHA DE EMISIÓN 10/09/2026"
+    extract:
+      tipo_documento: comprobante_domicilio
+      campos: {nombre_completo: "JOSÉ LÓPEZ RUIZ", domicilio: "CALLE ROBLE 18, JARDINES, QUERÉTARO, QRO.",
+               codigo_postal: "76020", fecha_emision: "2026-09-10"}
+
+  maria_invoice:
+    lines:
+      - "FACTURA DE VEHÍCULO — ESPÉCIMEN DE PRUEBA"
+      - "EMISOR AUTOS EJEMPLO DEL BAJÍO, S.A. DE C.V."
+      - "RECEPTOR MARÍA FERNANDA LÓPEZ GARCÍA"
+      - "VEHÍCULO KIA RIO MODELO 2021"
+      - "NIV 3KPA24AD5ME456789"
+      - "FECHA DE EMISIÓN 14/06/2021"
+    extract:
+      tipo_documento: factura_vehiculo
+      campos: {nombre_completo: "MARÍA FERNANDA LÓPEZ GARCÍA", marca: KIA, modelo: RIO, anio: 2021,
+               niv: 3KPA24AD5ME456789, fecha_emision: "2021-06-14"}

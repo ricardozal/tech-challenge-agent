@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Me compartes tu nombre completo?",
+    "text": "Hola, soy Laura Méndez Rojas"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": "Laura Méndez Rojas"
+    }
+  },
+  "recorded_at": "2026-10-04T15:57:40.131807+00:00",
+  "model": "seeded-from-scenario"
+}

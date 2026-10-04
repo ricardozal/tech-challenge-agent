@@ -1,0 +1,97 @@
+# Demo 4 · Sin segunda llave: se cotiza su fabricación, entra al plan de pagos y el caso llega a OK.
+name: no_spare_key
+description: 'Demo 4 · Sin segunda llave: se cotiza su fabricación, entra al plan de pagos y el caso llega a OK.'
+steps:
+- say: Buenas tardes, me llamo María Fernanda López García
+  stage: eligibility
+  question: ¿Me compartes tu nombre completo?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      nombre_completo: María Fernanda López García
+- say: Es un Kia Rio 2021
+  stage: eligibility
+  question: ¿Qué auto es? Dime marca, modelo y año.
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      auto_marca: Kia
+      auto_modelo: Rio
+      auto_anio: 2021
+- say: Sí, es mío
+  stage: eligibility
+  question: ¿El auto está a tu nombre?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      auto_a_nombre_propio: true
+- say: No tiene ningún adeudo
+  stage: eligibility
+  question: ¿El auto tiene algún adeudo, crédito o gravamen?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      adeudos_vehiculo: false
+- say: No, solo tengo una llave
+  stage: eligibility
+  question: ¿Tienes la segunda llave del auto?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      segunda_llave: false
+- say: Calle Roble 18, Col. Jardines, Querétaro, CP 76020
+  stage: profiling
+  question: ¿Cuál es tu domicilio, con código postal?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      domicilio: Calle Roble 18, Col. Jardines, Querétaro
+      codigo_postal: '76020'
+- say: Trabajo por mi cuenta y me depositan unos 24 mil al mes
+  stage: profiling
+  question: ¿Cuál es tu situación laboral y cuánto ganas?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      situacion_laboral: independiente
+      ingreso_monto: 24000
+      ingreso_periodicidad: mensual
+- say: Sí, los autorizo
+  stage: profiling
+  question: ¿Nos autorizas consultar tu historial en Buró de Crédito?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      consentimiento_buro: true
+- say: Me quedo con la opción 1
+  stage: simulation
+  question: ¿Cuál opción prefieres?
+  extract:
+    intencion: elegir_opcion
+    campos:
+      opcion_elegida: 1
+- upload: fixtures/documents/maria_identification.png
+  requested_type: identification
+- upload: fixtures/documents/maria_bank_statement.png
+  requested_type: bank_statement
+- upload: fixtures/documents/maria_proof_of_address.png
+  requested_type: proof_of_address
+- upload: fixtures/documents/maria_invoice.png
+  requested_type: vehicle_invoice
+expected:
+  status: ok_for_lender
+  stage: documents
+  tools_called:
+  - create_case
+  - update_declared_data
+  - evaluate_eligibility
+  - record_bureau_consent
+  - run_credit_check
+  - simulate_options
+  - select_option
+  - submit_document
+  - evaluate_gate
+  events:
+  - key_quoted
+  - options_simulated
+  - gate_passed

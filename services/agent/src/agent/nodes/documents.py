@@ -5,6 +5,7 @@ from typing import Any
 
 from agent.graph import Deps, TurnState, document_node, stage_node
 from agent.nodes.common import declared_updates, merge, pesos
+from agent.nodes.gate import request_gate_if_ready
 from agent.questions import document_question, family
 from contracts.common import Stage, Status
 
@@ -75,8 +76,8 @@ async def documents(state: TurnState, deps: Deps) -> dict[str, Any]:
 
     result, updates = await deps.call_tool(st, "submit_document", document)
     st = merge(st, updates)
-    if st["case"]["status"] != Status.active:
-        return st
+    if st["case"]["status"] not in (Status.active, Status.ok_for_lender):
+        return st  # escalated: respond tells the client an advisor will take the case
     doc_es = DOC_ES.get(family(requested), requested)
     if result.result.get("unexpected_type"):
         detected = DOC_ES.get(result.result.get("detected_type"), "otro documento")
@@ -91,7 +92,7 @@ async def documents(state: TurnState, deps: Deps) -> dict[str, Any]:
         else:
             facts["note_es"] = f"Recibí tu {doc_es} y está en orden."
     st["facts"] = facts
-    return st
+    return await request_gate_if_ready(st, deps)
 
 
 @stage_node(Stage.documents)

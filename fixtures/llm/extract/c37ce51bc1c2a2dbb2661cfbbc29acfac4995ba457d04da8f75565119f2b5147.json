@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Tienes la segunda llave del auto?",
+    "text": "Sí, tengo las dos llaves"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "segunda_llave": true
+    }
+  },
+  "recorded_at": "2026-10-04T15:57:40.132511+00:00",
+  "model": "seeded-from-scenario"
+}

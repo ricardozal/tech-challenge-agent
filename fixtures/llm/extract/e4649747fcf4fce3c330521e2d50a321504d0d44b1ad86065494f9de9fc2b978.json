@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Me compartes tu nombre completo?",
+    "text": "Buenas tardes, me llamo María Fernanda López García"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": "María Fernanda López García"
+    }
+  },
+  "recorded_at": "2026-10-04T15:57:41.240659+00:00",
+  "model": "seeded-from-scenario"
+}

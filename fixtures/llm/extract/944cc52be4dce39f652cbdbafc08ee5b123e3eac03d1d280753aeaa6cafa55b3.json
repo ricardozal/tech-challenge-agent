@@ -1,0 +1,22 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nESTADO DE CUENTA — ESPÉCIMEN DE PRUEBA\nBANCO EJEMPLO, S.A.\nCLIENTE MARÍA FERNANDA LÓPEZ GARCÍA\nPERIODO Del 01/09/2026 al 30/09/2026\nTOTAL DE DEPÓSITOS $24,100.00 MXN\nSALDO FINAL $6,980.40"
+  },
+  "response": {
+    "tipo_documento": "estado_cuenta",
+    "campos": {
+      "nombre_completo": "MARÍA FERNANDA LÓPEZ GARCÍA",
+      "banco": "BANCO EJEMPLO, S.A.",
+      "periodo_inicio": "2026-09-01",
+      "periodo_fin": "2026-09-30",
+      "total_depositos": 24100.0,
+      "saldo_final": 6980.4,
+      "moneda": "MXN"
+    }
+  },
+  "recorded_at": "2026-10-04T15:57:41.262520+00:00",
+  "model": "seeded-from-scenario"
+}

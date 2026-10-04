@@ -84,6 +84,8 @@ class HandlerContext:
         return self.case.state
 
     def emit(self, event_type: str, **data: Any) -> None:
+        if "type" in data:
+            raise ValueError("event data cannot override the event type")
         self.events.append({"type": event_type, **data})
 
     def decide(self, kind: str, result: str, reason: str | None = None, inputs: dict | None = None) -> None:

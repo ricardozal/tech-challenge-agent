@@ -1,0 +1,14 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "profiling",
+    "agent_question": "¿Cuál es tu domicilio, con código postal?",
+    "text": "mi ex pareja me está obligando a sacar este préstamo"
+  },
+  "response": {
+    "intencion": "tema_sensible",
+    "campos": {}
+  },
+  "recorded_at": "2026-10-04T15:57:35.064171+00:00",
+  "model": "seeded-from-scenario"
+}

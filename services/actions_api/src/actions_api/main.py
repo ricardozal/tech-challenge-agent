@@ -27,6 +27,8 @@ TOOL_MODULES = [
     "actions_api.tools.eligibility",
     "actions_api.tools.profiling",
     "actions_api.tools.documents",
+    "actions_api.tools.gate",
+    "actions_api.tools.advisor",
 ]
 
 

@@ -2,7 +2,6 @@
 
 import base64
 import hashlib
-from collections.abc import Callable
 from datetime import date
 from uuid import uuid4
 
@@ -13,14 +12,11 @@ from actions_api.providers.document_reader import DocumentReader
 from actions_api.rules.documents import INCOME_PROOFS, validations_for
 from actions_api.rules.matching import validate_address, validate_name
 from actions_api.toolkit import HandlerContext, ToolRejected, tool
+from actions_api.tools.gate import auto_gate
 from contracts.actions import SubmitDocumentInput
 from contracts.case import DocumentRecord, Validation
-from contracts.common import DocumentType, EscalationReason, ValidationResult
+from contracts.common import DocumentType, EscalationReason, Status, ValidationResult
 from contracts.llm import document_fields_to_domain
-
-# Called after validations change (the gate and N-attempt escalation are wired in US4).
-POST_VALIDATION_HOOKS: list[Callable[[HandlerContext, list[Validation]], None]] = []
-
 
 def today(ctx: HandlerContext) -> date:
     settings: Settings = ctx.services.extras["settings"]
@@ -40,10 +36,38 @@ def record_validations(ctx: HandlerContext, validations: list[Validation]) -> No
         state.validations[v.key] = v
         if v.result != ValidationResult.passed:
             state.attempts[v.type] = state.attempts.get(v.type, 0) + 1
-        ctx.emit("validation_recorded", key=v.key, type=v.type.value, result=v.result.value,
+        ctx.emit("validation_recorded", key=v.key, validation_type=v.type.value, result=v.result.value,
                  reason=v.detail.get("reason"))
-    for hook in POST_VALIDATION_HOOKS:
-        hook(ctx, validations)
+    escalate_if_persisting(ctx, validations)
+    if ctx.case.status != Status.escalated:
+        auto_gate(ctx)
+
+
+def escalate_if_persisting(ctx: HandlerContext, validations: list[Validation]) -> None:
+    """Escalate on the failed result number N + 1 of the same validation type (FR-038)."""
+    if ctx.case.status != Status.active:
+        return
+    limit = ctx.policy.escalation.max_correction_attempts
+    for vtype in dict.fromkeys(v.type for v in validations if v.result != ValidationResult.passed):
+        if ctx.state.attempts.get(vtype, 0) > limit:
+            failed = [v for v in ctx.state.validations.values() if v.type == vtype and v.result != ValidationResult.passed]
+            messages = [m for m in ctx.state.messages if m.author == "client"][-3:]
+            evidence = {
+                "validation_type": vtype.value,
+                "attempts": ctx.state.attempts[vtype],
+                "failed_validations": [v.model_dump(mode="json") for v in failed],
+                "documents": _documents_like(ctx, failed),
+                "last_client_messages": [m.model_dump(mode="json") for m in messages],
+            }
+            open_escalation(ctx, EscalationReason.mismatch_persisted, evidence=evidence)
+            return
+
+
+def _documents_like(ctx: HandlerContext, failed: list[Validation]) -> list[str]:
+    """Every document of the same type as the ones behind the failed validations (all the attempts)."""
+    ids = {e for v in failed for e in v.evidence}
+    types = {d.detected_type for d in ctx.state.documents if str(d.id) in ids}
+    return [str(d.id) for d in ctx.state.documents if d.detected_type in types]
 
 
 @tool("submit_document")

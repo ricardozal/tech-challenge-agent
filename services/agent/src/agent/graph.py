@@ -49,6 +49,7 @@ NODE_MODULES: list[str] = [
     "agent.nodes.profiling",
     "agent.nodes.simulation",
     "agent.nodes.documents",
+    "agent.nodes.escalation",
 ]
 
 

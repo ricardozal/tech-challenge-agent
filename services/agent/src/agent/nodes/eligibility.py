@@ -3,7 +3,7 @@
 from typing import Any
 
 from agent.graph import Deps, TurnState, stage_node
-from agent.nodes.common import declared_updates, merge, rejection_facts
+from agent.nodes.common import declared_updates, merge, pesos, rejection_facts
 from agent.questions import missing_fields
 from contracts.common import Stage
 
@@ -31,7 +31,7 @@ async def eligibility(state: TurnState, deps: Deps) -> dict[str, Any]:
         note = "¡Buenas noticias! Tu auto cumple los requisitos para usarlo como garantía."
         if result.result.get("key_quote"):
             note += (
-                f" Como no tienes la segunda llave, cotizamos su fabricación en ${result.result['key_quote']} "
+                f" Como no tienes la segunda llave, cotizamos su fabricación en {pesos(result.result['key_quote'])} "
                 "y ese costo se suma a tu plan de pagos."
             )
         facts["note_es"] = note

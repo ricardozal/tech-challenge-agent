@@ -1,0 +1,22 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nIDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA\nFormato genérico de prueba. No es un documento oficial.\nNOMBRE MARÍA FERNANDA LÓPEZ GARCÍA\nDOMICILIO CALLE ROBLE 18, COL. JARDINES, QUERÉTARO, QRO. C.P. 76020\nCURP LOGM900315MQTPRR04\nFECHA DE NACIMIENTO 15/03/1990\nEMISIÓN 2022   VIGENCIA 2032"
+  },
+  "response": {
+    "tipo_documento": "identificacion",
+    "campos": {
+      "nombre_completo": "MARÍA FERNANDA LÓPEZ GARCÍA",
+      "curp": "LOGM900315MQTPRR04",
+      "domicilio": "CALLE ROBLE 18, COL. JARDINES, QUERÉTARO, QRO.",
+      "codigo_postal": "76020",
+      "fecha_nacimiento": "1990-03-15",
+      "vigencia": 2032,
+      "fecha_emision": "2022"
+    }
+  },
+  "recorded_at": "2026-10-04T15:57:41.252076+00:00",
+  "model": "seeded-from-scenario"
+}

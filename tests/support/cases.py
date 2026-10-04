@@ -10,8 +10,8 @@ class Case:
     def __init__(self, api, case_id, version):
         self.api, self.id, self.version = api, case_id, version
 
-    def call(self, tool, input=None, actor="agent", **context):
-        resp = self.api.call(tool, self.id, self.version, actor=actor, input=input, **context)
+    def call(self, tool, input=None, actor="agent", key=None, **context):
+        resp = self.api.call(tool, self.id, self.version, actor=actor, input=input, key=key, **context)
         if resp.json().get("case"):
             self.version = resp.json()["case"]["version"]
         return resp

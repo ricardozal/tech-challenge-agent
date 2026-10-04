@@ -2,7 +2,7 @@
 
 Generado por `scripts/traceability.py` a partir de `@pytest.mark.req`; no editar a mano.
 
-Requisitos: 52 · con test: 41 · sin test: 11
+Requisitos: 52 · con test: 51 · sin test: 1
 
 | Requisito | Tests |
 |---|---|
@@ -27,7 +27,7 @@ Requisitos: 52 · con test: 41 · sin test: 11
 | FR-019 | `services/actions_api/tests/rules/test_profile.py::test_score_maps_to_the_policy_band`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_credit_check_assigns_the_profile_with_policy_version` |
 | FR-020 | `services/actions_api/tests/rules/test_options.py::test_no_option_left_means_no_offer`<br>`services/actions_api/tests/rules/test_profile.py::test_score_below_the_lowest_band_has_no_offer`<br>`services/actions_api/tests/rules/test_profile.py::test_unemployed_has_no_offer`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_low_score_is_rejected_without_offer` |
 | FR-021 | `services/actions_api/tests/rules/test_options.py::test_one_option_per_percentage_at_the_standard_term`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_options_are_simulated_and_carry_the_policy_version` |
-| FR-022 | `services/actions_api/tests/rules/test_options.py::test_key_cost_is_financed_inside_each_option`<br>`services/actions_api/tests/rules/test_options.py::test_option_is_skipped_when_the_key_eats_the_whole_amount`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_options_include_the_quoted_key`<br>`services/agent/tests/test_profiling_nodes.py::test_options_show_the_key_cost_when_there_is_no_spare_key` |
+| FR-022 | `tests/e2e/test_demos.py::test_demo_4_no_spare_key`<br>`services/actions_api/tests/rules/test_options.py::test_key_cost_is_financed_inside_each_option`<br>`services/actions_api/tests/rules/test_options.py::test_option_is_skipped_when_the_key_eats_the_whole_amount`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_options_include_the_quoted_key`<br>`services/agent/tests/test_profiling_nodes.py::test_options_show_the_key_cost_when_there_is_no_spare_key` |
 | FR-023 | `services/actions_api/tests/rules/test_options.py::test_financed_total_never_exceeds_the_max`<br>`services/actions_api/tests/rules/test_profile.py::test_max_financeable_is_the_lower_of_band_limit_and_vehicle_share` |
 | FR-024 | `services/actions_api/tests/tools/test_profiling_tools.py::test_selecting_a_proposed_option_moves_to_documents_and_others_are_rejected`<br>`services/agent/tests/test_profiling_nodes.py::test_other_amount_is_not_offered_and_a_proposed_option_is_selected` |
 | FR-025 | `services/agent/tests/test_documents_node.py::test_asks_for_the_four_documents_one_by_one` |
@@ -41,20 +41,20 @@ Requisitos: 52 · con test: 41 · sin test: 11
 | FR-033 | `services/actions_api/tests/rules/test_documents.py::test_low_confidence_field_is_not_used`<br>`services/actions_api/tests/rules/test_income.py::test_low_confidence_amount_is_not_used`<br>`services/actions_api/tests/tools/test_submit_document.py::test_low_confidence_fields_leave_validations_pending` |
 | FR-034 | `services/actions_api/tests/tools/test_submit_document.py::test_each_non_passed_result_counts_an_attempt_by_type`<br>`services/agent/tests/test_documents_node.py::test_income_mismatch_names_the_document_the_field_and_asks_again`<br>`services/agent/tests/test_documents_node.py::test_illegible_document_asks_for_a_better_photo` |
 | FR-035 | `services/actions_api/tests/tools/test_submit_document.py::test_instructions_inside_a_document_do_not_change_anything`<br>`services/llm_gateway/tests/test_modes.py::test_user_text_only_appears_inside_the_delimited_data_block` |
-| FR-036 | **sin test** |
-| FR-037 | **sin test** |
-| FR-038 | **sin test** |
-| FR-039 | **sin test** |
-| FR-040 | **sin test** |
+| FR-036 | `tests/e2e/test_demos.py::test_demo_1_happy_path`<br>`services/actions_api/tests/rules/test_gate.py::test_passes_only_with_every_required_key_passed`<br>`services/actions_api/tests/rules/test_gate.py::test_failed_low_confidence_or_absent_keys_are_missing`<br>`services/actions_api/tests/rules/test_gate.py::test_manual_verification_counts_as_passed`<br>`services/actions_api/tests/tools/test_gate_tool.py::test_last_passing_document_triggers_the_gate_as_a_separate_system_action` |
+| FR-037 | `services/actions_api/tests/tools/test_gate_tool.py::test_agent_request_with_pending_validations_is_rejected_and_audited` |
+| FR-038 | `tests/e2e/test_demos.py::test_demo_3_escalation_branch_and_advisor_verification`<br>`services/actions_api/tests/tools/test_escalation.py::test_third_failed_result_of_the_same_type_escalates` |
+| FR-039 | `services/actions_api/tests/tools/test_escalation.py::test_client_asking_for_a_human_escalates`<br>`services/agent/tests/test_router.py::test_asking_for_a_person_escalates_in_any_stage` |
+| FR-040 | `services/actions_api/tests/tools/test_escalation.py::test_sensitive_topic_escalates`<br>`services/agent/tests/test_router.py::test_sensitive_topic_is_escalated_without_trying_to_solve_it` |
 | FR-041 | `services/actions_api/tests/tools/test_eligibility_tool.py::test_registry_failure_after_retries_escalates`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_bureau_failure_escalates`<br>`services/actions_api/tests/tools/test_submit_document.py::test_document_reader_failure_after_retries_escalates` |
-| FR-042 | **sin test** |
-| FR-043 | `services/actions_api/tests/test_permissions.py::test_escalated_case_allows_the_agent_only_messages_and_cancellation` |
-| FR-044 | **sin test** |
-| FR-045 | **sin test** |
-| FR-046 | **sin test** |
+| FR-042 | `services/actions_api/tests/tools/test_escalation.py::test_ticket_has_reason_evidence_summary_and_suggested_action` |
+| FR-043 | `services/actions_api/tests/test_permissions.py::test_escalated_case_allows_the_agent_only_messages_and_cancellation`<br>`services/actions_api/tests/tools/test_advisor_tools.py::test_client_can_cancel_even_while_escalated_and_the_ticket_closes`<br>`services/actions_api/tests/tools/test_advisor_tools.py::test_agent_cannot_request_the_gate_while_escalated`<br>`services/actions_api/tests/tools/test_escalation.py::test_escalated_case_blocks_agent_business_tools_but_not_messages`<br>`services/agent/tests/test_router.py::test_after_escalation_the_agent_only_records_messages` |
+| FR-044 | `services/actions_api/tests/tools/test_advisor_tools.py::test_advisor_actions_resolve_the_ticket_and_are_audited` |
+| FR-045 | `tests/e2e/test_demos.py::test_demo_3_escalation_branch_and_advisor_verification`<br>`services/actions_api/tests/tools/test_advisor_tools.py::test_manual_verification_needs_justification_and_reruns_the_gate` |
+| FR-046 | `services/actions_api/tests/tools/test_advisor_tools.py::test_client_can_cancel_even_while_escalated_and_the_ticket_closes`<br>`services/agent/tests/test_router.py::test_cancel_intent_cancels_the_case` |
 | FR-047 | `services/actions_api/tests/rules/test_profile.py::test_changing_a_threshold_in_the_policy_changes_the_result`<br>`services/actions_api/tests/test_policy.py::test_policy_file_holds_every_business_threshold`<br>`services/actions_api/tests/test_policy.py::test_archived_versions_are_resolvable_and_unknown_ones_fail` |
 | FR-048 | `services/actions_api/tests/test_policy.py::test_case_pins_the_current_policy_version_and_actions_record_it`<br>`services/actions_api/tests/tools/test_eligibility_tool.py::test_missing_spare_key_is_quoted_and_recorded_with_policy_version`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_credit_check_assigns_the_profile_with_policy_version`<br>`services/actions_api/tests/tools/test_profiling_tools.py::test_options_are_simulated_and_carry_the_policy_version` |
 | FR-049 | **sin test** |
-| FR-050 | **sin test** |
+| FR-050 | `services/actions_api/tests/tools/test_advisor_tools.py::test_advisor_revokes_an_ok_and_the_agent_cannot` |
 | FR-051 | `tests/architecture/test_compose.py::test_only_the_gateway_knows_the_llm_mode_and_ollama`<br>`services/llm_gateway/tests/test_modes.py::test_fake_mode_never_calls_ollama` |
-| FR-052 | `tests/e2e/test_demo_eligibility_rejection.py::test_demo_eligibility_rejection` |
+| FR-052 | `tests/e2e/test_demo_eligibility_rejection.py::test_demo_eligibility_rejection`<br>`tests/e2e/test_demos.py::test_demo_1_happy_path`<br>`tests/e2e/test_demos.py::test_demo_3_correction_branch`<br>`tests/e2e/test_demos.py::test_demo_3_escalation_branch_and_advisor_verification`<br>`tests/e2e/test_demos.py::test_demo_4_no_spare_key` |

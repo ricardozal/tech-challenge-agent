@@ -61,4 +61,4 @@ def test_spare_key_quote_is_explained_to_the_client(stack):
     ])
 
     assert turns[-1]["case"]["stage"] == "profiling"
-    assert "$1850.00" in turns[-1]["reply"] and "plan de pagos" in turns[-1]["reply"]
+    assert "$1,850.00" in turns[-1]["reply"] and "plan de pagos" in turns[-1]["reply"]

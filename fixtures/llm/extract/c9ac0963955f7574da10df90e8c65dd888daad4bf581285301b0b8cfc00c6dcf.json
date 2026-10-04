@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿El auto tiene algún adeudo, crédito o gravamen?",
+    "text": "No tiene ningún adeudo"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "adeudos_vehiculo": false
+    }
+  },
+  "recorded_at": "2026-10-04T15:57:41.241390+00:00",
+  "model": "seeded-from-scenario"
+}

@@ -1,0 +1,100 @@
+# Demo 3, rama B · El recibo no cuadra tres veces (N = 2): el sistema escala con ticket para un asesor.
+name: document_escalation
+description: 'Demo 3, rama B · El recibo no cuadra tres veces (N = 2): el sistema escala con ticket para un asesor.'
+steps:
+- say: Hola, soy Laura Méndez Rojas
+  stage: eligibility
+  question: ¿Me compartes tu nombre completo?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      nombre_completo: Laura Méndez Rojas
+- say: Tengo un Volkswagen Jetta 2019
+  stage: eligibility
+  question: ¿Qué auto es? Dime marca, modelo y año.
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      auto_marca: Volkswagen
+      auto_modelo: Jetta
+      auto_anio: 2019
+- say: Sí, está a mi nombre
+  stage: eligibility
+  question: ¿El auto está a tu nombre?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      auto_a_nombre_propio: true
+- say: No, ya lo terminé de pagar
+  stage: eligibility
+  question: ¿El auto tiene algún adeudo, crédito o gravamen?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      adeudos_vehiculo: false
+- say: Sí, tengo las dos llaves
+  stage: eligibility
+  question: ¿Tienes la segunda llave del auto?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      segunda_llave: true
+- say: Av. Morelos 245, Col. Centro, Toluca, CP 50000
+  stage: profiling
+  question: ¿Cuál es tu domicilio, con código postal?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      domicilio: Av. Morelos 245, Col. Centro, Toluca
+      codigo_postal: '50000'
+- say: Soy empleada y gano 20 mil al mes
+  stage: profiling
+  question: ¿Cuál es tu situación laboral y cuánto ganas?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      situacion_laboral: empleado
+      ingreso_monto: 20000
+      ingreso_periodicidad: mensual
+- say: Sí, adelante
+  stage: profiling
+  question: ¿Nos autorizas consultar tu historial en Buró de Crédito?
+  extract:
+    intencion: proporcionar_datos
+    campos:
+      consentimiento_buro: true
+- say: La primera
+  stage: simulation
+  question: ¿Cuál opción prefieres?
+  extract:
+    intencion: elegir_opcion
+    campos:
+      opcion_elegida: 1
+- upload: fixtures/documents/laura_identification.png
+  requested_type: identification
+- upload: fixtures/documents/laura_proof_of_address.png
+  requested_type: proof_of_address
+- upload: fixtures/documents/laura_invoice.png
+  requested_type: vehicle_invoice
+- upload: fixtures/documents/laura_payslip_low.png
+  requested_type: payslip
+- upload: fixtures/documents/laura_payslip_low.png
+  requested_type: payslip
+- upload: fixtures/documents/laura_payslip_low.png
+  requested_type: payslip
+expected:
+  status: escalated
+  stage: documents
+  tools_called:
+  - create_case
+  - update_declared_data
+  - evaluate_eligibility
+  - record_bureau_consent
+  - run_credit_check
+  - simulate_options
+  - select_option
+  - submit_document
+  tools_not_called:
+  - evaluate_gate
+  events:
+  - escalated

@@ -1,0 +1,18 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Qué auto es? Dime marca, modelo y año.",
+    "text": "Es un Nissan Versa 2018"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "auto_marca": "Nissan",
+      "auto_modelo": "Versa",
+      "auto_anio": 2018
+    }
+  },
+  "recorded_at": "2026-10-04T06:37:32.040511+00:00",
+  "model": "seeded-from-scenario"
+}

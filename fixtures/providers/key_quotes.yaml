@@ -1,0 +1,6 @@
+# Simulated spare-key quote (R-15): price to manufacture a second key by make + model + year.
+records:
+  - {make: Volkswagen, model: Jetta, year: 2019, amount: "1850.00", quote_id: KQ-VW-JETTA-2019}
+  - {make: Kia, model: Rio, year: 2021, amount: "2400.00", quote_id: KQ-KIA-RIO-2021}
+  - {make: Nissan, model: Versa, year: 2018, amount: "1600.00", quote_id: KQ-NISSAN-VERSA-2018}
+default: {amount: "2500.00", quote_id: KQ-DEFAULT}

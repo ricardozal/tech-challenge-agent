@@ -44,7 +44,7 @@ INTENT_NODES: dict[str, Node] = {}
 DOCUMENT_NODE: dict[str, Node] = {}
 
 # Node modules register themselves on import; later phases add theirs here.
-NODE_MODULES: list[str] = []
+NODE_MODULES: list[str] = ["agent.nodes.eligibility"]
 
 
 def stage_node(stage: str) -> Callable[[Node], Node]:
@@ -129,13 +129,13 @@ def route_after_interpret(state: TurnState) -> str:
     status = state["case"]["status"]
     intent = state.get("intent")
     if intent == Intent.cancel and intent in INTENT_NODES and status in (Status.active, Status.escalated):
-        return f"intent:{intent}"
+        return f"intent_{intent}"
     if status != Status.active:
         return "respond"
     if intent in INTENT_NODES:
-        return f"intent:{intent}"
+        return f"intent_{intent}"
     stage = state["case"]["stage"]
-    return f"stage:{stage}" if stage in STAGE_NODES else "respond"
+    return f"stage_{stage}" if stage in STAGE_NODES else "respond"
 
 
 def build_graph(deps: Deps, checkpointer: Any = None):
@@ -155,13 +155,13 @@ def build_graph(deps: Deps, checkpointer: Any = None):
     graph.add_node("respond", bind(respond))
     targets = {"respond": "respond"}
     for stage, fn in STAGE_NODES.items():
-        graph.add_node(f"stage:{stage}", bind(fn))
-        graph.add_edge(f"stage:{stage}", "respond")
-        targets[f"stage:{stage}"] = f"stage:{stage}"
+        graph.add_node(f"stage_{stage}", bind(fn))
+        graph.add_edge(f"stage_{stage}", "respond")
+        targets[f"stage_{stage}"] = f"stage_{stage}"
     for intent, fn in INTENT_NODES.items():
-        graph.add_node(f"intent:{intent}", bind(fn))
-        graph.add_edge(f"intent:{intent}", "respond")
-        targets[f"intent:{intent}"] = f"intent:{intent}"
+        graph.add_node(f"intent_{intent}", bind(fn))
+        graph.add_edge(f"intent_{intent}", "respond")
+        targets[f"intent_{intent}"] = f"intent_{intent}"
     entry_targets = {"respond": "respond", "interpret": "interpret"}
     if "documents" in DOCUMENT_NODE:
         graph.add_node("documents", bind(DOCUMENT_NODE["documents"]))

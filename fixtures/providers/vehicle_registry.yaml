@@ -1,0 +1,11 @@
+# Simulated vehicle registry (R-15): liens and reference value by declared owner + vehicle.
+# Lookup key: normalized name | make | model | year. Synthetic data only.
+records:
+  - {name: Laura Méndez Rojas, make: Volkswagen, model: Jetta, year: 2019, lien: false, reference_value: "180000"}
+  - {name: Jorge Ramírez Luna, make: Nissan, model: Versa, year: 2018, lien: false, reference_value: "120000"}
+  - {name: María Fernanda López García, make: Kia, model: Rio, year: 2021, lien: false, reference_value: "210000"}
+  - {name: Sofía Castillo Pérez, make: Mazda, model: "3", year: 2020, lien: true, reference_value: "230000"}
+  - {name: Prueba Sin Valor, make: Chevrolet, model: Aveo, year: 2010, lien: false, reference_value: null}
+  - {name: Prueba Falla Proveedor, make: Volkswagen, model: Jetta, year: 2019, fail: true}
+# Any vehicle not listed above.
+default: {lien: false, reference_value: "150000"}

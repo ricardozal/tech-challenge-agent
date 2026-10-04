@@ -1,0 +1,14 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿El auto está a tu nombre?",
+    "text": "lo maneja mi esposa"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {}
+  },
+  "recorded_at": "2026-10-04T06:37:32.600426+00:00",
+  "model": "seeded-from-scenario"
+}

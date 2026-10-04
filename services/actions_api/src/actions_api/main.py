@@ -12,13 +12,15 @@ from fastapi.responses import JSONResponse
 from actions_api import db
 from actions_api.config import Settings
 from actions_api.policy import PolicyRegistry
+from actions_api.providers.key_quote import KeyQuoteProvider
+from actions_api.providers.vehicle_registry import VehicleRegistryProvider
 from actions_api.toolkit import REGISTRY, Services, execute
 from contracts.actions import ToolCall, ToolResult
 from contracts.case import AuditEntry, CaseSummary, CaseView, Escalation
 from contracts.common import Actor
 
 # Tool modules register themselves with @tool on import.
-TOOL_MODULES = ["actions_api.tools.case"]
+TOOL_MODULES = ["actions_api.tools.case", "actions_api.tools.eligibility"]
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -27,7 +29,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         importlib.import_module(module)
 
     database = db.Database(settings.database_url)
-    services = Services(policies=PolicyRegistry.load(settings.policy_dir), extras={"settings": settings})
+    services = Services(
+        policies=PolicyRegistry.load(settings.policy_dir),
+        extras={
+            "settings": settings,
+            "vehicle_registry": VehicleRegistryProvider(settings.providers_dir / "vehicle_registry.yaml"),
+            "key_quote": KeyQuoteProvider(settings.providers_dir / "key_quotes.yaml"),
+        },
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:

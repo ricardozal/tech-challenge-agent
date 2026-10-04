@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Me compartes tu nombre completo?",
+    "text": "Hola, soy Jorge Ramírez Luna"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": "Jorge Ramírez Luna"
+    }
+  },
+  "recorded_at": "2026-10-04T06:37:32.040037+00:00",
+  "model": "seeded-from-scenario"
+}

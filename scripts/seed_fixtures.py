@@ -45,8 +45,13 @@ def write(task: str, key: str, request: dict, response: dict) -> Path:
 
 def seed(scenario_path: Path) -> int:
     scenario = yaml.safe_load(scenario_path.read_text(encoding="utf-8"))
+    return seed_steps(scenario.get("steps", []))
+
+
+def seed_steps(steps: list[dict]) -> int:
+    """Write the fixtures of a list of scenario steps (also used by tests)."""
     count = 0
-    for step in scenario.get("steps", []):
+    for step in steps:
         if "say" in step and "extract" in step:
             inputs = {"stage": step.get("stage"), "agent_question": step.get("question"), "text": step["say"]}
             write("extract", fixture_key("extract", "mensaje", inputs), {"schema_name": "mensaje", **inputs}, step["extract"])

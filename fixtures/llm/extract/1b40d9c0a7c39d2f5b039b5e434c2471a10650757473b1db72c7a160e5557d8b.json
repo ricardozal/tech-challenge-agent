@@ -1,0 +1,16 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿El auto está a tu nombre?",
+    "text": "está a nombre de mi esposa pero yo lo manejo diario"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "auto_a_nombre_propio": false
+    }
+  },
+  "recorded_at": "2026-10-04T06:37:32.040656+00:00",
+  "model": "seeded-from-scenario"
+}

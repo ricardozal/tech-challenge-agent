@@ -59,5 +59,6 @@ forbidden_modules =
     os
     pathlib
     actions_api.db
+    actions_api.policy
     actions_api.providers
     actions_api.toolkit

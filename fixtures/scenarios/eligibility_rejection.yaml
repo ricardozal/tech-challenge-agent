@@ -1,0 +1,22 @@
+# Demo 2 · Rechazo por elegibilidad: el auto está a nombre de otra persona (P1, FR-012).
+name: eligibility_rejection
+description: El cliente dice que el auto está a nombre de su esposa; el sistema rechaza sin consultar Buró.
+steps:
+  - say: "Hola, soy Jorge Ramírez Luna"
+    stage: eligibility
+    question: "¿Me compartes tu nombre completo?"
+    extract: {intencion: proporcionar_datos, campos: {nombre_completo: "Jorge Ramírez Luna"}}
+  - say: "Es un Nissan Versa 2018"
+    stage: eligibility
+    question: "¿Qué auto es? Dime marca, modelo y año."
+    extract: {intencion: proporcionar_datos, campos: {auto_marca: Nissan, auto_modelo: Versa, auto_anio: 2018}}
+  - say: "está a nombre de mi esposa pero yo lo manejo diario"
+    stage: eligibility
+    question: "¿El auto está a tu nombre?"
+    extract: {intencion: proporcionar_datos, campos: {auto_a_nombre_propio: false}}
+expected:
+  status: rejected
+  stage: eligibility
+  tools_called: [create_case, update_declared_data, evaluate_eligibility]
+  tools_not_called: [run_credit_check]
+  events: [vehicle_rejected]

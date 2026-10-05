@@ -1,0 +1,13 @@
+{
+  "request": {
+    "sha256": "c6b9bad476e299d4150bfc13d7b2ebca227c1cddb0f3570d66feb7146186a8a2"
+  },
+  "response": {
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nIDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA\nN0MBR3 L...A M..D.Z\nCURP M#RL8#0#1#\nV1G#NC1A 20#1"
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:03:39.694953+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

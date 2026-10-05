@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "documents",
+    "status": "active",
+    "facts": {
+      "note_es": "Recibí tu comprobante de ingresos y está en orden."
+    },
+    "next_question": "¿Me envías tu comprobante de domicilio?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Te confirmo que ya recibí tu comprobante de ingresos y todo se encuentra en orden. ¿Me envías tu comprobante de domicilio?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:29:07.909128+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 3519.6,
+  "prompt_tokens": 174,
+  "completion_tokens": 34
+}

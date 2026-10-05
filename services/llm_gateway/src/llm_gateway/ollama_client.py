@@ -10,6 +10,7 @@ OPTIONS = {"temperature": 0, "seed": 42, "num_predict": 512}
 # OCR has its own budget: a long document must not be cut by the extraction limit.
 OCR_OPTIONS = {"temperature": 0, "seed": 42, "num_predict": 1024}
 KEEP_ALIVE = "30m"
+OCR_PROMPT = "Text Recognition:"
 
 
 @dataclass
@@ -17,6 +18,7 @@ class Completion:
     text: str
     prompt_tokens: int | None
     completion_tokens: int | None
+    latency_ms: float | None = None  # set by LlmService around the call
 
 
 class OllamaClient:
@@ -35,10 +37,20 @@ class OllamaClient:
         resp = self._client.chat(model=self.model, messages=messages, options=OPTIONS, think=False, keep_alive=KEEP_ALIVE)
         return Completion(resp.message.content or "", resp.prompt_eval_count, resp.eval_count)
 
+    def list_models(self) -> list[str]:
+        """Installed model names; `name:latest` also counts as `name`."""
+        names: list[str] = []
+        for m in self._client.list().models:
+            name = m.model or ""
+            names.append(name)
+            if name.endswith(":latest"):
+                names.append(name.removesuffix(":latest"))
+        return names
+
     def ocr(self, image: bytes) -> Completion:
         resp = self._client.chat(
             model=self.ocr_model,
-            messages=[{"role": "user", "content": "Text Recognition:", "images": [image]}],
+            messages=[{"role": "user", "content": OCR_PROMPT, "images": [image]}],
             options=OCR_OPTIONS,
             keep_alive=KEEP_ALIVE,
         )

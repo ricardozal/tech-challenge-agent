@@ -1,0 +1,42 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nFACTURA DE VEHÍCULO — ESPÉCIMEN DE PRUEBA\nEMISOR AUTOS EJEMPLO DE TOLUCA, S.A. DE C.V.\nRECEPTOR LAURA MÉNDEZ ROJAS\nVEHÍCULO VOLKSWAGEN JETTA MODELO 2019\nNIV 3VWEJ1BU0KM123456\nFECHA DE EMISIÓN 22/03/2019"
+  },
+  "response": {
+    "tipo_documento": "factura_vehiculo",
+    "campos": {
+      "nombre_completo": "LAURA MÉNDEZ ROJAS",
+      "curp": null,
+      "domicilio": null,
+      "codigo_postal": null,
+      "fecha_nacimiento": null,
+      "vigencia": null,
+      "empleador": null,
+      "banco": null,
+      "periodicidad": null,
+      "periodo_inicio": null,
+      "periodo_fin": null,
+      "ingreso_bruto": null,
+      "ingreso_neto": null,
+      "total_depositos": null,
+      "saldo_final": null,
+      "fecha_emision": "2019-03-22",
+      "marca": "VOLKSWAGEN",
+      "modelo": "JETTA",
+      "anio": 2019,
+      "niv": "3VWEJ1BU0KM123456",
+      "moneda": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:34:07.954963+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 17896.8,
+  "prompt_tokens": 569,
+  "completion_tokens": 202
+}

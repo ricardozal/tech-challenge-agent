@@ -23,7 +23,7 @@ from pathlib import Path
 
 import yaml
 
-from contracts.llm import fixture_key
+from contracts.llm import PROMPT_VERSION, fixture_key
 
 try:  # imported as scripts.seed_fixtures (tests) or run as a script (make seed-fixtures)
     from scripts.make_documents import load_specs, ocr_text
@@ -32,6 +32,7 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = ROOT / "fixtures" / "llm"
+SCHEMA_VERSION = json.loads((ROOT / "eval" / "esquemas.json").read_text(encoding="utf-8"))["version"]
 
 
 def specs() -> dict:
@@ -39,13 +40,19 @@ def specs() -> dict:
 
 
 def write(task: str, key: str, request: dict, response: dict) -> Path:
+    """Seeded fixture (origin `seeded`, no latency or tokens); never overwrites an authentic recording."""
     path = FIXTURES / task / f"{key}.json"
+    if path.exists() and json.loads(path.read_text(encoding="utf-8")).get("origin") == "recorded":
+        return path
     path.parent.mkdir(parents=True, exist_ok=True)
     record = {
         "request": request,
         "response": response,
-        "recorded_at": datetime.now(UTC).isoformat(),
+        "origin": "seeded",
         "model": "seeded-from-scenario",
+        "recorded_at": datetime.now(UTC).isoformat(),
+        "schema_version": SCHEMA_VERSION,
+        "prompt_version": PROMPT_VERSION,
     }
     path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
@@ -62,16 +69,16 @@ def seed_steps(steps: list[dict]) -> int:
     for step in steps:
         if "say" in step and "extract" in step:
             inputs = {"stage": step.get("stage"), "agent_question": step.get("question"), "text": step["say"]}
-            write("extract", fixture_key("extract", "mensaje", inputs), {"schema_name": "mensaje", **inputs}, step["extract"])
+            write("extract", fixture_key("extract", "mensaje", inputs, SCHEMA_VERSION), {"schema_name": "mensaje", **inputs}, step["extract"])
             count += 1
         if "upload" in step:
             spec = specs().get(Path(step["upload"]).stem, {})
             step = {"ocr_text": ocr_text(spec) if spec else None, "extract": spec.get("extract"), **step}
             content = (ROOT / step["upload"]).read_bytes()
             ocr_inputs = {"sha256": hashlib.sha256(content).hexdigest()}
-            write("ocr", fixture_key("ocr", None, ocr_inputs), ocr_inputs, {"text": step["ocr_text"]})
+            write("ocr", fixture_key("ocr", None, ocr_inputs, SCHEMA_VERSION), ocr_inputs, {"text": step["ocr_text"]})
             inputs = {"stage": None, "agent_question": None, "text": step["ocr_text"]}
-            write("extract", fixture_key("extract", "documento", inputs), {"schema_name": "documento", **inputs},
+            write("extract", fixture_key("extract", "documento", inputs, SCHEMA_VERSION), {"schema_name": "documento", **inputs},
                   step["extract"])
             count += 2
     return count

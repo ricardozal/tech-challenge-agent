@@ -19,6 +19,7 @@ dev = [
     "agent",
     "llm-gateway",
     "doc-intel",
+    "arize-phoenix-client>=3.5",
 ]
 
 [tool.uv]
@@ -41,8 +42,8 @@ llm-gateway = { workspace = true }
 doc-intel = { workspace = true }
 
 [tool.pytest.ini_options]
-testpaths = ["services", "tests"]
-addopts = "--import-mode=importlib"
+testpaths = ["services", "tests", "packages/contracts/tests"]
+addopts = "--import-mode=importlib -m 'not ollama'"
 pythonpath = ["."]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
@@ -50,4 +51,5 @@ markers = [
     "req(id): functional requirement covered by the test",
     "db: needs the compose Postgres (make up-db)",
     "compose: needs the full compose stack (make up)",
+    "ollama: needs Ollama with gemma4:12b and glm-ocr (LLM_MODE=ollama)",
 ]

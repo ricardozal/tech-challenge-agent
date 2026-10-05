@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "simulation",
+    "status": "active",
+    "facts": {
+      "note_es": "Estas son tus opciones: 1) Recibes $97,600.00 (financiamos $100,000.00, que incluye $2,400.00 de la segunda llave) y pagas $5,964.27 al mes durante 24 meses, tasa anual 32%. 2) Recibes $72,600.00 (financiamos $75,000.00, que incluye $2,400.00 de la segunda llave) y pagas $4,473.20 al mes durante 24 meses, tasa anual 32%. 3) Recibes $47,600.00 (financiamos $50,000.00, que incluye $2,400.00 de la segunda llave) y pagas $2,982.13 al mes durante 24 meses, tasa anual 32%."
+    },
+    "next_question": "¿Cuál opción prefieres?",
+    "client_first_name": "María"
+  },
+  "response": {
+    "text": "Hola, María. Estas son tus opciones de financiamiento: puedes recibir $97,600.00 con pagos mensuales de $5,964.27, $72,600.00 con pagos de $4,473.20, o $47,600.00 con pagos de $2,982.13, todos a 24 meses con una tasa anual del 32%. Todas las opciones incluyen el costo de la segunda llave. ¿Cuál opción prefieres?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:37:49.838893+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 9019.8,
+  "prompt_tokens": 383,
+  "completion_tokens": 118
+}

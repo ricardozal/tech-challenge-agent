@@ -1,0 +1,13 @@
+{
+  "request": {
+    "sha256": "78bd13dbacddfe9ac324f46fa02e6cbf6ddb4c55487d80c859c83459683e053f"
+  },
+  "response": {
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nFACTURA DE VEHÍCULO — ESPÉCIMEN DE PRUEBA\nEMISOR AUTOS EJEMPLO DE TOLUCA, S.A. DE C.V.\nRECEPTOR JORGE RAMÍREZ LUNA\nVEHÍCULO VOLKSWAGEN JETTA MODELO 2019\nNIV 3VWEJ1BU0KM654321\nFECHA DE EMISIÓN 22/03/2019"
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:03:40.496369+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "profiling",
+    "agent_question": "¿Cuál es tu situación laboral y cuánto ganas?",
+    "text": "Trabajo por mi cuenta y me depositan unos 24 mil al mes"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "domicilio": null,
+      "codigo_postal": null,
+      "ingreso_monto": 24000,
+      "ingreso_periodicidad": "mensual",
+      "situacion_laboral": "independiente",
+      "consentimiento_buro": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:37:29.367050+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 6635.7,
+  "prompt_tokens": 483,
+  "completion_tokens": 74
+}

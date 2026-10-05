@@ -40,11 +40,13 @@ async def respond(state: TurnState, deps: Deps) -> dict[str, Any]:
         )
     )
 
+    text = questions.end_with_question(reply.text, next_question)
+
     current = {"id": str(view.id), "stage": view.stage.value, "status": view.status.value, "version": view.version}
     _, updates = await deps.call_tool(
         {**state, "case": current},
         "append_message",
-        {"message_id": f"{state['message_id']}:agent", "author": "agent", "text": reply.text,
+        {"message_id": f"{state['message_id']}:agent", "author": "agent", "text": text,
          "delivers_pending_note": bool(advisor_note)},
     )
 
@@ -54,5 +56,5 @@ async def respond(state: TurnState, deps: Deps) -> dict[str, Any]:
     elif state.get("kind") == "document":
         document = state.get("document") or {}
         history.append({"author": "client", "text": f"[documento: {document.get('requested_type')}]"})
-    history.append({"author": "agent", "text": reply.text})
-    return {**updates, "reply": reply.text, "next_question": next_question, "last_question": next_question, "history": history}
+    history.append({"author": "agent", "text": text})
+    return {**updates, "reply": text, "next_question": next_question, "last_question": next_question, "history": history}

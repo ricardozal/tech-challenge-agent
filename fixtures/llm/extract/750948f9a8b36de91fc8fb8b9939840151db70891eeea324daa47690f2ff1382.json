@@ -1,0 +1,17 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nIDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA\nN0MBR3 L...A M..D.Z\nCURP M#RL8#0#1#\nV1G#NC1A 20#1"
+  },
+  "response": {
+    "tipo_documento": "identificacion",
+    "campos": {}
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:03:39.695389+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

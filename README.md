@@ -13,7 +13,7 @@ acción queda en un registro que solo admite inserciones.
 
 ## Arquitectura
 
-Seis contenedores con docker compose y Ollama en el host:
+Siete contenedores con docker compose y Ollama en el host:
 
 | Servicio | Qué hace |
 |---|---|
@@ -23,28 +23,56 @@ Seis contenedores con docker compose y Ollama en el host:
 | `doc_intel` | OCR + extracción + confianza por campo. Sin base de datos ni estado |
 | `web` | Web de demo en http://localhost:8080: chat del cliente (`/chat`) y consola del asesor (`/asesor`). Estática (nginx); el navegador llama directo a `agent` y `actions_api` |
 | `postgres` | Esquemas `cases`, `audit` (solo inserción) y `agent` (checkpoints), con un rol por servicio |
+| `phoenix` | Consola de trazas en http://localhost:6006: una traza por turno del agente con sus etapas, tools y llamadas al modelo |
 
 Diagramas C4 en [docs/diagrams/](docs/diagrams/) (contexto, contenedores, componentes y vista dinámica).
 Las decisiones están en [DECISIONS.md](DECISIONS.md) y la especificación completa en
 [specs/001-credit-agent-core/](specs/001-credit-agent-core/) (spec, plan, research, modelo de datos,
-contratos y tareas); la web de demo, en [specs/002-demo-web/](specs/002-demo-web/). La constitución del proyecto está en
+contratos y tareas); la web de demo, en [specs/002-demo-web/](specs/002-demo-web/); modelos reales y
+observabilidad, en [specs/003-real-models-observability/](specs/003-real-models-observability/). La constitución del proyecto está en
 [.specify/memory/constitution.md](.specify/memory/constitution.md).
 
 ## Requisitos
 
 - Docker con Compose v2 y [uv](https://docs.astral.sh/uv/).
 - Solo para las pruebas de la web (`make test-web`): Node 24 y, una vez, `cd web && npm ci && npx playwright install chromium`.
-- Solo para `LLM_MODE=ollama|record` y `make eval`: Ollama en el host con `gemma4:12b` y `glm-ocr`.
+- Solo para `LLM_MODE=ollama|record`, `make record`, `make eval` y `make test-ollama`: Ollama en el host
+  con los modelos instalados (`ollama pull gemma4:12b` y `ollama pull glm-ocr`).
 
-No hace falta GPU: por defecto el gateway responde con fixtures grabados.
+No hace falta GPU: por defecto el gateway responde con respuestas grabadas del modelo real.
 
 ## Arrancar
 
 ```bash
 uv sync
-make up        # construye y levanta los 6 servicios (LLM_MODE=fake)
+make up        # construye y levanta los 7 servicios (LLM_MODE=fake)
 make ps
 ```
+
+## Modelos: grabado, real y grabación
+
+Una sola variable de entorno cambia el modo; nada más se toca. Solo `llm_gateway` la conoce.
+
+| Modo | Comando | Qué hace |
+|---|---|---|
+| `fake` (por defecto) | `make up` | Responde con las respuestas grabadas de `fixtures/llm/`; sin GPU ni Ollama |
+| `ollama` | `LLM_MODE=ollama make up` | `gemma4:12b` conversa y extrae, `glm-ocr` lee los documentos (temperature 0, seed 42) |
+| `record` | `LLM_MODE=record make up && make record` | Como `ollama`, y además graba cada respuesta; `make record` corre los 4 demos y solo promueve a `fixtures/llm/` las de los demos que llegaron a su resultado |
+
+Si a Ollama le falta un modelo, `/health` del gateway responde 503 nombrando el modelo y `make up`
+falla; nunca se cae en silencio a respuestas grabadas. Cada respuesta grabada dice su origen
+(`recorded` o `seeded`), el modelo, la latencia y los tokens; `make fixtures-status` (en `fake`) dice si
+los demos usan solo respuestas auténticas.
+
+## Trazas
+
+Con `make up`, abre http://localhost:6006 (proyecto `tech-challenge-agent`). Cada turno del agente es
+una traza cuya raíz es `turn`: debajo están los nodos del grafo (etapas), cada tool con su entrada y
+desenlace, y cada llamada al modelo con entrada, salida, latencia y tokens; los turnos de documento
+incluyen la lectura (`read_document` → OCR → extracción) en la misma traza. Para ver los turnos de un
+caso, filtra por su id en la vista de sesiones (`session.id`). Con respuestas grabadas, las llamadas
+al modelo se marcan como reproducción con la latencia y los tokens de la grabación original. Las
+entradas y salidas se redactan igual que los logs, y si Phoenix está apagado los turnos funcionan igual.
 
 ## Web de demo
 
@@ -60,7 +88,7 @@ Con `make up`, abre http://localhost:8080:
   el panel de métricas.
 
 Con respuestas grabadas (`LLM_MODE=fake`) solo se entienden los mensajes del guion; el texto libre
-funciona con `LLM_MODE=ollama`. Si cambias un guion de `fixtures/scenarios/`, corre
+(p. ej. "es un Nissan Versa 2020, lo compré de agencia") funciona con `LLM_MODE=ollama`. Si cambias un guion de `fixtures/scenarios/`, corre
 `make web-scenarios`. Para desarrollar la web con recarga en caliente:
 `WEB_ORIGINS=http://localhost:8080,http://localhost:5173 make up && make web-dev`.
 
@@ -89,7 +117,8 @@ make advisor-verify CASE=<id> KEY=income JUSTIFICATION="Ingreso confirmado por l
 make test           # reglas, tools, gateway, doc_intel y agente (necesita make up)
 make test-arch      # fronteras: import-linter, permisos de BD, registro inmutable, compose
 make test-web       # Playwright contra http://localhost:8080: los 4 escenarios del chat y la consola
-make test-e2e       # demos, concurrencia (50 pares simultáneos), reproducibilidad (10 corridas), métricas
+make test-e2e       # demos, concurrencia, reproducibilidad, métricas, trazas en Phoenix y respuestas auténticas
+make test-ollama    # con LLM_MODE=ollama: demos y texto libre con modelos reales, y el gate de calidad
 make traceability   # regenera TRACEABILITY.md; falla si algún FR no tiene test
 make metrics        # reporte: rechazos por auto, falsos OK, mismatches por tipo, casos con llave cotizada
 ```
@@ -97,15 +126,20 @@ make metrics        # reporte: rechazos por auto, falsos OK, mismatches por tipo
 Cada test que cubre un requisito lleva `@pytest.mark.req("FR-xxx")` o, en Playwright, un tag `@FR-xxx`;
 [TRACEABILITY.md](TRACEABILITY.md) se genera a partir de esos marcadores.
 
-La calidad del LLM se mide, no se supone: `make eval` corre el set de [eval/](eval/) contra el gateway
-con Ollama y falla si quedan menos de 85% de campos correctos o algún JSON inválido.
+La calidad del LLM se mide, no se supone: `make eval` corre el set de [eval/](eval/) (mensajes y
+documentos) contra el gateway con el modelo real, con el esquema de cada etapa y la misma regla de
+puntaje de la comparación de modelos. Reporta por caso, por tipo y en total, guarda la corrida en
+`eval/resultados/` y sale con 1 si quedan menos de 85% de campos correctos o algún JSON inválido (con 2
+si el gateway está en `fake`).
 
 ```bash
 LLM_MODE=ollama make up
 make eval
 ```
 
-Para regrabar las respuestas del LLM: `LLM_MODE=record make up && make demo-all`.
+Para regrabar las respuestas del LLM: `LLM_MODE=record make up && make record`. Cambiar las
+instrucciones del modelo exige subir `PROMPT_VERSION` (`packages/contracts/src/contracts/llm.py`),
+regrabar y volver a pasar `make eval`.
 
 ## Datos
 

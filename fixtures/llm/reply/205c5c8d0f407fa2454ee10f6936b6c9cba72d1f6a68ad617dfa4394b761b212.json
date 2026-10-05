@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "eligibility",
+    "status": "active",
+    "facts": {},
+    "next_question": "¿El auto tiene algún adeudo, crédito o gravamen?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Gracias por tu interés en nuestro crédito personal con garantía vehicular, donde podrás seguir usando tu auto mientras lo liquidas. Para continuar con tu proceso, ¿el auto tiene algún adeudo, crédito o gravamen?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:30:58.974219+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4382.8,
+  "prompt_tokens": 160,
+  "completion_tokens": 47
+}

@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "eligibility",
+    "status": "rejected",
+    "facts": {
+      "reason_es": "el auto no está a tu nombre, y para usarlo como garantía tiene que estarlo"
+    },
+    "next_question": null,
+    "client_first_name": "Jorge"
+  },
+  "response": {
+    "text": "Hola, Jorge. Lamentablemente, no podemos proceder con tu solicitud porque el auto no está a tu nombre. Para poder usarlo como garantía, el vehículo debe estar registrado a tu nombre. ¿Tienes alguna otra duda en la que pueda apoyarte?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:25:30.446823+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4849.2,
+  "prompt_tokens": 173,
+  "completion_tokens": 51
+}

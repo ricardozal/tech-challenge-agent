@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "eligibility",
+    "status": "active",
+    "facts": {
+      "note_es": "Hola, soy el asistente virtual. Te ayudo a solicitar un crédito personal con tu auto como garantía; tú sigues usando tu auto."
+    },
+    "next_question": "¿Me compartes tu nombre completo?",
+    "client_first_name": null
+  },
+  "response": {
+    "text": "¡Hola! Soy tu asistente virtual y estoy aquí para ayudarte a solicitar un crédito personal con tu auto como garantía, manteniendo el uso de tu vehículo. ¿Me compartes tu nombre completo?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:36:12.692295+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 3387.8,
+  "prompt_tokens": 187,
+  "completion_tokens": 39
+}

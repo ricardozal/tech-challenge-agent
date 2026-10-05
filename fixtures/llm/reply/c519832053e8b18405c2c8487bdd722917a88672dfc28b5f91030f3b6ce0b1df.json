@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "eligibility",
+    "status": "active",
+    "facts": {},
+    "next_question": "¿Qué auto es? Dime marca, modelo y año.",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Es un gusto saludarte y apoyarte con tu solicitud de crédito personal manteniendo el uso de tu vehículo. Para continuar con el proceso, ¿Qué auto es? Dime marca, modelo y año."
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:30:35.923792+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4276.9,
+  "prompt_tokens": 159,
+  "completion_tokens": 44
+}

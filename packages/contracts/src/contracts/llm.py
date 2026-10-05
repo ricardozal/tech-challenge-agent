@@ -61,7 +61,11 @@ class ReplyResponse(BaseModel):
     fixture_hit: bool
 
 
-# --- Fixture key (R-11) -------------------------------------------------------------------------
+# --- Fixture key (R-11, O-10) -------------------------------------------------------------------
+
+# Bump when the instructions in llm_gateway/prompts.py change: recorded answers of an older prompt
+# then become visible misses instead of being replayed.
+PROMPT_VERSION = 2
 
 _SPACES = re.compile(r"\s+")
 
@@ -76,10 +80,17 @@ def _normalize(value: Any) -> Any:
     return value
 
 
-def fixture_key(task: str, schema_name: str | None, inputs: dict[str, Any]) -> str:
-    """sha256 of the canonical request; shared by the gateway and scripts/seed_fixtures.py."""
+def fixture_key(task: str, schema_name: str | None, inputs: dict[str, Any], schema_version: int) -> str:
+    """sha256 of the canonical request plus schema and prompt versions; shared by the gateway and
+    scripts/seed_fixtures.py."""
     canonical = json.dumps(
-        {"task": task, "schema_name": schema_name, "inputs": _normalize(inputs)},
+        {
+            "task": task,
+            "schema_name": schema_name,
+            "schema_version": schema_version,
+            "prompt_version": PROMPT_VERSION,
+            "inputs": _normalize(inputs),
+        },
         sort_keys=True,
         ensure_ascii=False,
         separators=(",", ":"),

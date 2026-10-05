@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "simulation",
+    "status": "active",
+    "facts": {
+      "note_es": "Estas son tus opciones: 1) Recibes $90,000.00 y pagas $4,932.63 al mes durante 24 meses, tasa anual 24%. 2) Recibes $67,500.00 y pagas $3,699.47 al mes durante 24 meses, tasa anual 24%. 3) Recibes $45,000.00 y pagas $2,466.31 al mes durante 24 meses, tasa anual 24%."
+    },
+    "next_question": "¿Cuál opción prefieres?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Estas son tus opciones de crédito: puedes recibir $90,000.00 con un pago mensual de $4,932.63, $67,500.00 con un pago de $3,699.47, o $45,000.00 con un pago de $2,466.31, todos a 24 meses con una tasa anual del 24%. ¿Cuál opción prefieres?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:32:00.471381+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 7746.6,
+  "prompt_tokens": 289,
+  "completion_tokens": 109
+}

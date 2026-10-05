@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "documents",
+    "status": "active",
+    "facts": {
+      "note_es": "Recibí tu comprobante de domicilio y está en orden."
+    },
+    "next_question": "Envíame la factura del auto.",
+    "client_first_name": "María"
+  },
+  "response": {
+    "text": "Hola, María. Te confirmo que ya recibí tu comprobante de domicilio y todo está en orden. Envíame la factura del auto."
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:40:09.038838+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 3974.2,
+  "prompt_tokens": 173,
+  "completion_tokens": 31
+}

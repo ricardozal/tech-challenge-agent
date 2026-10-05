@@ -1,7 +1,12 @@
-"""LLM quality gate (Principle VIII, R-13): extraction over eval/casos_eval.jsonl must reach at least
-85% correct fields and 100% valid JSON, measured through the real llm_gateway.
+"""LLM quality gate (Principle VIII, R-13, O-14): extraction over eval/casos_eval.jsonl must reach at
+least 85% correct fields and 100% valid JSON, measured through the real llm_gateway.
 
     LLM_MODE=ollama make up && make eval
+
+Each message case is sent with its stage, so the gateway uses the message schema of that stage
+(eval/esquemas.json v4, O-13); `transversal` cases go without stage (full schema).
+Exit codes: 0 passes · 1 does not pass (failed cases listed) · 2 the gateway is in LLM_MODE=fake or does
+not answer (nothing is measured and no result file is written).
 
 Scoring follows the `puntaje` rule of eval/esquemas.json exactly as the model comparison applied it:
 n = 1 (intent or document type) + expected fields; numbers and booleans exact (numbers written as
@@ -14,6 +19,7 @@ import argparse
 import json
 import os
 import re
+import statistics
 import sys
 import time
 import unicodedata
@@ -88,49 +94,85 @@ def request_for(case: dict) -> dict:
     return {"schema_name": "documento", "text": clean_ocr(EVAL / f"ocr_{case['id']}.txt")}
 
 
+def summarize(rows: list[dict], health: dict) -> dict:
+    """Totals over the whole set (the threshold), plus per-type breakdown, medians and failed cases."""
+    total_ok = sum(r["ok"] for r in rows)
+    total_n = sum(r["n"] for r in rows)
+    fields = total_ok / total_n if total_n else 0.0
+    valid = sum(r["valid"] for r in rows) / len(rows) if rows else 0.0
+    by_type, medians = {}, {}
+    for tipo in ("mensaje", "documento"):
+        typed = [r for r in rows if r["type"] == tipo]
+        if not typed:
+            continue
+        ok, n = sum(r["ok"] for r in typed), sum(r["n"] for r in typed)
+        by_type[tipo] = {"correct": ok, "fields": n, "pct": round(100 * ok / n, 1) if n else 0.0}
+        medians[tipo] = round(statistics.median(r["seconds"] for r in typed), 1)
+    return {
+        "at": datetime.now().isoformat(timespec="seconds"),
+        "mode": health.get("mode"),
+        "model": health.get("model"),
+        "schema_version": health.get("schema_version"),
+        "prompt_version": health.get("prompt_version"),
+        "cases": len(rows),
+        "correct_fields": total_ok,
+        "fields": total_n,
+        "fields_pct": round(fields * 100, 1),
+        "valid_json_pct": round(valid * 100, 1),
+        "by_type": by_type,
+        "median_seconds": medians,
+        "failed_cases": [r["case"] for r in rows if not r["valid"] or r["ok"] < r["n"]],
+        "passed": round(fields, 4) >= MIN_FIELDS and valid >= MIN_VALID,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--cases", nargs="+", help="case ids (default: all)")
-    parser.add_argument("--allow-fake", action="store_true", help="for testing the script only")
     args = parser.parse_args()
 
     cases = [json.loads(line) for line in (EVAL / "casos_eval.jsonl").read_text(encoding="utf-8").splitlines() if line]
     if args.cases:
         cases = [c for c in cases if c["id"] in set(args.cases)]
     with httpx.Client(base_url=LLM_URL, timeout=600) as http:
-        health = http.get("/health").json()
-        if health["mode"] == "fake" and not args.allow_fake:
-            print("El gateway está en LLM_MODE=fake; levántalo con LLM_MODE=ollama make up.", file=sys.stderr)
+        try:
+            health = http.get("/health").json()
+        except (httpx.HTTPError, ValueError):
+            health = {}
+        if health.get("mode") not in ("ollama", "record"):
+            print("El gateway está en LLM_MODE=fake o no responde; la medición requiere el modelo real "
+                  "(LLM_MODE=ollama make up).", file=sys.stderr)
             return 2
-        rows, total_ok, total_n, invalid = [], 0, 0, 0
+        rows = []
         for case in cases:
             started = time.monotonic()
             resp = http.post("/v1/extract", json=request_for(case))
             elapsed = round(time.monotonic() - started, 1)
             if resp.status_code != 200:
-                invalid += 1
-                ok, n = 0, case["n_campos"]
+                ok, n, valid = 0, case["n_campos"], False
                 data = {"error": resp.json().get("error")}
             else:
                 data = resp.json()["data"]
-                ok, n = score(case, data)
-            total_ok, total_n = total_ok + ok, total_n + n
-            rows.append({"case": case["id"], "ok": ok, "n": n, "seconds": elapsed, "data": data})
-            print(f"{case['id']:<4} {ok:>2}/{n:<2} {elapsed:>6}s  {case.get('que_prueba', '')[:70]}")
+                (ok, n), valid = score(case, data), True
+            rows.append({"case": case["id"], "type": case["tipo"], "ok": ok, "n": n, "valid": valid,
+                         "seconds": elapsed, "data": data})
+            print(f"{case['id']:<4} {ok:>2}/{n:<2} {elapsed:>6}s  {case.get('que_prueba', '')[:70]}", flush=True)
 
-    fields = total_ok / total_n if total_n else 0.0
-    valid = 1 - invalid / len(cases) if cases else 0.0
-    passed = fields >= MIN_FIELDS and valid >= MIN_VALID
-    summary = {"at": datetime.now().isoformat(timespec="seconds"), "mode": health["mode"],
-               "schema_version": health.get("schema_version"), "cases": len(cases), "correct_fields": total_ok,
-               "fields": total_n, "fields_pct": round(fields * 100, 1), "valid_json_pct": round(valid * 100, 1),
-               "passed": passed}
+    summary = summarize(rows, health)
     out = EVAL / "resultados" / f"gate-{datetime.now():%Y-%m-%d_%H%M%S}.json"
     out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps({"summary": summary, "rows": rows}, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\ncampos correctos: {fields:.1%} (mínimo {MIN_FIELDS:.0%}) · JSON válido: {valid:.1%} (mínimo 100%)")
-    print(f"{'PASA' if passed else 'NO PASA'} · resultados en {out.relative_to(ROOT)}")
-    return 0 if passed else 1
+    by_type = summary["by_type"]
+    print()
+    print("   ".join(f"{t}s: {v['correct']}/{v['fields']} = {v['pct']}%" for t, v in by_type.items()))
+    print(f"campos correctos: {summary['correct_fields']}/{summary['fields']} = {summary['fields_pct']}% "
+          f"(mínimo {MIN_FIELDS:.0%}) · JSON válido: {summary['valid_json_pct']}% (mínimo 100%)")
+    medians = " · ".join(f"mediana {t} {v}s" for t, v in summary["median_seconds"].items())
+    print(f"modelo {summary['model']} · esquema v{summary['schema_version']} · modo {summary['mode']} · {medians}")
+    if not summary["passed"]:
+        print(f"casos con fallas: {', '.join(summary['failed_cases'])}")
+    print(f"{'PASA' if summary['passed'] else 'NO PASA'} · resultados en {out.relative_to(ROOT)}")
+    return 0 if summary["passed"] else 1
 
 
 if __name__ == "__main__":

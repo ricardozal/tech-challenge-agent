@@ -1,0 +1,28 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Qué auto es? Dime marca, modelo y año.",
+    "text": "Es un Nissan Versa 2018"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": null,
+      "auto_a_nombre_propio": null,
+      "adeudos_vehiculo": null,
+      "segunda_llave": null,
+      "auto_marca": "Nissan",
+      "auto_modelo": "Versa",
+      "auto_anio": 2018
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:25:14.324781+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 7152.5,
+  "prompt_tokens": 488,
+  "completion_tokens": 81
+}

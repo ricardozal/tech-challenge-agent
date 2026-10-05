@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "eligibility",
+    "status": "active",
+    "facts": {},
+    "next_question": "¿Tienes la segunda llave del auto?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Gracias por compartirnos la información sobre tu trámite. ¿Tienes la segunda llave del auto?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:31:09.305608+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 3098.5,
+  "prompt_tokens": 155,
+  "completion_tokens": 24
+}

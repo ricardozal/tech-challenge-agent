@@ -1,4 +1,4 @@
-"""fake / record modes, schema v3, prompt delimiting and log redaction (R-11, R-12, R-22)."""
+"""fake / record modes, schema v4, prompt delimiting and log redaction (R-11, R-12, R-22)."""
 
 import base64
 import json
@@ -12,7 +12,6 @@ from llm_gateway.config import REPO_ROOT
 from llm_gateway.main import create_app
 from llm_gateway.modes import FixtureMissing, LlmService, extract_inputs
 from llm_gateway.ollama_client import Completion
-from llm_gateway.redaction import redact
 from llm_gateway.schemas import Schemas
 
 SCHEMAS = Schemas(REPO_ROOT / "eval" / "esquemas.json")
@@ -27,14 +26,14 @@ def service(tmp_path, mode="fake", client_factory=no_ollama) -> LlmService:
 
 
 def seed(tmp_path, req: ExtractRequest, data: dict) -> None:
-    key = fixture_key("extract", req.schema_name, extract_inputs(req))
+    key = fixture_key("extract", req.schema_name, extract_inputs(req), SCHEMAS.version)
     path = tmp_path / "extract" / f"{key}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"request": {}, "response": data}))
 
 
-def test_schema_is_version_3_with_sensitive_topic_and_personal_data():
-    assert SCHEMAS.version == 3
+def test_schema_is_version_4_with_sensitive_topic_and_personal_data():
+    assert SCHEMAS.version == 4
     assert "tema_sensible" in SCHEMAS.schema("mensaje")["properties"]["intencion"]["enum"]
     assert {"nombre_completo", "domicilio", "codigo_postal"} <= set(SCHEMAS.field_names("mensaje"))
     assert set(SCHEMAS.schema("mensaje")["properties"]["campos"]["required"]) == set(SCHEMAS.field_names("mensaje"))
@@ -80,11 +79,14 @@ def test_fake_reply_template_ends_with_the_next_question(tmp_path):
 def test_record_mode_writes_a_fixture_that_fake_mode_reads(tmp_path):
     class FakeOllama:
         def chat_json(self, messages, schema):
-            return Completion(json.dumps(SCHEMAS.complete("mensaje", {"intencion": "pedir_humano"})), 10, 5)
+            return Completion(json.dumps(SCHEMAS.complete("mensaje", {"intencion": "pedir_humano"}, "profiling")), 10, 5)
 
     req = ExtractRequest(schema_name="mensaje", stage="profiling", agent_question="¿Cuál es tu situación laboral y cuánto ganas?",
                          text="quiero hablar con una persona")
-    recorded = service(tmp_path, "record", FakeOllama).extract(req)
+    # Recording into the fixtures directory itself stands for `make record` promoting the answer.
+    recorder = LlmService("record", tmp_path, SCHEMAS, FakeOllama, model="gemma4:12b", ocr_model="glm-ocr",
+                          record_dir=tmp_path)
+    recorded = recorder.extract(req)
     replayed = service(tmp_path).extract(req)
     assert recorded.data == replayed.data
     assert replayed.fixture_hit is True and replayed.data["intencion"] == "pedir_humano"
@@ -134,9 +136,34 @@ def test_prompt_lists_every_schema_field_in_order_with_its_type():
     assert "tema_sensible" in user["content"].split("Campos")[0]
 
 
-def test_redaction_removes_curp_rfc_phones_and_known_names():
-    text = "Soy Laura Méndez, CURP MERL880412MMCNJR09, RFC MERL880412AB1, tel 55 1234 5678"
-    out = redact(text, ["Laura Méndez Rojas"])
-    for secret in ("MERL880412MMCNJR09", "MERL880412AB1", "5678", "Laura", "Méndez"):
-        assert secret not in out
-    assert "[REDACTED_CURP]" in out and "[REDACTED_RFC]" in out and "[REDACTED_PHONE]" in out
+
+def _write_fixture(tmp_path, req: ExtractRequest, record: dict) -> None:
+    key = fixture_key("extract", req.schema_name, extract_inputs(req), SCHEMAS.version)
+    path = tmp_path / "extract" / f"{key}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(record))
+
+
+@pytest.mark.req("FR-083")
+def test_fixture_without_origin_is_seeded_and_recorded_metrics_are_exposed(tmp_path):
+    svc = service(tmp_path)
+    seeded = ExtractRequest(schema_name="mensaje", stage="eligibility", agent_question="?", text="sembrado")
+    recorded = ExtractRequest(schema_name="mensaje", stage="eligibility", agent_question="?", text="grabado")
+    _write_fixture(tmp_path, seeded, {"request": {}, "response": {"intencion": "otro", "campos": {}}})
+    _write_fixture(tmp_path, recorded, {"request": {}, "response": {"intencion": "otro", "campos": {}},
+                                        "origin": "recorded", "latency_ms": 6123.4, "prompt_tokens": 812,
+                                        "completion_tokens": 64})
+    key = lambda req: fixture_key("extract", "mensaje", extract_inputs(req), SCHEMAS.version)  # noqa: E731
+    assert svc.load_fixture("extract", key(seeded))["origin"] == "seeded"
+    record = svc.load_fixture("extract", key(recorded))
+    assert (record["origin"], record["latency_ms"], record["prompt_tokens"], record["completion_tokens"]) == (
+        "recorded", 6123.4, 812, 64)
+    assert svc.extract(recorded).fixture_hit is True
+
+
+def test_health_reports_mode_versions_and_models(tmp_path):
+    from contracts.llm import PROMPT_VERSION
+
+    body = TestClient(create_app(service=service(tmp_path))).get("/health").json()
+    assert body == {"status": "ok", "mode": "fake", "schema_version": 4, "prompt_version": PROMPT_VERSION,
+                    "model": "gemma4:12b", "ocr_model": "glm-ocr"}

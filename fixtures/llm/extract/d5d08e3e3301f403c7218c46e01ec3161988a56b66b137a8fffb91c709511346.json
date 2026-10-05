@@ -1,0 +1,19 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "simulation",
+    "agent_question": "¿Cuál opción prefieres?",
+    "text": "la segunda"
+  },
+  "response": {
+    "intencion": "elegir_opcion",
+    "campos": {
+      "opcion_elegida": 2
+    }
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:03:43.916512+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

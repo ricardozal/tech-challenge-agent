@@ -1,0 +1,27 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "profiling",
+    "agent_question": "¿Cuál es tu domicilio, con código postal?",
+    "text": "Calle Roble 18, Col. Jardines, Querétaro, CP 76020"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "domicilio": "Calle Roble 18, Col. Jardines, Querétaro",
+      "codigo_postal": "76020",
+      "ingreso_monto": null,
+      "ingreso_periodicidad": null,
+      "situacion_laboral": null,
+      "consentimiento_buro": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:37:18.070258+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 7201.2,
+  "prompt_tokens": 490,
+  "completion_tokens": 84
+}

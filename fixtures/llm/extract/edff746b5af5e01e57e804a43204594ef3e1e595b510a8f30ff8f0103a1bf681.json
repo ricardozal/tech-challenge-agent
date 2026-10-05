@@ -1,0 +1,28 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Qué auto es? Dime marca, modelo y año.",
+    "text": "Tengo un Volkswagen Jetta 2019"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": null,
+      "auto_a_nombre_propio": null,
+      "adeudos_vehiculo": null,
+      "segunda_llave": null,
+      "auto_marca": "Volkswagen",
+      "auto_modelo": "Jetta",
+      "auto_anio": 2019
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:30:43.161169+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 7052.5,
+  "prompt_tokens": 489,
+  "completion_tokens": 81
+}

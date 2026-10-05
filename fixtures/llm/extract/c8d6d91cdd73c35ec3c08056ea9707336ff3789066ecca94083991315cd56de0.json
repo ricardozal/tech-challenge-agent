@@ -1,0 +1,19 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "profiling",
+    "agent_question": "¿Cuál es tu situación laboral y cuánto ganas?",
+    "text": "ahorita no tengo trabajo"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "situacion_laboral": "desempleado"
+    }
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:03:45.782883+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

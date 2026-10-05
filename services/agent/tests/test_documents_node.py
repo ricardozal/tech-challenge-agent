@@ -21,7 +21,7 @@ def test_asks_for_the_four_documents_one_by_one(stack):
     assert chosen["reply"].endswith(Q_ID)
     assert [d["reply"].endswith(q) for d, q in zip(docs[:3], (Q_INCOME_PROOF, Q_PROOF_OF_ADDRESS, Q_INVOICE))] == [True] * 3
     assert all(tools(d) == ["submit_document"] for d in docs)
-    assert all("está en orden" in d["reply"] for d in docs)
+    # The acknowledgement is worded by the model (recorded answer); that each document passed is checked below.
     validations = stack["http"].get(f"{stack['actions']}/cases/{case_id}").json()["state"]["validations"]
     assert len(validations) == 9 and {v["result"] for v in validations.values()} == {"passed"}
 
@@ -35,7 +35,8 @@ def test_income_mismatch_names_the_document_the_field_and_asks_again(stack):
     ])
     reply = turns[-1]["reply"]
     assert "comprobante de ingresos" in reply
-    assert "el ingreso que muestra ($14,000.00 al mes) no coincide con el que me dijiste ($20,000.00 al mes)" in reply
+    # The wording comes from the model (recorded answer); the document, amounts and mismatch from the code.
+    assert all(fact in reply for fact in ("comprobante de ingresos", "$14,000.00", "$20,000.00", "no coincide"))
     assert reply.endswith(Q_INCOME_PROOF)
 
 

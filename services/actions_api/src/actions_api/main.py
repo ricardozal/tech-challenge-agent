@@ -9,6 +9,8 @@ from uuid import UUID
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
 from actions_api import db, metrics
 from actions_api.config import Settings
@@ -31,6 +33,15 @@ TOOL_MODULES = [
     "actions_api.tools.gate",
     "actions_api.tools.advisor",
 ]
+
+
+def _propagate_trace_context(app: FastAPI) -> None:
+    """Propagation only (O-06): no tracer provider and no exporter. With the no-op provider of the
+    OpenTelemetry API, the incoming `traceparent` stays current and the httpx call to doc_intel carries
+    it, so a document turn remains one trace; actions_api itself exports no spans."""
+    FastAPIInstrumentor.instrument_app(app, excluded_urls="health", exclude_spans=["receive", "send"])
+    if not HTTPXClientInstrumentor().is_instrumented_by_opentelemetry:
+        HTTPXClientInstrumentor().instrument()
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -56,7 +67,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         yield
         database.close()
 
-    app = FastAPI(title="Case Actions API", lifespan=lifespan)
+    # Native FastAPI telemetry off: actions_api only propagates context (O-06).
+    app = FastAPI(title="Case Actions API", lifespan=lifespan,
+                  telemetry={"tracing": False, "metrics": False, "logs": False})
+    _propagate_trace_context(app)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(settings.web_origins),

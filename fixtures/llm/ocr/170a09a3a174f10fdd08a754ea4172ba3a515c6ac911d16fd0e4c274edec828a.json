@@ -1,0 +1,16 @@
+{
+  "request": {
+    "sha256": "f627c8679e2e067e5598f325167ffffbdc9de6ccc021d59021cd9bb094b8b61e"
+  },
+  "response": {
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nESTADO DE CUENTA — ESPÉCIMEN DE PRUEBA\nBANCO EJEMPLO, S.A.\nCLIENTE MARÍA FERNANDA LÓPEZ GARCÍA\nPERIODO Del 01/09/2026 al 30/09/2026\nTOTAL DE DEPÓSITOS $24,100.00 MXN\nSALDO FINAL $6,980.40"
+  },
+  "origin": "recorded",
+  "model": "glm-ocr",
+  "recorded_at": "2026-10-05T02:38:57.127823+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 12462.0,
+  "prompt_tokens": 601,
+  "completion_tokens": 1024
+}

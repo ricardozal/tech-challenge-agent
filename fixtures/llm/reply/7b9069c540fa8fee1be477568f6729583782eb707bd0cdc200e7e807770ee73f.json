@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "profiling",
+    "status": "active",
+    "facts": {
+      "note_es": "¡Buenas noticias! Tu auto cumple los requisitos para usarlo como garantía."
+    },
+    "next_question": "¿Cuál es tu domicilio, con código postal?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "¡Hola, Laura! Tengo buenas noticias, ya que tu auto cumple con los requisitos para ser utilizado como garantía. ¿Cuál es tu domicilio, con código postal?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:31:19.892727+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 3609.3,
+  "prompt_tokens": 177,
+  "completion_tokens": 34
+}

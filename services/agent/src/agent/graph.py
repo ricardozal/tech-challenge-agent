@@ -5,16 +5,23 @@ Actions API, never from text written by the LLM (Principle II).
 """
 
 import importlib
+import json
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any, Literal, TypedDict
 
 from langgraph.graph import END, START, StateGraph
+from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
+from opentelemetry import trace
+from opentelemetry.trace import Status as SpanStatus
+from opentelemetry.trace import StatusCode
 
+from agent import telemetry
 from agent.clients import ActionsClient, LlmClient
 from contracts.actions import ToolContext, ToolResult
 from contracts.case import CaseView
 from contracts.common import FINAL_STATUSES, Intent, Status
+from contracts.redaction import redact
 
 
 class TurnState(TypedDict, total=False):
@@ -78,6 +85,41 @@ def document_node(fn: Node) -> Node:
 class Deps:
     actions: ActionsClient
     llm: LlmClient
+    tracer: trace.Tracer | None = None
+
+    async def _traced_call(
+        self, state: TurnState, tool: str, context: ToolContext, tool_input: dict[str, Any] | None
+    ) -> ToolResult:
+        """TOOL span per actions call (O-05): input, outcome and resulting case; rejected → ERROR."""
+        tracer = self.tracer or telemetry.tracer()
+        names = [n for n in (state.get("fields", {}).get("full_name"), (tool_input or {}).get("full_name")) if n]
+        with tracer.start_as_current_span(tool, record_exception=False, set_status_on_exception=False) as span:
+            span.set_attribute(SpanAttributes.OPENINFERENCE_SPAN_KIND, OpenInferenceSpanKindValues.TOOL.value)
+            span.set_attribute(SpanAttributes.TOOL_NAME, tool)
+            span.set_attribute(SpanAttributes.METADATA, json.dumps({
+                "actor": context.on_behalf_of or "agent",
+                "idempotency_key": context.idempotency_key,
+                "expected_version": context.expected_version,
+            }))
+            span.set_attribute(SpanAttributes.INPUT_VALUE,
+                               redact(json.dumps(tool_input or {}, ensure_ascii=False, default=str), names))
+            try:
+                result = await self.actions.call(tool, context, tool_input)
+            except Exception as exc:
+                span.set_status(SpanStatus(StatusCode.ERROR, f"{type(exc).__name__}: {exc}"))
+                raise
+            code = result.rejection.code if result.rejection else None
+            case = result.case
+            span.set_attribute(SpanAttributes.OUTPUT_VALUE, json.dumps({
+                "outcome": result.outcome.value,
+                "rejection_code": code,
+                "stage": case.stage.value if case else None,
+                "status": case.status.value if case else None,
+                "version": case.version if case else None,
+            }))
+            if code:
+                span.set_status(SpanStatus(StatusCode.ERROR, code))
+            return result
 
     async def call_tool(
         self,
@@ -97,13 +139,13 @@ class Deps:
             on_behalf_of=on_behalf_of,
             evidence_message_id=evidence,
         )
-        result = await self.actions.call(tool, context, tool_input)
+        result = await self._traced_call(state, tool, context, tool_input)
         if result.rejection and result.rejection.code == "version_conflict":
             # Someone else (an advisor) changed the case; reread and retry once with a new key.
             view = await self.actions.get_case(state["case_id"])
             context.expected_version = view.version
             context.idempotency_key += ":retry"
-            result = await self.actions.call(tool, context, tool_input)
+            result = await self._traced_call(state, tool, context, tool_input)
         updates: dict[str, Any] = {
             "step": step,
             "tool_calls": [
@@ -152,7 +194,13 @@ def build_graph(deps: Deps, checkpointer: Any = None):
 
     def bind(fn: Node) -> Callable[[TurnState], Awaitable[dict[str, Any]]]:
         async def run(state: TurnState) -> dict[str, Any]:
-            return await fn(state, deps)
+            # The LangChain instrumentor does not make its node span current; doing it here nests the
+            # TOOL spans and HTTP calls of the node under its stage in the trace (contracts/tracing.md).
+            node_span = telemetry.node_span()
+            if node_span is None:
+                return await fn(state, deps)
+            with trace.use_span(node_span, end_on_exit=False):
+                return await fn(state, deps)
 
         return run
 

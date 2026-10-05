@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "documents",
+    "status": "escalated",
+    "facts": {},
+    "next_question": null,
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Tu solicitud ha sido escalada para una revisión detallada por nuestro equipo especializado. En este momento, nos encontramos en la etapa de revisión de documentos. ¿Tienes alguna otra duda sobre este proceso?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:36:09.019383+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4523.2,
+  "prompt_tokens": 149,
+  "completion_tokens": 44
+}

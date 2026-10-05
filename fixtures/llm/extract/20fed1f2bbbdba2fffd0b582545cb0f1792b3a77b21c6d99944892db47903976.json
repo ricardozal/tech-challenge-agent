@@ -1,0 +1,27 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "profiling",
+    "agent_question": "¿Cuál es tu situación laboral y cuánto ganas?",
+    "text": "Soy empleada y gano 20 mil al mes"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "domicilio": null,
+      "codigo_postal": null,
+      "ingreso_monto": 20000,
+      "ingreso_periodicidad": "mensual",
+      "situacion_laboral": "empleado",
+      "consentimiento_buro": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:31:40.426160+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 7328.9,
+  "prompt_tokens": 479,
+  "completion_tokens": 73
+}

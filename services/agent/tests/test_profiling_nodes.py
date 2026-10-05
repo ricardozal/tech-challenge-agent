@@ -25,7 +25,8 @@ def test_asks_address_income_and_consent_then_proposes_options(stack):
     assert turns[-4]["reply"].endswith(Q_ADDRESS)
     assert [t["reply"].endswith(q) for t, q in zip(profiling, (Q_INCOME, Q_CONSENT, Q_OPTION))] == [True] * 3
     assert tools(profiling[-1]) == ["record_bureau_consent", "run_credit_check", "simulate_options"]
-    assert "Recibes $90,000.00 y pagas $4,932.63 al mes durante 24 meses" in profiling[-1]["reply"]
+    # The wording comes from the model (recorded answer); the amounts come from the code.
+    assert all(fact in profiling[-1]["reply"] for fact in ("$90,000.00", "$4,932.63", "24 meses"))
     assert profiling[-1]["case"]["stage"] == "simulation"
     # the agent never asks the client how much they want
     assert not any("cuánto necesitas" in t["reply"] or "monto" in t["reply"].lower() for t in turns)

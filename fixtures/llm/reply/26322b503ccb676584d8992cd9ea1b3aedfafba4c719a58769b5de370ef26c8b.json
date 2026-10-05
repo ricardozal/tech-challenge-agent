@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "profiling",
+    "status": "active",
+    "facts": {},
+    "next_question": "¿Nos autorizas consultar tu historial en Buró de Crédito?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Es un gusto saludarte y apoyarte con tu solicitud de crédito personal manteniendo el uso de tu auto. Para continuar con tu proceso, ¿Nos autorizas consultar tu historial en Buró de Crédito?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:31:45.522444+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4863.9,
+  "prompt_tokens": 161,
+  "completion_tokens": 46
+}

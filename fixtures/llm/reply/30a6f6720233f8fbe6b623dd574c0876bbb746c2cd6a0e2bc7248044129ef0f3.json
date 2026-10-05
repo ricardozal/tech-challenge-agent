@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "profiling",
+    "status": "active",
+    "facts": {
+      "note_es": "¡Buenas noticias! Tu auto cumple los requisitos para usarlo como garantía. Como no tienes la segunda llave, cotizamos su fabricación en $2,400.00 y ese costo se suma a tu plan de pagos."
+    },
+    "next_question": "¿Cuál es tu domicilio, con código postal?",
+    "client_first_name": "María"
+  },
+  "response": {
+    "text": "¡Buenas noticias, María! Tu auto cumple con los requisitos para usarlo como garantía y, debido a que no cuentas con la segunda llave, cotizamos su fabricación en $2,400.00, monto que se sumaría a tu plan de pagos. ¿Cuál es tu domicilio, con código postal?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:37:08.932652+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 5124.8,
+  "prompt_tokens": 209,
+  "completion_tokens": 66
+}

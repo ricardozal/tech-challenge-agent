@@ -4,6 +4,7 @@
 
 Steps: `say` (message), `upload` (document), `advisor` (advisor tool on actions_api).
 `expected`: final `status`/`stage`, `tools_called`, `tools_not_called`, `events`.
+Every DemoFailure starts with `paso N (<step>)` or `paso final` so callers (make record) can report it.
 """
 
 import argparse
@@ -11,6 +12,7 @@ import os
 import sys
 import time
 import uuid
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +28,14 @@ class DemoFailure(AssertionError):
     pass
 
 
+def describe(n: int, step: dict[str, Any]) -> str:
+    if "say" in step:
+        return f"paso {n} (say {step['say']!r})"
+    if "upload" in step:
+        return f"paso {n} (upload {Path(step['upload']).name})"
+    return f"paso {n} ({next(iter(step), '?')})"
+
+
 def _advisor(http: httpx.Client, case_id: str, step: dict[str, Any], n: int) -> dict[str, Any]:
     case = http.get(f"{ACTIONS_URL}/cases/{case_id}").json()
     call = {
@@ -35,7 +45,8 @@ def _advisor(http: httpx.Client, case_id: str, step: dict[str, Any], n: int) -> 
     return http.post(f"{ACTIONS_URL}/tools/{step['advisor']}", json=call, headers={"X-Actor": "advisor"}).json()
 
 
-def play(path: Path, quiet: bool = False) -> dict[str, Any]:
+def play(path: Path, quiet: bool = False, after_step: Callable[[str], None] | None = None) -> dict[str, Any]:
+    """`after_step(label)` runs after the greeting ("inicio") and after each step (make fixtures-status)."""
     scenario = yaml.safe_load(path.read_text(encoding="utf-8"))
     say = (lambda *a: None) if quiet else print
     run_id = uuid.uuid4().hex[:8]
@@ -47,12 +58,15 @@ def play(path: Path, quiet: bool = False) -> dict[str, Any]:
         case_id = body["case_id"]
         say(f"\n=== {scenario['name']} · caso {case_id}")
         say(f"agente> {body['reply']}")
+        if after_step:
+            after_step("inicio (saludo)")
         last_question = None
         for n, step in enumerate(scenario.get("steps", []), start=1):
             key = f"{scenario['name']}-{run_id}-{n}"
             if "say" in step:
                 if step.get("question") and last_question and step["question"] != last_question:
-                    raise DemoFailure(f"paso {n}: el agente preguntó {last_question!r}, el guion espera {step['question']!r}")
+                    raise DemoFailure(f"{describe(n, step)}: el agente preguntó {last_question!r}, "
+                                      f"el guion espera {step['question']!r}")
                 say(f"cliente> {step['say']}")
                 resp = http.post(f"{AGENT_URL}/cases/{case_id}/messages", json={"text": step["say"]},
                                  headers={"Idempotency-Key": key})
@@ -70,14 +84,16 @@ def play(path: Path, quiet: bool = False) -> dict[str, Any]:
                 say(f"asesor> {step['advisor']} → {result.get('outcome')} {result.get('rejection') or ''}")
                 continue
             else:
-                raise DemoFailure(f"paso {n}: tipo de paso desconocido {step}")
+                raise DemoFailure(f"{describe(n, step)}: tipo de paso desconocido {step}")
             if resp.status_code != 200:
-                raise DemoFailure(f"paso {n}: HTTP {resp.status_code} {resp.text[:300]}")
+                raise DemoFailure(f"{describe(n, step)}: HTTP {resp.status_code} {resp.text[:300]}")
             turn = resp.json()
             calls = ", ".join(f"{c['tool']}:{c['outcome']}" for c in turn["tool_calls"] if c["tool"] != "append_message")
             say(f"agente> {turn['reply']}" + (f"   [{calls}]" if calls else ""))
             conversation = http.get(f"{AGENT_URL}/cases/{case_id}/conversation").json()
             last_question = conversation["state"].get("last_question")
+            if after_step:
+                after_step(describe(n, step))
 
         case = http.get(f"{ACTIONS_URL}/cases/{case_id}").json()
         audit = http.get(f"{ACTIONS_URL}/cases/{case_id}/audit").json()
@@ -109,7 +125,7 @@ def check(expected: dict[str, Any], case: dict[str, Any], audit: list[dict[str, 
     problems += [f"se llamó {t}" for t in expected.get("tools_not_called", []) if t in called]
     problems += [f"falta el evento {ev}" for ev in expected.get("events", []) if ev not in events]
     if problems:
-        raise DemoFailure("; ".join(problems))
+        raise DemoFailure("paso final: " + "; ".join(problems))
 
 
 def main() -> int:

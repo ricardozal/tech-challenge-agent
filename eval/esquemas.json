@@ -1,6 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "nota": "Todos los campos son requeridos y aceptan null: la gramática de Ollama/llama.cpp fija el orden de las propiedades, y con campos opcionales el modelo no puede volver a uno anterior en el esquema.",
+  "etapas": {
+    "eligibility": ["nombre_completo", "auto_a_nombre_propio", "adeudos_vehiculo", "segunda_llave", "auto_marca", "auto_modelo", "auto_anio"],
+    "profiling": ["domicilio", "codigo_postal", "ingreso_monto", "ingreso_periodicidad", "situacion_laboral", "consentimiento_buro"],
+    "simulation": ["opcion_elegida", "monto_solicitado", "plazo_meses"],
+    "documents": ["nombre_completo", "domicilio", "codigo_postal", "ingreso_monto", "ingreso_periodicidad", "situacion_laboral"]
+  },
   "mensaje": {
     "reglas": [
       "Llena todos los campos: pon null en los que el cliente no mencionó en este mensaje.",

@@ -1,0 +1,16 @@
+{
+  "request": {
+    "sha256": "4ebb902c4080720787683fedbf74c89d793910a5781fa93958bc9a7f24b72a1b"
+  },
+  "response": {
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nIDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA\nFormato genérico de prueba. No es un documento oficial.\nNOMBRE LAURA MÉNDEZ ROJAS\nDOMICILIO AV. MORELOS No. 245, COL. CENTRO, TOLUCA, MÉX. C.P. 50000\nCURP MERL880412MMCNJR09\nFECHA DE NACIMIENTO 12/04/1988\nEMISIÓN 2021 VIGENCIA 2031"
+  },
+  "origin": "recorded",
+  "model": "glm-ocr",
+  "recorded_at": "2026-10-05T02:32:25.517240+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 12515.5,
+  "prompt_tokens": 640,
+  "completion_tokens": 1024
+}

@@ -1,0 +1,17 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "documents",
+    "agent_question": "Envíame una foto de tu identificación oficial (INE o pasaporte).",
+    "text": "va, ahorita lo busco"
+  },
+  "response": {
+    "intencion": "otro",
+    "campos": {}
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:03:37.527069+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

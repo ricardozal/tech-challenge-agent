@@ -1,0 +1,16 @@
+{
+  "request": {
+    "sha256": "551aa27f90476a19a30f573fa0bef19a8dea43fffd0c4367ac18e65dda8eeb77"
+  },
+  "response": {
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nRECIBO DE NÓMINA — ESPÉCIMEN DE PRUEBA\nEMPRESA SERVICIOS EJEMPLO DEL CENTRO, S.A. DE C.V.\nEMPLEADO LAURA MÉNDEZ ROJAS\nTIPO DE PAGO Quincenal\nPERIODO Del 01/09/2026 al 15/09/2026\nFECHA DE PAGO 15/09/2026\nTOTAL PERCEPCIONES 7,900.00\nNETO A PAGAR $7,000.00 MXN\n-----------------------------------------\nRECIBO DE NÓMINA — ESPÉCIMEN DE PRUEBA\nEMPRESA SERVICIOS EJEMPLO DEL CENTRO, S.A. DE C.V.\nEMPLEADO LAURA MÉNDEZ ROJAS\nTIPO DE PAGO Quincenal\nPERIODO Del 01/09/2026 al 15/09/2026\nFECHA DE PAGO 15/09/2026\nTOTAL PERCEPCIONES 7,900.00\nNETO A PAGAR $7,000.00 MXN\n-----------------------------------------"
+  },
+  "origin": "recorded",
+  "model": "glm-ocr",
+  "recorded_at": "2026-10-05T02:35:43.887333+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 11887.4,
+  "prompt_tokens": 718,
+  "completion_tokens": 1024
+}

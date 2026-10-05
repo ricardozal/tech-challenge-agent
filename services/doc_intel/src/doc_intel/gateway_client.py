@@ -4,6 +4,11 @@ import httpx
 
 from contracts.llm import ExtractRequest, ExtractResponse, OcrRequest, OcrResponse
 
+# Drop idle connections before uvicorn does (its keep-alive timeout is 5 s): with real models a call
+# can follow the previous one after more than 5 s, and reusing a connection the server is closing
+# fails with ReadError.
+LIMITS = httpx.Limits(keepalive_expiry=2.0)
+
 
 class UpstreamFailure(RuntimeError):
     pass
@@ -11,7 +16,7 @@ class UpstreamFailure(RuntimeError):
 
 class GatewayClient:
     def __init__(self, base_url: str, http: httpx.Client | None = None):
-        self._http = http or httpx.Client(base_url=base_url, timeout=330)
+        self._http = http or httpx.Client(base_url=base_url, timeout=330, limits=LIMITS)
 
     def _post(self, path: str, body: dict) -> dict:
         try:

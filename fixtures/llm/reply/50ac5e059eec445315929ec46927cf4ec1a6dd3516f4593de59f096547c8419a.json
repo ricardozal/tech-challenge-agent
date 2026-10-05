@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "profiling",
+    "status": "active",
+    "facts": {},
+    "next_question": "¿Cuál es tu situación laboral y cuánto ganas?",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura, es un gusto saludarte. Para poder brindarte la mejor asesoría sobre nuestro crédito con garantía de auto, necesito conocer un poco más sobre ti. ¿Cuál es tu situación laboral y cuánto ganas?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:31:32.849947+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4573.8,
+  "prompt_tokens": 157,
+  "completion_tokens": 45
+}

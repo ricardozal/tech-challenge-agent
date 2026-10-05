@@ -1,0 +1,42 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nESTADO DE CUENTA — ESPÉCIMEN DE PRUEBA\nBANCO EJEMPLO, S.A.\nCLIENTE MARÍA FERNANDA LÓPEZ GARCÍA\nPERIODO Del 01/09/2026 al 30/09/2026\nTOTAL DE DEPÓSITOS $24,100.00 MXN\nSALDO FINAL $6,980.40"
+  },
+  "response": {
+    "tipo_documento": "estado_cuenta",
+    "campos": {
+      "nombre_completo": "MARÍA FERNANDA LÓPEZ GARCÍA",
+      "curp": null,
+      "domicilio": null,
+      "codigo_postal": null,
+      "fecha_nacimiento": null,
+      "vigencia": null,
+      "empleador": null,
+      "banco": "BANCO EJEMPLO, S.A.",
+      "periodicidad": null,
+      "periodo_inicio": "2026-09-01",
+      "periodo_fin": "2026-09-30",
+      "ingreso_bruto": null,
+      "ingreso_neto": null,
+      "total_depositos": 24100.0,
+      "saldo_final": 6980.4,
+      "fecha_emision": null,
+      "marca": null,
+      "modelo": null,
+      "anio": null,
+      "niv": null,
+      "moneda": "MXN"
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:39:18.167593+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 20948.1,
+  "prompt_tokens": 563,
+  "completion_tokens": 211
+}

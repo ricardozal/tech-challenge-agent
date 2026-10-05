@@ -14,6 +14,7 @@ class Settings:
     ollama_url: str
     fixtures_dir: Path
     esquemas_path: Path
+    record_dir: Path
     model: str = "gemma4:12b"
     ocr_model: str = "glm-ocr"
 
@@ -22,9 +23,11 @@ class Settings:
         mode = os.environ.get("LLM_MODE", "fake")
         if mode not in MODES:
             raise ValueError(f"LLM_MODE must be one of {MODES}, got {mode!r}")
+        fixtures_dir = Path(os.environ.get("FIXTURES_DIR", REPO_ROOT / "fixtures" / "llm"))
         return cls(
             mode=mode,
             ollama_url=os.environ.get("OLLAMA_URL", "http://localhost:11434"),
-            fixtures_dir=Path(os.environ.get("FIXTURES_DIR", REPO_ROOT / "fixtures" / "llm")),
+            fixtures_dir=fixtures_dir,
             esquemas_path=Path(os.environ.get("ESQUEMAS_PATH", REPO_ROOT / "eval" / "esquemas.json")),
+            record_dir=Path(os.environ.get("FIXTURES_RECORD_DIR", fixtures_dir / "_recording")),
         )

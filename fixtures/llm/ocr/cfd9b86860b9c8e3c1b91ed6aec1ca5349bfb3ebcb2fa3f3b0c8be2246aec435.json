@@ -1,0 +1,16 @@
+{
+  "request": {
+    "sha256": "9d36c91a9fb9c1ca62340916fdb2a545a977276b32ef16f20d5cfceab8585144"
+  },
+  "response": {
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nFACTURA DE VEHÍCULO — ESPÉCIMEN DE PRUEBA\nEMISOR AUTOS EJEMPLO DEL BAJÍO, S.A. DE C.V.\nRECEPTOR MARÍA FERNANDA LÓPEZ GARCÍA\nVEHÍCULO KIA RIO MODELO 2021\nNIV 3KPA24AD5ME456789\nFECHA DE EMISIÓN 14/06/2021"
+  },
+  "origin": "recorded",
+  "model": "glm-ocr",
+  "recorded_at": "2026-10-05T02:40:21.158351+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 11720.1,
+  "prompt_tokens": 601,
+  "completion_tokens": 1024
+}

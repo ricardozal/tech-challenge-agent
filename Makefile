@@ -1,10 +1,11 @@
-# Demo commands. LLM_MODE=fake by default (no GPU, recorded LLM answers).
+# Demo commands. LLM_MODE=fake by default (no GPU, recorded LLM answers);
+# LLM_MODE=ollama uses the real models and LLM_MODE=record also records their answers.
 COMPOSE ?= docker compose
 PY      ?= uv run python
 REPEAT  ?= 1
 SCENARIOS := happy_path eligibility_rejection document_correction document_escalation no_spare_key
 
-.PHONY: up up-db down ps logs test test-arch test-e2e traceability metrics eval seed-fixtures \
+.PHONY: up up-db down ps logs test test-arch test-e2e test-ollama record fixtures-status traceability metrics eval seed-fixtures \
         demo-all advisor-open-escalations advisor-verify web-scenarios web-dev test-web \
         demo-happy-path demo-eligibility-rejection demo-document-correction demo-document-escalation demo-no-spare-key
 
@@ -32,14 +33,23 @@ test-arch:     ## Architecture boundaries (import-linter, DB roles, compose)
 test-e2e:      ## Demo scenarios against the running compose (LLM_MODE=fake)
 	uv run pytest tests/e2e
 
+test-ollama:   ## Real-model tests (needs LLM_MODE=ollama make up)
+	uv run pytest -m ollama tests services
+
 traceability:  ## Regenerate TRACEABILITY.md; fails if an FR has no test
 	$(PY) scripts/traceability.py
 
 metrics:
 	curl -s http://localhost:8000/metrics | $(PY) -m json.tool
 
-eval:          ## LLM quality gate (needs Ollama and LLM_MODE=ollama)
+eval:          ## LLM quality gate: ≥85% fields and 100% valid JSON (needs LLM_MODE=ollama make up)
 	$(PY) scripts/eval_gate.py
+
+record:        ## Record the 4 demos with real models (needs LLM_MODE=record make up)
+	$(PY) scripts/record_fixtures.py $(if $(ONLY),--scenarios $(ONLY))
+
+fixtures-status: ## Which recorded answers the demos use (LLM_MODE=fake)
+	$(PY) scripts/fixtures_status.py $(if $(PRUNE),--prune)
 
 seed-fixtures: ## Write fixtures/llm from the scenario scripts
 	$(PY) scripts/seed_fixtures.py

@@ -1,0 +1,20 @@
+{
+  "request": {
+    "stage": "eligibility",
+    "status": "active",
+    "facts": {},
+    "next_question": "¿El auto está a tu nombre?",
+    "client_first_name": "Jorge"
+  },
+  "response": {
+    "text": "Hola, Jorge. Es un gusto saludarte y apoyarte con tu solicitud de crédito personal manteniendo el uso de tu auto. Para continuar con el proceso, ¿el auto está a tu nombre?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:25:18.465693+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4051.5,
+  "prompt_tokens": 155,
+  "completion_tokens": 40
+}

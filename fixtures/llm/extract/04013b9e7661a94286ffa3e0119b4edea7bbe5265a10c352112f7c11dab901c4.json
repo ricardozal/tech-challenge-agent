@@ -1,0 +1,28 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿Me compartes tu nombre completo?",
+    "text": "Hola, soy Jorge Ramírez Luna"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": "Jorge Ramírez Luna",
+      "auto_a_nombre_propio": null,
+      "adeudos_vehiculo": null,
+      "segunda_llave": null,
+      "auto_marca": null,
+      "auto_modelo": null,
+      "auto_anio": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:25:02.690504+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 6742.6,
+  "prompt_tokens": 480,
+  "completion_tokens": 77
+}

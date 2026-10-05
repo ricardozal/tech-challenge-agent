@@ -1,0 +1,22 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nAGUA EJEMPLO DE QUERÉTARO\nTITULAR JOSÉ LÓPEZ RUIZ\nDOMICILIO CALLE ROBLE 18, JARDINES, QUERÉTARO, QRO.\nC.P. 76020\nFECHA DE EMISIÓN 10/09/2026"
+  },
+  "response": {
+    "tipo_documento": "comprobante_domicilio",
+    "campos": {
+      "nombre_completo": "JOSÉ LÓPEZ RUIZ",
+      "domicilio": "CALLE ROBLE 18, JARDINES, QUERÉTARO, QRO.",
+      "codigo_postal": "76020",
+      "fecha_emision": "2026-09-10"
+    }
+  },
+  "origin": "seeded",
+  "model": "seeded-from-scenario",
+  "recorded_at": "2026-10-05T03:05:00.636033+00:00",
+  "schema_version": 4,
+  "prompt_version": 2
+}

@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "documents",
+    "status": "active",
+    "facts": {
+      "note_es": "Revisé tu comprobante de ingresos: el ingreso que muestra ($14,000.00 al mes) no coincide con el que me dijiste ($20,000.00 al mes)."
+    },
+    "next_question": "Envíame tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta).",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Revisé tu comprobante de ingresos y noté que el monto de $14,000.00 al mes no coincide con los $20,000.00 que me mencionaste anteriormente. Para poder continuar, ¿podrías enviarme tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta)?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:35:31.644070+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 5746.4,
+  "prompt_tokens": 222,
+  "completion_tokens": 79
+}

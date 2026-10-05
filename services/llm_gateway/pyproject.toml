@@ -2,7 +2,7 @@
 name = "llm-gateway"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = ["contracts", "fastapi>=0.115", "uvicorn>=0.30", "ollama>=0.4", "jsonschema>=4"]
+dependencies = ["contracts", "fastapi>=0.115", "uvicorn>=0.30", "ollama>=0.4", "jsonschema>=4", "arize-phoenix-otel>=0.17", "opentelemetry-instrumentation-httpx>=0.66b0", "opentelemetry-instrumentation-fastapi>=0.66b0", "openinference-semantic-conventions>=0.1.41"]
 
 [build-system]
 requires = ["hatchling"]

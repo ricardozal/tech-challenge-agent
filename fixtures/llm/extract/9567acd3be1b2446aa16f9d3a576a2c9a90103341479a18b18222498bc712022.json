@@ -1,0 +1,28 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿El auto está a tu nombre?",
+    "text": "Sí, está a mi nombre"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": null,
+      "auto_a_nombre_propio": true,
+      "adeudos_vehiculo": null,
+      "segunda_llave": null,
+      "auto_marca": null,
+      "auto_modelo": null,
+      "auto_anio": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:30:54.297608+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 6633.4,
+  "prompt_tokens": 480,
+  "completion_tokens": 74
+}

@@ -1,0 +1,752 @@
+{
+  "summary": {
+    "at": "2026-10-04T17:56:15",
+    "mode": "ollama",
+    "schema_version": 4,
+    "cases": 37,
+    "correct_fields": 102,
+    "fields": 114,
+    "fields_pct": 89.5,
+    "valid_json_pct": 100.0,
+    "passed": true
+  },
+  "rows": [
+    {
+      "case": "M01",
+      "ok": 1,
+      "n": 2,
+      "seconds": 16.4,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": "Laura Méndez",
+          "auto_a_nombre_propio": true,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M02",
+      "ok": 2,
+      "n": 2,
+      "seconds": 6.9,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": false,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M03",
+      "ok": 2,
+      "n": 2,
+      "seconds": 6.8,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": true,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M04",
+      "ok": 3,
+      "n": 3,
+      "seconds": 6.9,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": true,
+          "adeudos_vehiculo": false,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M05",
+      "ok": 2,
+      "n": 2,
+      "seconds": 6.7,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": false,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M06",
+      "ok": 1,
+      "n": 2,
+      "seconds": 6.8,
+      "data": {
+        "intencion": "pregunta",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M07",
+      "ok": 4,
+      "n": 4,
+      "seconds": 7.1,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": "Volkswagen",
+          "auto_modelo": "Jetta",
+          "auto_anio": 2019
+        }
+      }
+    },
+    {
+      "case": "M08",
+      "ok": 6,
+      "n": 6,
+      "seconds": 7.1,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": true,
+          "adeudos_vehiculo": null,
+          "segunda_llave": true,
+          "auto_marca": "Nissan",
+          "auto_modelo": "March",
+          "auto_anio": 2017
+        }
+      }
+    },
+    {
+      "case": "M09",
+      "ok": 4,
+      "n": 4,
+      "seconds": 7.0,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": 9800,
+          "ingreso_periodicidad": "quincenal",
+          "situacion_laboral": "empleado",
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M10",
+      "ok": 4,
+      "n": 4,
+      "seconds": 6.8,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": 20000,
+          "ingreso_periodicidad": "mensual",
+          "situacion_laboral": "independiente",
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M11",
+      "ok": 4,
+      "n": 4,
+      "seconds": 6.6,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": 18500,
+          "ingreso_periodicidad": "mensual",
+          "situacion_laboral": "empleado",
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M12",
+      "ok": 4,
+      "n": 4,
+      "seconds": 6.8,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": 7200,
+          "ingreso_periodicidad": "mensual",
+          "situacion_laboral": "pensionado",
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M13",
+      "ok": 2,
+      "n": 2,
+      "seconds": 6.3,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": true
+        }
+      }
+    },
+    {
+      "case": "M14",
+      "ok": 1,
+      "n": 1,
+      "seconds": 6.1,
+      "data": {
+        "intencion": "pregunta",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M15",
+      "ok": 2,
+      "n": 2,
+      "seconds": 5.7,
+      "data": {
+        "intencion": "elegir_opcion",
+        "campos": {
+          "opcion_elegida": 2,
+          "monto_solicitado": null,
+          "plazo_meses": null
+        }
+      }
+    },
+    {
+      "case": "M16",
+      "ok": 0,
+      "n": 2,
+      "seconds": 5.9,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "opcion_elegida": 2,
+          "monto_solicitado": 50000,
+          "plazo_meses": null
+        }
+      }
+    },
+    {
+      "case": "M17",
+      "ok": 3,
+      "n": 3,
+      "seconds": 6.6,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": 22000,
+          "ingreso_periodicidad": "mensual",
+          "situacion_laboral": null
+        }
+      }
+    },
+    {
+      "case": "M18",
+      "ok": 1,
+      "n": 1,
+      "seconds": 10.8,
+      "data": {
+        "intencion": "pedir_humano",
+        "campos": {
+          "nombre_completo": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null,
+          "opcion_elegida": null,
+          "monto_solicitado": null,
+          "plazo_meses": null
+        }
+      }
+    },
+    {
+      "case": "M19",
+      "ok": 2,
+      "n": 3,
+      "seconds": 10.6,
+      "data": {
+        "intencion": "tema_sensible",
+        "campos": {
+          "nombre_completo": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null,
+          "ingreso_monto": 100000,
+          "ingreso_periodicidad": "mensual",
+          "situacion_laboral": null,
+          "consentimiento_buro": null,
+          "opcion_elegida": null,
+          "monto_solicitado": null,
+          "plazo_meses": null
+        }
+      }
+    },
+    {
+      "case": "M20",
+      "ok": 1,
+      "n": 1,
+      "seconds": 9.9,
+      "data": {
+        "intencion": "cancelar",
+        "campos": {
+          "nombre_completo": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null,
+          "opcion_elegida": null,
+          "monto_solicitado": null,
+          "plazo_meses": null
+        }
+      }
+    },
+    {
+      "case": "D01",
+      "ok": 6,
+      "n": 8,
+      "seconds": 14.8,
+      "data": {
+        "tipo_documento": "identificacion",
+        "campos": {
+          "nombre_completo": "LAURA MÉNDEZ ROJAS",
+          "curp": "MERL880412MMCNJR09",
+          "domicilio": "AV. MORELOS No. 245 COL. CENTRO",
+          "codigo_postal": "50000",
+          "fecha_nacimiento": "1988-04-12",
+          "vigencia": 2031,
+          "empleador": null,
+          "banco": null,
+          "periodicidad": null,
+          "periodo_inicio": null,
+          "periodo_fin": null,
+          "ingreso_bruto": null,
+          "ingreso_neto": null,
+          "total_depositos": null,
+          "saldo_final": null,
+          "fecha_emision": "2021-01-01",
+          "marca": null,
+          "modelo": null,
+          "anio": null,
+          "niv": null,
+          "moneda": null
+        }
+      }
+    },
+    {
+      "case": "D02",
+      "ok": 7,
+      "n": 9,
+      "seconds": 15.4,
+      "data": {
+        "tipo_documento": "recibo_nomina",
+        "campos": {
+          "nombre_completo": "JORGE ALBERTO RAMÍREZ SOTO",
+          "curp": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "fecha_nacimiento": null,
+          "vigencia": null,
+          "empleador": "EMPRESA MANUFACTURAS EJEMPLO DEL BAJÍO, S.A. DE C.V.",
+          "banco": null,
+          "periodicidad": "quincenal",
+          "periodo_inicio": "2026-09-01",
+          "periodo_fin": "2026-09-15",
+          "ingreso_bruto": 10500.0,
+          "ingreso_neto": 9200.0,
+          "total_depositos": null,
+          "saldo_final": null,
+          "fecha_emision": "2026-09-15",
+          "marca": null,
+          "modelo": null,
+          "anio": null,
+          "niv": null,
+          "moneda": "MXN"
+        }
+      }
+    },
+    {
+      "case": "D03",
+      "ok": 8,
+      "n": 8,
+      "seconds": 21.6,
+      "data": {
+        "tipo_documento": "estado_cuenta",
+        "campos": {
+          "nombre_completo": "MARÍA FERNANDA LÓPEZ GARCÍA",
+          "curp": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "fecha_nacimiento": null,
+          "vigencia": null,
+          "empleador": null,
+          "banco": "BANCO EJEMPLO, S.A.",
+          "periodicidad": null,
+          "periodo_inicio": "2026-08-01",
+          "periodo_fin": "2026-08-31",
+          "ingreso_bruto": null,
+          "ingreso_neto": null,
+          "total_depositos": 23450.0,
+          "saldo_final": 6420.55,
+          "fecha_emision": null,
+          "marca": null,
+          "modelo": null,
+          "anio": null,
+          "niv": null,
+          "moneda": "MXN"
+        }
+      }
+    },
+    {
+      "case": "D04",
+      "ok": 6,
+      "n": 7,
+      "seconds": 14.7,
+      "data": {
+        "tipo_documento": "comprobante_domicilio",
+        "campos": {
+          "nombre_completo": "LAURA MÉNDEZ ROJAS",
+          "curp": null,
+          "domicilio": "AV MORELOS 245, CENTRO, TOLUCA, MÉX.",
+          "codigo_postal": "50000",
+          "fecha_nacimiento": null,
+          "vigencia": null,
+          "empleador": null,
+          "banco": null,
+          "periodicidad": null,
+          "periodo_inicio": "2026-07-01",
+          "periodo_fin": "2026-08-31",
+          "ingreso_bruto": null,
+          "ingreso_neto": null,
+          "total_depositos": null,
+          "saldo_final": null,
+          "fecha_emision": "2026-09-05",
+          "marca": null,
+          "modelo": null,
+          "anio": null,
+          "niv": null,
+          "moneda": "MXN"
+        }
+      }
+    },
+    {
+      "case": "D05",
+      "ok": 6,
+      "n": 7,
+      "seconds": 12.5,
+      "data": {
+        "tipo_documento": "factura_vehiculo",
+        "campos": {
+          "nombre_completo": "LAURA MÉNDEZ ROJAS",
+          "curp": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "fecha_nacimiento": null,
+          "vigencia": null,
+          "empleador": null,
+          "banco": null,
+          "periodicidad": null,
+          "periodo_inicio": null,
+          "periodo_fin": null,
+          "ingreso_bruto": null,
+          "ingreso_neto": null,
+          "total_depositos": null,
+          "saldo_final": null,
+          "fecha_emision": "2019-03-22",
+          "marca": "VOLKSWAGEN",
+          "modelo": "JETTA",
+          "anio": 2019,
+          "niv": "3VWEJ1BU0KM123456",
+          "moneda": "MXN"
+        }
+      }
+    },
+    {
+      "case": "M21",
+      "ok": 2,
+      "n": 2,
+      "seconds": 8.8,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": "Laura Méndez Rojas",
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M22",
+      "ok": 2,
+      "n": 2,
+      "seconds": 7.0,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": "jose luis hernandez",
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M23",
+      "ok": 2,
+      "n": 2,
+      "seconds": 6.9,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": "Laura Méndez Rojas",
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": null,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M24",
+      "ok": 3,
+      "n": 3,
+      "seconds": 8.4,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": "Av. Morelos 245, Col. Centro, Toluca",
+          "codigo_postal": "50000",
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M25",
+      "ok": 2,
+      "n": 3,
+      "seconds": 7.6,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": "calle 5 de mayo #12 int 3, san pedro",
+          "codigo_postal": "66220",
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M26",
+      "ok": 2,
+      "n": 2,
+      "seconds": 7.0,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "domicilio": "Insurgentes Sur 1602, Crédito Constructor, CDMX",
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M27",
+      "ok": 1,
+      "n": 1,
+      "seconds": 6.0,
+      "data": {
+        "intencion": "tema_sensible",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M28",
+      "ok": 1,
+      "n": 1,
+      "seconds": 7.5,
+      "data": {
+        "intencion": "tema_sensible",
+        "campos": {
+          "nombre_completo": null,
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null
+        }
+      }
+    },
+    {
+      "case": "M29",
+      "ok": 1,
+      "n": 1,
+      "seconds": 6.0,
+      "data": {
+        "intencion": "tema_sensible",
+        "campos": {
+          "opcion_elegida": null,
+          "monto_solicitado": null,
+          "plazo_meses": null
+        }
+      }
+    },
+    {
+      "case": "M30",
+      "ok": 1,
+      "n": 1,
+      "seconds": 6.4,
+      "data": {
+        "intencion": "tema_sensible",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    },
+    {
+      "case": "M31",
+      "ok": 2,
+      "n": 2,
+      "seconds": 7.4,
+      "data": {
+        "intencion": "proporcionar_datos",
+        "campos": {
+          "nombre_completo": null,
+          "auto_a_nombre_propio": null,
+          "adeudos_vehiculo": false,
+          "segunda_llave": null,
+          "auto_marca": null,
+          "auto_modelo": null,
+          "auto_anio": null
+        }
+      }
+    },
+    {
+      "case": "M32",
+      "ok": 1,
+      "n": 1,
+      "seconds": 6.4,
+      "data": {
+        "intencion": "otro",
+        "campos": {
+          "domicilio": null,
+          "codigo_postal": null,
+          "ingreso_monto": null,
+          "ingreso_periodicidad": null,
+          "situacion_laboral": null,
+          "consentimiento_buro": null
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE ENERGÍA\nTITULAR LAURA MÉNDEZ ROJAS\nDOMICILIO AV MORELOS 245, CENTRO, TOLUCA, MÉX.\nC.P. 50000\nPERIODO 01/07/2026 al 31/08/2026\nFECHA DE EMISIÓN 05/09/2026\nCOMPROBANTE DE DOMICILIO — ESPÉCIMEN DE PRUEBA\nSUMINISTRADORA EJEMPLO DE"
+  },
+  "response": {
+    "tipo_documento": "comprobante_domicilio",
+    "campos": {
+      "nombre_completo": "LAURA MÉNDEZ ROJAS",
+      "curp": null,
+      "domicilio": "AV MORELOS 245, CENTRO, TOLUCA, MÉX.",
+      "codigo_postal": "50000",
+      "fecha_nacimiento": null,
+      "vigencia": null,
+      "empleador": null,
+      "banco": null,
+      "periodicidad": null,
+      "periodo_inicio": "2026-07-01",
+      "periodo_fin": "2026-08-31",
+      "ingreso_bruto": null,
+      "ingreso_neto": null,
+      "total_depositos": null,
+      "saldo_final": null,
+      "fecha_emision": "2026-09-05",
+      "marca": null,
+      "modelo": null,
+      "anio": null,
+      "niv": null,
+      "moneda": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:33:32.830548+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 26436.8,
+  "prompt_tokens": 1218,
+  "completion_tokens": 250
+}

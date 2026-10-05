@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "documents",
+    "status": "active",
+    "facts": {
+      "note_es": "Recibí tu factura del auto y está en orden."
+    },
+    "next_question": "Envíame tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta).",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "Hola, Laura. Te confirmo que ya recibí la factura de tu auto y todo está en orden. Para continuar con tu trámite, ¿podrías enviarme tu comprobante de ingresos más reciente (recibo de nómina o estado de cuenta)?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:34:12.648975+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 4513.5,
+  "prompt_tokens": 186,
+  "completion_tokens": 54
+}

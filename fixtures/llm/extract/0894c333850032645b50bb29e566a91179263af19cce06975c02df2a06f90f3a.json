@@ -1,0 +1,24 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "simulation",
+    "agent_question": "¿Cuál opción prefieres?",
+    "text": "Me quedo con la opción 1"
+  },
+  "response": {
+    "intencion": "elegir_opcion",
+    "campos": {
+      "opcion_elegida": 1,
+      "monto_solicitado": null,
+      "plazo_meses": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:37:55.447009+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 5379.0,
+  "prompt_tokens": 429,
+  "completion_tokens": 44
+}

@@ -1,0 +1,42 @@
+{
+  "request": {
+    "schema_name": "documento",
+    "stage": null,
+    "agent_question": null,
+    "text": "ESPÉCIMEN DE PRUEBA — DATOS FICTICIOS\nIDENTIFICACIÓN — ESPÉCIMEN DE PRUEBA\nFormato genérico de prueba. No es un documento oficial.\nNOMBRE LAURA MÉNDEZ ROJAS\nDOMICILIO AV. MORELOS No. 245, COL. CENTRO, TOLUCA, MÉX. C.P. 50000\nCURP MERL880412MMCNJR09\nFECHA DE NACIMIENTO 12/04/1988\nEMISIÓN 2021 VIGENCIA 2031"
+  },
+  "response": {
+    "tipo_documento": "identificacion",
+    "campos": {
+      "nombre_completo": "LAURA MÉNDEZ ROJAS",
+      "curp": "MERL880412MMCNJR09",
+      "domicilio": "AV. MORELOS No. 245, COL. CENTRO, TOLUCA, MÉX.",
+      "codigo_postal": "50000",
+      "fecha_nacimiento": "1988-04-12",
+      "vigencia": 2031,
+      "empleador": null,
+      "banco": null,
+      "periodicidad": null,
+      "periodo_inicio": null,
+      "periodo_fin": null,
+      "ingreso_bruto": null,
+      "ingreso_neto": null,
+      "total_depositos": null,
+      "saldo_final": null,
+      "fecha_emision": "2021-01-01",
+      "marca": null,
+      "modelo": null,
+      "anio": null,
+      "niv": null,
+      "moneda": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:32:48.523676+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 22938.9,
+  "prompt_tokens": 588,
+  "completion_tokens": 257
+}

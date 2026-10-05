@@ -29,6 +29,7 @@ dist/
 
 # Datos locales de los servicios
 .data/
+fixtures/llm/_recording/
 
 # Web (feature 002)
 web/public/documents/

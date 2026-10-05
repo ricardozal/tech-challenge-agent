@@ -1,0 +1,22 @@
+{
+  "request": {
+    "stage": "documents",
+    "status": "active",
+    "facts": {
+      "note_es": "Perfecto, elegiste recibir $90,000.00 y pagar $4,932.63 al mes. Ahora necesito tus documentos."
+    },
+    "next_question": "Envíame una foto de tu identificación oficial (INE o pasaporte).",
+    "client_first_name": "Laura"
+  },
+  "response": {
+    "text": "¡Hola, Laura! Perfecto, ya quedó registrado que elegiste recibir $90,000.00 con un pago mensual de $4,932.63. Ahora necesito que me proporciones tus documentos para continuar con el proceso. ¿Envíame una foto de tu identificación oficial (INE o pasaporte)?"
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:32:12.534834+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 5395.4,
+  "prompt_tokens": 203,
+  "completion_tokens": 70
+}

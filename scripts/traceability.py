@@ -10,8 +10,12 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SPECS = [ROOT / "specs" / "001-credit-agent-core" / "spec.md", ROOT / "specs" / "002-demo-web" / "spec.md"]
-TEST_DIRS = [ROOT / "tests", *sorted((ROOT / "services").glob("*/tests"))]
+SPECS = [
+    ROOT / "specs" / "001-credit-agent-core" / "spec.md",
+    ROOT / "specs" / "002-demo-web" / "spec.md",
+    ROOT / "specs" / "003-real-models-observability" / "spec.md",
+]
+TEST_DIRS = [ROOT / "tests", *sorted((ROOT / "services").glob("*/tests")), *sorted((ROOT / "packages").glob("*/tests"))]
 PLAYWRIGHT_DIR = ROOT / "web" / "e2e"
 FR_ID = re.compile(r"\*\*(FR-\d{3})\*\*")
 # test('title' | "title" | `title`, { tag: [...] }, ...)

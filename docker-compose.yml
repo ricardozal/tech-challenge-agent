@@ -1,4 +1,4 @@
-# Feature 002: 6 of the 7 reference containers (phoenix: feature 003).
+# Feature 003: the 7 reference containers.
 # Ollama runs on the host; only llm_gateway knows LLM_MODE and OLLAMA_URL (Principle V).
 
 x-healthcheck: &http-health
@@ -57,6 +57,7 @@ services:
       DATABASE_URL: postgresql://agent_rw:agent_pw@postgres:5432/app?options=-csearch_path%3Dagent
       ACTIONS_URL: http://actions_api:8000
       LLM_URL: http://llm_gateway:8002
+      PHOENIX_COLLECTOR_ENDPOINT: http://phoenix:6006  # traces; no depends_on: turns never wait for phoenix
       CASE_LOCK_TIMEOUT_S: "10"
       WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:8080}  # CORS for the web container
     ports:
@@ -80,7 +81,9 @@ services:
       LLM_MODE: ${LLM_MODE:-fake}
       OLLAMA_URL: http://host.docker.internal:11434
       FIXTURES_DIR: /app/fixtures/llm
+      FIXTURES_RECORD_DIR: /app/fixtures/llm/_recording  # LLM_MODE=record writes here; make record promotes
       ESQUEMAS_PATH: /app/eval/esquemas.json
+      PHOENIX_COLLECTOR_ENDPOINT: http://phoenix:6006
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -97,6 +100,7 @@ services:
       dockerfile: services/doc_intel/Dockerfile
     environment:
       LLM_URL: http://llm_gateway:8002
+      PHOENIX_COLLECTOR_ENDPOINT: http://phoenix:6006
     ports:
       - "8003:8003"
     depends_on:
@@ -125,6 +129,20 @@ services:
       <<: *http-health
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
 
+  # Trace console (O-01): UI and OTLP/HTTP on 6006. Nobody depends on it to start or to finish a turn.
+  phoenix:
+    image: arizephoenix/phoenix:version-20.19.0
+    environment:
+      PHOENIX_WORKING_DIR: /mnt/data
+    volumes:
+      - phoenix_data:/mnt/data
+    ports:
+      - "6006:6006"
+    healthcheck:
+      <<: *http-health
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:6006/healthz')"]
+
 volumes:
   pgdata:
   documents:
+  phoenix_data:

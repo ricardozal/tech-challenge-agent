@@ -90,8 +90,53 @@ desincronizan. Los contratos de `packages/contracts` de 001 no cambian.
 | 2026-10-04 | La consola renueva la llave de idempotencia después de un rechazo; solo un reenvío tras error de red la reutiliza | Convergencia T055: `actions_api` guarda también los rechazos por llave, y reenviar tras un `version_conflict` daba `idempotency_mismatch` |
 | 2026-10-04 | El test de conflicto de versión provoca el cambio con un mensaje del cliente mientras el caso está escalado (cambia la versión, no el estado), y verifica que reintentar el mismo formulario se acepta | Si otra pestaña devolvía el caso al agente, rechazar ya no estaba permitido y el reintento no se podía probar |
 
+## Feature 003 · Modelos reales y observabilidad
+
+Detalle en [specs/003-real-models-observability/research.md](specs/003-real-models-observability/research.md).
+`phoenix` (consola de trazas) es el 7.º contenedor de la topología de referencia; se registra aquí
+antes de agregarlo (Principio I), junto con las dependencias de instrumentación.
+
+| Id | Decisión | Motivo |
+|---|---|---|
+| O-01 | Contenedor `phoenix` (`arizephoenix/phoenix:version-20.19.0`, puerto 6006, volumen `phoenix_data`); ningún servicio depende de él para arrancar | Consola local de trazas (FR-091); el turno no depende de la consola (FR-092) |
+| O-02 | `telemetry.py` por servicio con `phoenix.otel.register(project_name="tech-challenge-agent", batch=True)`, `httpx` y FastAPI instrumentados (sin `/health`); sin `PHOENIX_COLLECTOR_ENDPOINT` no exporta | Exportación en segundo plano; ningún servicio importa código de otro |
+| O-03 | Un span raíz `turn` por ejecución del grafo, con `session.id` = caso; el agente no instrumenta su FastAPI de entrada | Una traza por turno (FR-085) y búsqueda por caso (FR-086) |
+| O-04 | LangGraph instrumentado con OpenInference y `TraceConfig(hide_inputs, hide_outputs)` (instrumentación explícita en lugar de `auto_instrument`) | Los nodos muestran etapa, orden y duración sin exponer el estado del turno (FR-087, FR-093) |
+| O-05 | Span `TOOL` por llamada en `Deps.call_tool`, `ERROR` si se rechaza | El agente conoce tool, entrada y desenlace (FR-088, FR-090) |
+| O-06 | `actions_api` solo propaga contexto (instrumentación sin SDK ni exportador) | Los turnos de documento pasan por él; sin duplicar spans ni trazar las lecturas de la web |
+| O-07 | Spans `CHAIN` por tarea y `LLM` por intento en el gateway, con modelo, entrada, salida, tokens y marca de reproducción | FR-089, FR-090 |
+| O-08 | Span `read_document` en `doc_intel` con tipo detectado y confianza | La lectura de documentos se ve en orden en la traza |
+| O-09 | `redact()` pasa a `contracts.redaction`; logs y spans manuales usan la misma política | FR-093 sin importar código entre servicios |
+| O-10 | Fixture v2 (`origin`, latencia, tokens, versiones); la llave incluye `schema_version` y `PROMPT_VERSION` | Saber qué es auténtico (FR-083) y que un cambio de prompt o esquema no reproduzca respuestas viejas |
+| O-11 | `LLM_MODE=record` graba en `fixtures/llm/_recording/`; `make record` promueve por guion solo si el demo llegó a su resultado | Una grabación fallida no reemplaza las vigentes (FR-081) |
+| O-12 | `GET/DELETE /v1/fixtures/usage` en el gateway y `make fixtures-status` | Comprobar que los demos usan solo respuestas auténticas (FR-083, SC-019) |
+| O-13 | `eval/esquemas.json` v4: cada etapa pide solo sus campos de mensaje; sin etapa, esquema completo | Menos tokens de salida y menos latencia por turno. Consecuencia aceptada: un dato que el cliente adelanta fuera de su etapa no se extrae en ese turno; el agente lo pregunta en su etapa |
+| O-14 | `make eval` sigue en `scripts/eval_gate.py` (R-13), extendido con desglose por tipo y salida 2 fuera de modo real; `eval/correr_eval.py` no cambia | El gate ya existía; el otro script es el comparador de modelos (fuera de alcance) |
+| O-15 | En `ollama`/`record` el gateway verifica `gemma4:12b` y `glm-ocr` y responde 503 en `/health` si falta alguno | Fallar visible, nunca caer a respuestas grabadas (FR-084) |
+
+### Ajustes durante la implementación
+
+| Fecha | Ajuste | Motivo |
+|---|---|---|
+| 2026-10-04 | Las listas de `etapas` en `eval/esquemas.json` siguen el orden del esquema completo (el gateway lo valida al cargar) | El esquema reducido conserva ese orden; una lista en otro orden confundía al leerla |
+| 2026-10-04 | FastAPI 0.142 traza solo cuando hay un `TracerProvider` global: se desactiva su telemetría nativa (`FastAPI(telemetry={"tracing": False, ...})`) en los cuatro servicios | En el agente creaba una raíz HTTP por encima de `turn`; en los demás duplicaba los spans de la instrumentación de OpenTelemetry |
+| 2026-10-04 | Al ejecutar cada nodo, el agente activa como contexto el span de LangGraph de ese nodo (`openinference.instrumentation.langchain.get_current_span`) | El instrumentador de LangChain no lo hace por diseño; sin esto las tools y las llamadas HTTP colgaban de `turn` y no de su etapa |
+| 2026-10-04 | Exportación por OTLP/HTTP (`protocol="http/protobuf"`) al puerto 6006, sin `http receive/send` de ASGI | `register` elegía gRPC en 4317; el plan fija 6006. Los spans ASGI internos solo agregaban ruido |
+| 2026-10-04 | La salida del span de OCR es `{"chars": n}`, como en los logs (R-22); el texto leído aparece redactado como entrada de la extracción | El OCR no conoce los nombres del documento; la extracción sí y los redacta |
+| 2026-10-04 | La tool del turno de documento es `submit_document` (el contrato de trazas decía `register_document`) | Nombre real del catálogo de 001 |
+| 2026-10-04 | Los clientes del agente envuelven errores de conexión y timeouts de httpx en `UpstreamError`: el canal responde 502 `upstream_failure` y el span `turn` queda en `ERROR` | Con el gateway caído el turno terminaba en 500 con traceback (edge case "Modelo lento") |
+| 2026-10-04 | Los cuatro clientes HTTP entre servicios usan `keepalive_expiry=2` | Con modelos reales hay más de 5 s entre llamadas a `actions_api`; httpx reutilizaba una conexión que uvicorn estaba cerrando (keep-alive de 5 s) y el turno fallaba con `ReadError`. En `fake` nunca pasaba |
+| 2026-10-04 | Las pruebas e2e de trazas esperan hasta 180 s a que Phoenix tenga los spans | Phoenix ingiere de forma asíncrona; tras la suite e2e se midió ≈ 1 min de atraso. No se pierden spans |
+| 2026-10-04 | El gateway responde 502 `upstream_failure` ante timeouts o conexiones cortadas con Ollama (`httpx.HTTPError`) | En las pruebas con modelos reales Ollama no respondió una vez en 300 s y el gateway devolvía 500; el guion pasó al repetirlo |
+| 2026-10-04 | El nodo `respond` garantiza que la respuesta termina con el texto exacto de la siguiente pregunta (`questions.end_with_question`): reemplaza una variante final con otra puntuación o mayúsculas, o la agrega | Con respuestas reales el modelo a veces escribe "¿el auto está a tu nombre?" o "¿Envíame…?"; la pregunta la decide el código (Principio II) |
+| 2026-10-04 | Las pruebas del agente que buscaban frases de la plantilla verifican ahora los datos de la respuesta (montos, documento, desajuste) | Tras `make record` la redacción es la del modelo real; los datos siguen viniendo del código |
+| 2026-10-04 | `make record ONLY="…"` filtra guiones (no `SCENARIOS`) | `SCENARIOS` ya es la lista de demos del Makefile |
+| 2026-10-04 | Ante `upstream_failure` el agente responde al cliente un texto fijo en español; el detalle técnico queda en el span `turn` y en el log | Convergencia T058 (Principio X): el chat mostraba `llm_gateway reply: ReadTimeout: …` |
+| 2026-10-04 | `make fixtures-status` lee el uso del gateway después de cada paso y reporta cada respuesta sembrada o faltante con su guion y paso | Convergencia T059: el contrato pide el paso, no solo la tarea |
+
 ## Calidad del LLM (`make eval`, Principio VIII)
 
 | Fecha | Modelo | Esquema | Casos | Campos correctos | JSON válido | Resultado |
 |---|---|---|---|---|---|---|
 | 2026-10-04 | `gemma4:12b` (temperature 0, seed 42, think false) | v3 | 37 (25 originales + 12 nuevos de v3) | 102/114 = **89.5%** (originales 88.2%, nuevos 95.2%) | 100% | Pasa (mínimo 85% y 100%) · `eval/resultados/gate-2026-10-04_104313.json` |
+| 2026-10-04 | `gemma4:12b` (temperature 0, seed 42, think false) | v4 (por etapa, O-13) | 37 | 102/114 = **89.5%** (mensajes 69/75 = 92.0%, documentos 33/39 = 84.6%; igual que v3) | 100% | Pasa · mediana por mensaje 12.8 s → **6.9 s** (documentos 15.8 s) · `eval/resultados/gate-2026-10-04_175615.json` (antes de grabar) y `eval/resultados/gate-2026-10-04_195001.json` (gate extendido) |

@@ -2,6 +2,8 @@
 
 import base64
 import hashlib
+import json
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Annotated, Any
@@ -11,7 +13,13 @@ from fastapi import FastAPI, File, Form, Header, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from openinference.instrumentation import using_session
+from openinference.semconv.trace import OpenInferenceSpanKindValues, SpanAttributes
+from opentelemetry import trace
+from opentelemetry.trace import Status as SpanStatus
+from opentelemetry.trace import StatusCode
 
+from agent import telemetry
 from agent.clients import ActionsClient, LlmClient, UpstreamError
 from agent.config import Settings
 from agent.graph import Deps, TurnState, build_graph
@@ -27,6 +35,16 @@ from contracts.channel import (
     TurnResponse,
 )
 from contracts.common import DocumentType, ErrorBody, ErrorDetail
+from contracts.redaction import redact
+
+
+# What the client reads when a service does not answer (Constitution X: Spanish, no technical detail).
+# The detail (service, exception) stays in the `turn` span and in the agent log.
+UPSTREAM_MESSAGE = (
+    "No pude responderte en este momento porque un servicio tardó demasiado o no respondió. "
+    "Intenta de nuevo en unos segundos."
+)
+log = logging.getLogger("agent")
 
 
 def _error(status: int, code: str, message: str) -> JSONResponse:
@@ -37,8 +55,10 @@ def _message_id(case_id: UUID, idempotency_key: str) -> str:
     return "m-" + hashlib.sha256(f"{case_id}:{idempotency_key}".encode()).hexdigest()[:12]
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, tracer: trace.Tracer | None = None) -> FastAPI:
     settings = settings or Settings.from_env()
+    telemetry.setup()
+    tracer = tracer or telemetry.tracer()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -50,13 +70,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             await saver.setup()
             app.state.store = store
             app.state.actions = actions
-            app.state.graph = build_graph(Deps(actions=actions, llm=llm), saver)
+            app.state.graph = build_graph(Deps(actions=actions, llm=llm, tracer=tracer), saver)
             yield
         await actions.aclose()
         await llm.aclose()
         await store.close()
 
-    app = FastAPI(title="Agent channel", lifespan=lifespan)
+    app = FastAPI(title="Agent channel", lifespan=lifespan, telemetry=telemetry.FASTAPI_TELEMETRY_OFF)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(settings.web_origins),
@@ -66,7 +86,35 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
 
     async def run_turn(case_id: UUID, kind: str, message_id: str, **inputs: Any) -> TurnResponse:
-        view = await app.state.actions.get_case(case_id)
+        """One turn = one trace (O-03): the root span `turn` wraps the whole graph run."""
+        with using_session(str(case_id)), tracer.start_as_current_span(
+            "turn", record_exception=False, set_status_on_exception=False
+        ) as span:
+            span.set_attribute(SpanAttributes.OPENINFERENCE_SPAN_KIND, OpenInferenceSpanKindValues.AGENT.value)
+            span.set_attribute(SpanAttributes.SESSION_ID, str(case_id))
+            meta: dict[str, Any] = {"case_id": str(case_id), "message_id": message_id, "kind": kind}
+            document = inputs.get("document") or {}
+            text = inputs.get("text") or (f"documento: {document.get('requested_type')}" if document else "")
+            try:
+                view = await app.state.actions.get_case(case_id)
+                names = [view.state.client.full_name] if view.state.client.full_name else []
+                meta.update(stage_before=view.stage.value, status_before=view.status.value)
+                span.set_attribute(SpanAttributes.INPUT_VALUE, redact(text, names))
+                turn, learned_name = await _run_graph(case_id, kind, message_id, view, **inputs)
+                names += [learned_name] if learned_name else []
+            except Exception as exc:
+                span.set_status(SpanStatus(StatusCode.ERROR, f"{type(exc).__name__}: {exc}"))
+                raise
+            finally:
+                span.set_attribute(SpanAttributes.METADATA, json.dumps(meta))
+            meta.update(stage_after=turn.case.stage, status_after=turn.case.status, version_after=turn.case.version)
+            span.set_attribute(SpanAttributes.METADATA, json.dumps(meta, default=str))
+            span.set_attribute(SpanAttributes.OUTPUT_VALUE, redact(turn.reply, names))
+            return turn
+
+    async def _run_graph(
+        case_id: UUID, kind: str, message_id: str, view: Any, **inputs: Any
+    ) -> tuple[TurnResponse, str | None]:
         state: TurnState = {
             "case_id": str(case_id),
             "kind": kind,
@@ -88,7 +136,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             reply=out["reply"],
             case=TurnCase(stage=case["stage"], status=case["status"], version=case["version"]),
             tool_calls=[ToolCallSummary(**call) for call in out.get("tool_calls", [])],
-        )
+        ), (out.get("fields") or {}).get("full_name")
 
     async def guarded_turn(case_id: UUID, idempotency_key: str, kind: str, **inputs: Any) -> Any:
         stored = await app.state.store.get_processed(case_id, idempotency_key)
@@ -106,7 +154,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except CaseBusy:
             return _error(409, "case_busy", "Hay otro mensaje de este caso en proceso; reenvíalo en un momento.")
         except UpstreamError as exc:
-            return _error(502, "upstream_failure", str(exc))
+            log.warning("upstream_failure case=%s: %s", case_id, exc)
+            return _error(502, "upstream_failure", UPSTREAM_MESSAGE)
 
     @app.get("/health")
     async def health() -> dict:

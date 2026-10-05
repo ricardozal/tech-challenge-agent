@@ -1,0 +1,28 @@
+{
+  "request": {
+    "schema_name": "mensaje",
+    "stage": "eligibility",
+    "agent_question": "¿El auto tiene algún adeudo, crédito o gravamen?",
+    "text": "No, ya lo terminé de pagar"
+  },
+  "response": {
+    "intencion": "proporcionar_datos",
+    "campos": {
+      "nombre_completo": null,
+      "auto_a_nombre_propio": null,
+      "adeudos_vehiculo": false,
+      "segunda_llave": null,
+      "auto_marca": null,
+      "auto_modelo": null,
+      "auto_anio": null
+    }
+  },
+  "origin": "recorded",
+  "model": "gemma4:12b",
+  "recorded_at": "2026-10-05T02:31:06.118582+00:00",
+  "schema_version": 4,
+  "prompt_version": 2,
+  "latency_ms": 6977.2,
+  "prompt_tokens": 486,
+  "completion_tokens": 74
+}

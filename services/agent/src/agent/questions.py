@@ -4,6 +4,7 @@ The texts are deterministic on purpose: they are part of the LLM fixture key (R-
 questions of the evaluation set (eval/casos_eval.jsonl).
 """
 
+import re
 from dataclasses import dataclass
 
 from contracts.case import CaseView
@@ -118,3 +119,28 @@ def document_question(doc_type: str) -> Question:
 def next_document_question(case: CaseView) -> Question | None:
     needed = missing_documents(case)
     return DOCUMENT_QUESTIONS[needed[0]] if needed else None
+
+
+_MARKS = re.compile(r"[¿?¡!.,:;]")
+
+
+def _plain(text: str) -> str:
+    return " ".join(_MARKS.sub(" ", text).lower().split())
+
+
+def end_with_question(reply: str, question: str | None) -> str:
+    """The question asked is the code's decision (Principle II): the reply ends with its exact text.
+
+    The real model sometimes rewrites its punctuation or case (e.g. "¿el auto está a tu nombre?" or
+    "¿Envíame tu identificación?"); a trailing variant is replaced by the exact question, and a reply
+    without it gets the question appended.
+    """
+    reply = reply.strip()
+    if not question or reply.endswith(question):
+        return reply
+    target = _plain(question)
+    for start in range(len(reply)):
+        if (start == 0 or not reply[start - 1].isalnum()) and _plain(reply[start:]) == target:
+            return (reply[:start].rstrip() + " " + question).strip()
+    return f"{reply} {question}"
+

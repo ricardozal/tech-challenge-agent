@@ -2,7 +2,7 @@
 
 Generado por `scripts/traceability.py` a partir de `@pytest.mark.req` y de los tags `@FR-xxx` de Playwright (`web/e2e/`); no editar a mano.
 
-Requisitos: 75 · con test: 75 · sin test: 0
+Requisitos: 98 · con test: 98 · sin test: 0
 
 | Requisito | Tests |
 |---|---|
@@ -81,3 +81,26 @@ Requisitos: 75 · con test: 75 · sin test: 0
 | FR-073 | `web/e2e/demo.spec.ts::asesor · resolver escalación` |
 | FR-074 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
 | FR-075 | `web/e2e/demo.spec.ts::chat · ${scenario.id}` |
+| FR-076 | `tests/architecture/test_compose.py::test_only_the_gateway_knows_the_llm_mode_and_ollama`<br>`tests/architecture/test_compose.py::test_only_the_gateway_config_reads_the_llm_mode_variable` |
+| FR-077 | `tests/ollama/test_real_mode.py::test_gateway_uses_gemma_and_glm_ocr` |
+| FR-078 | `tests/ollama/test_real_mode.py::test_demo_reaches_its_outcome_with_real_models` |
+| FR-079 | `tests/ollama/test_real_mode.py::test_free_text_outside_the_script_is_understood` |
+| FR-080 | `services/llm_gateway/tests/test_recording.py::test_record_writes_every_task_to_the_recording_dir_only`<br>`services/llm_gateway/tests/test_recording.py::test_recorded_fixture_has_origin_versions_latency_and_tokens`<br>`services/llm_gateway/tests/test_recording.py::test_metrics_are_those_of_the_valid_attempt`<br>`services/llm_gateway/tests/test_recording.py::test_invalid_output_is_not_recorded` |
+| FR-081 | `tests/scripts/test_record_fixtures.py::test_promote_moves_recordings_and_replaces_same_key`<br>`tests/scripts/test_record_fixtures.py::test_discard_leaves_current_fixtures_untouched`<br>`tests/scripts/test_record_fixtures.py::test_run_all_promotes_passing_scenarios_and_discards_the_failing_one` |
+| FR-082 | `tests/e2e/test_fixtures_status.py::test_demos_use_only_recorded_answers` |
+| FR-083 | `tests/e2e/test_fixtures_status.py::test_demos_use_only_recorded_answers`<br>`tests/e2e/test_fixtures_status.py::test_fixtures_status_command_reports_no_seeded_or_missing`<br>`tests/scripts/test_fixtures_status.py::test_each_seeded_or_missing_answer_is_reported_with_its_step`<br>`services/llm_gateway/tests/test_health_and_usage.py::test_usage_counts_recorded_seeded_and_missing_answers`<br>`services/llm_gateway/tests/test_health_and_usage.py::test_usage_is_not_counted_in_real_modes`<br>`services/llm_gateway/tests/test_modes.py::test_fixture_without_origin_is_seeded_and_recorded_metrics_are_exposed`<br>`packages/contracts/tests/test_fixture_key.py::test_key_changes_with_the_schema_version`<br>`packages/contracts/tests/test_fixture_key.py::test_key_changes_with_the_prompt_version` |
+| FR-084 | `services/llm_gateway/tests/test_health_and_usage.py::test_health_is_503_naming_the_missing_model`<br>`services/llm_gateway/tests/test_health_and_usage.py::test_health_is_503_with_both_models_when_ollama_does_not_answer`<br>`services/llm_gateway/tests/test_health_and_usage.py::test_an_ollama_failure_is_an_error_not_a_recorded_answer`<br>`services/llm_gateway/tests/test_health_and_usage.py::test_an_ollama_timeout_is_a_clear_upstream_failure` |
+| FR-085 | `tests/e2e/test_tracing.py::test_every_turn_is_exactly_one_trace`<br>`tests/e2e/test_tracing.py::test_document_turn_reads_the_document_inside_the_same_trace`<br>`tests/e2e/test_tracing.py::test_simultaneous_turns_of_two_cases_have_separate_traces` |
+| FR-086 | `tests/e2e/test_tracing.py::test_turn_identifies_case_message_and_kind` |
+| FR-087 | `tests/e2e/test_tracing.py::test_message_trace_shows_the_graph_stages_in_order` |
+| FR-088 | `tests/e2e/test_tracing.py::test_tool_spans_have_name_input_and_outcome`<br>`services/agent/tests/test_tool_spans.py::test_rejected_tool_is_an_error_span_with_its_code` |
+| FR-089 | `tests/e2e/test_tracing.py::test_document_turn_reads_the_document_inside_the_same_trace`<br>`tests/e2e/test_tracing.py::test_llm_spans_show_model_input_output_and_recorded_tokens`<br>`services/llm_gateway/tests/test_tracing.py::test_extraction_span_and_llm_span_carry_model_io_and_tokens`<br>`services/llm_gateway/tests/test_tracing.py::test_replay_shows_origin_and_the_recorded_latency_and_tokens` |
+| FR-090 | `services/agent/tests/test_tool_spans.py::test_rejected_tool_is_an_error_span_with_its_code`<br>`services/agent/tests/test_tool_spans.py::test_turn_span_is_an_error_when_the_model_does_not_answer`<br>`services/agent/tests/test_tool_spans.py::test_upstream_failure_message_is_spanish_without_technical_detail`<br>`services/llm_gateway/tests/test_tracing.py::test_each_attempt_is_its_own_llm_span_and_the_invalid_one_is_an_error`<br>`services/llm_gateway/tests/test_tracing.py::test_task_span_is_an_error_when_both_attempts_fail` |
+| FR-091 | `tests/architecture/test_compose.py::test_phoenix_is_a_pinned_local_console_with_its_own_volume`<br>`tests/architecture/test_compose.py::test_only_agent_gateway_and_doc_intel_export_traces` |
+| FR-092 | `tests/architecture/test_compose.py::test_no_service_needs_phoenix_to_start`<br>`tests/e2e/test_tracing_console_down.py::test_demos_finish_the_same_with_phoenix_stopped` |
+| FR-093 | `tests/e2e/test_tracing.py::test_no_span_input_contains_the_clients_curp`<br>`services/agent/tests/test_tool_spans.py::test_tool_input_is_redacted`<br>`services/llm_gateway/tests/test_tracing.py::test_inputs_and_outputs_are_redacted`<br>`packages/contracts/tests/test_redaction.py::test_redaction_removes_curp_rfc_phones_and_known_names` |
+| FR-094 | `tests/eval/test_eval_gate.py::test_requests_use_the_stage_of_each_case_and_the_recorded_ocr`<br>`tests/eval/test_eval_gate.py::test_gate_passes_with_the_real_model` |
+| FR-095 | `tests/eval/test_eval_gate.py::test_score_follows_the_comparison_rule`<br>`tests/eval/test_eval_gate.py::test_extra_non_null_fields_subtract_and_missing_fields_count_as_null` |
+| FR-096 | `tests/eval/test_eval_gate.py::test_threshold_is_85_percent_of_fields_and_100_percent_valid_json`<br>`tests/eval/test_eval_gate.py::test_gate_passes_with_the_real_model` |
+| FR-097 | `tests/eval/test_eval_gate.py::test_summary_has_model_versions_breakdown_medians_and_failed_cases` |
+| FR-098 | `tests/eval/test_eval_gate.py::test_gate_refuses_to_measure_recorded_answers` |

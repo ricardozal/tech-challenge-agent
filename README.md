@@ -25,7 +25,7 @@ Siete contenedores con docker compose y Ollama en el host:
 | `postgres` | Esquemas `cases`, `audit` (solo inserción) y `agent` (checkpoints), con un rol por servicio |
 | `phoenix` | Consola de trazas en http://localhost:6006: una traza por turno del agente con sus etapas, tools y llamadas al modelo |
 
-Diagramas C4 en [docs/diagrams/](docs/diagrams/) (contexto, contenedores, componentes y vista dinámica).
+Diagramas C4 de la versión entregable en [docs/diagrams/v2/](docs/diagrams/v2/): contexto, contenedores, componentes de `agent` y de `actions_api`, el ciclo de vida del caso y un turno de documento con su traza (fuente editable en `c4-architecture.excalidraw`, un frame por diagrama). La primera versión, diseñada antes de implementar, queda en [docs/diagrams/v1/](docs/diagrams/v1/).
 Las decisiones están en [DECISIONS.md](DECISIONS.md) y la especificación completa en
 [specs/001-credit-agent-core/](specs/001-credit-agent-core/) (spec, plan, research, modelo de datos,
 contratos y tareas); la web de demo, en [specs/002-demo-web/](specs/002-demo-web/); modelos reales y

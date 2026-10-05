@@ -101,8 +101,9 @@ Ollama, Arize Phoenix (OpenTelemetry + OpenInference), pytest y Playwright.
 | 3 · Validación documental fallida | `make demo-document-correction` · `make demo-document-escalation` | El recibo no cuadra con el ingreso declarado: la clienta corrige y llega a OK, o falla 3 veces y el caso se escala con ticket |
 | 4 · Sin segunda llave | `make demo-no-spare-key` | Se cotiza la llave ($2,400), entra al plan de pagos y el caso llega a OK |
 
-Los mismos escenarios se recorren desde el chat (`/chat`). Después del demo 3B, el asesor resuelve el
-ticket desde `/asesor` o por terminal:
+Los diagramas de secuencia de cada demo (Mermaid) están en
+[docs/diagrams/v2/sequence-diagrams/](docs/diagrams/v2/sequence-diagrams/). Los mismos escenarios se recorren
+desde el chat (`/chat`). Después del demo 3B, el asesor resuelve el ticket desde `/asesor` o por terminal:
 
 ```bash
 make advisor-open-escalations
@@ -172,7 +173,9 @@ implement → converge.
 - [TRACEABILITY.md](TRACEABILITY.md): requisito → prueba, generado a partir de los marcadores.
 - [docs/diagrams/v2/](docs/diagrams/v2/): diagramas C4 de la versión entregable (contexto,
   contenedores, componentes de `agent` y `actions_api`, ciclo del caso y un turno de documento con su
-  traza). La primera versión, diseñada antes de implementar, está en [v1](docs/diagrams/v1/).
+  traza), y los diagramas de secuencia de los 4 demos en
+  [sequence-diagrams/](docs/diagrams/v2/sequence-diagrams/). La primera versión, diseñada antes de
+  implementar, está en [v1](docs/diagrams/v1/).
 - [.specify/memory/constitution.md](.specify/memory/constitution.md): principios y límites que
   gobiernan todas las features.
 

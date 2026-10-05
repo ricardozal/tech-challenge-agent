@@ -9,7 +9,7 @@ SCENARIOS := happy_path eligibility_rejection document_correction document_escal
         demo-all advisor-open-escalations advisor-verify web-scenarios web-dev test-web \
         demo-happy-path demo-eligibility-rejection demo-document-correction demo-document-escalation demo-no-spare-key
 
-up:            ## Build and start the 6 services (web on http://localhost:8080)
+up:            ## Build and start the 7 services (web :8080, Phoenix :6006)
 	$(COMPOSE) up -d --build --wait
 
 up-db:         ## Start only Postgres (unit tests of actions_api and agent)
